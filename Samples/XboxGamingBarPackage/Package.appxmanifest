@@ -4,7 +4,8 @@
   xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
   xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
   xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
-  IgnorableNamespaces="uap rescap">
+  xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3"
+  IgnorableNamespaces="uap uap3 rescap">
 
   <Identity
     Name="454e0d5a-f422-40de-bd45-c63eb806f957"
@@ -42,8 +43,36 @@
 	  <Extensions>
         <desktop:Extension
           xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10"
-		  Category="windows.fullTrustProcess"
-		  Executable="XboxGamingBarHelper\XboxGamingBarHelper.exe" />
+		      Category="windows.fullTrustProcess"
+		      Executable="XboxGamingBarHelper\XboxGamingBarHelper.exe" />
+        <uap3:Extension Category="windows.appExtension">
+          <uap3:AppExtension Name="microsoft.gameBarUIExtension"
+                             Id="GamingWidget"
+                             DisplayName="Gaming"
+                             Description="Xbox Game Bar widget for changing system settings during game sessions with gamepad."
+                             PublicFolder="GameBar">
+            <uap3:Properties>
+              <GameBarWidget Type="Standard">
+                <HomeMenuVisible>true</HomeMenuVisible>
+                <PinningSupported>true</PinningSupported>
+                <Window>
+                  <Size>
+                    <Height>824</Height>
+                    <Width>464</Width>
+                    <MinHeight>824</MinHeight>
+                    <MinWidth>464</MinWidth>
+                    <MaxHeight>824</MaxHeight>
+                    <MaxWidth>900</MaxWidth>
+                  </Size>
+                  <ResizeSupported>
+                    <Horizontal>true</Horizontal>
+                    <Vertical>true</Vertical>
+                  </ResizeSupported>
+                </Window>
+              </GameBarWidget>
+            </uap3:Properties>
+          </uap3:AppExtension>
+        </uap3:Extension>
 	  </Extensions>
     </Application>
   </Applications>
