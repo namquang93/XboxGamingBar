@@ -8,12 +8,12 @@
 
   <Identity
     Name="454e0d5a-f422-40de-bd45-c63eb806f957"
-    Publisher="CN=PC"
-    Version="1.0.0.0" />
+    Publisher="CN=Play n&apos; Build"
+    Version="0.1.0.0" />
 
   <Properties>
-    <DisplayName>XboxGamingBarPackage</DisplayName>
-    <PublisherDisplayName>PC</PublisherDisplayName>
+    <DisplayName>Xbox Gaming Bar</DisplayName>
+    <PublisherDisplayName>Play n&apos; Build</PublisherDisplayName>
     <Logo>Images\StoreLogo.png</Logo>
   </Properties>
 
@@ -31,7 +31,7 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="$targetentrypoint$">
       <uap:VisualElements
-        DisplayName="XboxGamingBarPackage"
+        DisplayName="Xbox Gaming Bar"
         Description="XboxGamingBarPackage"
         BackgroundColor="transparent"
         Square150x150Logo="Images\Square150x150Logo.png"
