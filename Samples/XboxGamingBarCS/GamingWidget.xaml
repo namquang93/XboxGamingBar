@@ -7,14 +7,21 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <StackPanel>
-        <TextBlock Text="Performance Overlay" Margin="0,0,0,8" FontWeight="SemiBold"/>
-        <Slider x:Name="slider"
+    <Grid x:Name="MainGrid" Margin="10,10,10,10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="50"/>
+            <!-- Add more RowDefinitions as needed, each with Height="200" -->
+        </Grid.RowDefinitions>
+        <TextBlock x:Name="PerformanceOverlayText" Text="Performance Overlay" Margin="0,0,0,8" FontWeight="SemiBold" Grid.Row="0"/>
+        <Slider x:Name="PerformanceOverlaySlider" Grid.Row="1"
             Minimum="0" Maximum="4"
             TickFrequency="1"
             TickPlacement="BottomRight"
-            ValueChanged="Slider_ValueChanged"/>
-        <Grid Margin="0,4,0,0">
+            ValueChanged="PerformanceOverlaySlider_ValueChanged"/>
+
+        <Grid Margin="0,4,0,0" Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
@@ -28,6 +35,7 @@
             <TextBlock Text="MedHi"  Grid.Column="3" HorizontalAlignment="Center"/>
             <TextBlock Text="High"   Grid.Column="4" HorizontalAlignment="Center"/>
         </Grid>
-        <Button x:Name="myButton" Click="MyButton_Click">Click Me</Button>
-    </StackPanel>
+        
+        <Button x:Name="MyButton" Click="MyButton_Click" Grid.Row="3">Click Me</Button>
+    </Grid>
 </Page>

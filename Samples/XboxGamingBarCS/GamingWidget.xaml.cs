@@ -30,7 +30,7 @@ namespace XboxGamingBarCS
         }
         private async void MyButton_Click(object sender, RoutedEventArgs e)
         {
-            myButton.Content = "Clicked";
+            MyButton.Content = "Clicked";
 
             if (ApiInformation.IsApiContractPresent("Windows.ApplicationModel.FullTrustAppContract", 1, 0))
             {
@@ -38,7 +38,7 @@ namespace XboxGamingBarCS
             }
         }
 
-        private void Slider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        private void PerformanceOverlaySlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
 
         }
