@@ -8,7 +8,7 @@ namespace XboxGamingBarHelper
         static void Main(string[] args)
         {
             Console.Title = "Xbox Gaming Bar Helper";
-            Console.WriteLine($"OSD {OSD.GetOSDEntries()} APP {OSD.GetAppEntries().Length}");
+            Console.WriteLine($"OSD {OSD.GetOSDEntries().Length} APP {OSD.GetAppEntries().Length}");
             Console.WriteLine("\r\nPress any key to exit ...");
             Console.ReadLine();
         }
