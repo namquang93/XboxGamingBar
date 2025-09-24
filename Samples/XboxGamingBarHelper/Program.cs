@@ -18,7 +18,7 @@ namespace XboxGamingBarHelper
 {
     internal class Program
     {
-        private AppServiceConnection connection = null;
+        private static AppServiceConnection connection = null;
         static AutoResetEvent done = new AutoResetEvent(false);
 
         static void Main(string[] args)
@@ -29,6 +29,10 @@ namespace XboxGamingBarHelper
             // Console.ReadLine();
 
             // await InitializeAppServiceConnection();
+
+            
+
+            InitializeAppServiceConnection();
 
             Thread bgThread = new Thread(ThreadProc);
             bgThread.Start(done);
@@ -45,10 +49,10 @@ namespace XboxGamingBarHelper
         /// <summary>
         /// Open connection to UWP app service
         /// </summary>
-        private async void InitializeAppServiceConnection()
+        private static async void InitializeAppServiceConnection()
         {
             connection = new AppServiceConnection();
-            connection.AppServiceName = "SampleInteropService";
+            connection.AppServiceName = "XboxGamingBarService";
             connection.PackageFamilyName = Package.Current.Id.FamilyName;
             connection.RequestReceived += Connection_RequestReceived;
             connection.ServiceClosed += Connection_ServiceClosed;
@@ -65,7 +69,7 @@ namespace XboxGamingBarHelper
         /// <summary>
         /// Handles the event when the desktop process receives a request from the UWP app
         /// </summary>
-        private async void Connection_RequestReceived(AppServiceConnection sender, AppServiceRequestReceivedEventArgs args)
+        private static async void Connection_RequestReceived(AppServiceConnection sender, AppServiceRequestReceivedEventArgs args)
         {
             // retrive the reg key name from the ValueSet in the request
             string key = args.Request.Message["KEY"] as string;
@@ -126,7 +130,7 @@ namespace XboxGamingBarHelper
         /// <summary>
         /// Handles the event when the app service connection is closed
         /// </summary>
-        private void Connection_ServiceClosed(AppServiceConnection sender, AppServiceClosedEventArgs args)
+        private static void Connection_ServiceClosed(AppServiceConnection sender, AppServiceClosedEventArgs args)
         {
             // connection to the UWP lost, so we shut down the desktop process
             //fix later
