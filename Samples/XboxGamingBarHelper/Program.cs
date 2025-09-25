@@ -1,8 +1,14 @@
 ﻿using Microsoft.Win32;
 using RTSSSharedMemoryNET;
+using Shared;
+using Shared.Functions;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO.MemoryMappedFiles;
 using System.Linq;
+using System.Runtime.InteropServices;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.Policy;
 using System.Text;
 using System.Threading;
@@ -12,6 +18,8 @@ using System.Windows.Threading;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.AppService;
 using Windows.Foundation.Collections;
+//using XboxGamingBarHelper.RTSS;
+//using Shared.Utilities;
 // using System.Windows.Controls;
 
 namespace XboxGamingBarHelper
@@ -21,7 +29,11 @@ namespace XboxGamingBarHelper
         private static AppServiceConnection connection = null;
         static AutoResetEvent done = new AutoResetEvent(false);
 
-        static void Main(string[] args)
+        private static bool needToUpdate = false;
+
+        private static int osdLevel = 0;
+
+        static async Task Main(string[] args)
         {
             // Console.Title = "Xbox Gaming Bar Helper";
             // Console.WriteLine($"OSD {OSD.GetOSDEntries().Length} APP {OSD.GetAppEntries().Length}");
@@ -32,24 +44,25 @@ namespace XboxGamingBarHelper
 
             
 
-            InitializeAppServiceConnection();
+            await InitializeAppServiceConnection();
 
-            Thread bgThread = new Thread(ThreadProc);
-            bgThread.Start(done);
-            done.WaitOne();
+            //Thread bgThread = new Thread(ThreadProc);
+            //bgThread.Start(done);
+            //done.WaitOne();
         }
 
         static void ThreadProc(object unused)
         {
-            // keep this up ofr 60sec, just for demo purposes
-            Thread.Sleep(60000);
-            done.Set();
+            while (true)
+            {
+                Thread.Sleep(1000);
+            }
         }
 
         /// <summary>
         /// Open connection to UWP app service
         /// </summary>
-        private static async void InitializeAppServiceConnection()
+        private static async Task InitializeAppServiceConnection()
         {
             connection = new AppServiceConnection();
             connection.AppServiceName = "XboxGamingBarService";
@@ -60,9 +73,47 @@ namespace XboxGamingBarHelper
             AppServiceConnectionStatus status = await connection.OpenAsync();
             if (status != AppServiceConnectionStatus.Success)
             {
-                // something went wrong ...
-                // MessageBox.Show(status.ToString());
-                // this.IsEnabled = false;
+                needToUpdate = false;
+                return;
+            }
+
+            needToUpdate = true;
+            while (needToUpdate)
+            {
+                await Task.Delay(1000);
+                Console.WriteLine($"OSD {OSD.GetOSDEntries().Length} APP {OSD.GetAppEntries().Length}");
+                //const string mapName = "RTSSSharedMemoryV2";
+                //int size = Marshal.SizeOf<RTSSSharedMemory>();
+                //using (var mmf = MemoryMappedFile.CreateOrOpen(mapName, size))
+                //{
+                //    using (var accessor = mmf.CreateViewAccessor(0, size, MemoryMappedFileAccess.Read))
+                //    {
+                //        byte[] buffer = new byte[size];
+                //        accessor.ReadArray(0, buffer, 0, size);
+
+                //        GCHandle handle = GCHandle.Alloc(buffer, GCHandleType.Pinned);
+                //        try
+                //        {
+                //            var sharedMemory = Marshal.PtrToStructure<RTSSSharedMemory>(handle.AddrOfPinnedObject());
+                //            var signature = StringUtilities.UInt32ToFourCC(sharedMemory.Signature);
+
+                //            Console.WriteLine($"RTSS Signature {signature}.{sharedMemory.Version}");
+                //        }
+                //        catch (Exception ex)
+                //        {
+                //            Console.WriteLine($"ERROR {ex.Message}");
+                //        }
+                //        finally
+                //        {
+                //            handle.Free();
+                //        }
+                //    }
+                //}
+
+                //foreach (var appEntry in OSD.GetAppEntries())
+                //{
+                //    Console.WriteLine($"APP {appEntry.Name}");
+                //}
             }
         }
 

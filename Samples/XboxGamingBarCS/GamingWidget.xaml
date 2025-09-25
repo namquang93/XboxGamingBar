@@ -12,6 +12,7 @@
             <RowDefinition Height="50"/>
             <RowDefinition Height="50"/>
             <RowDefinition Height="50"/>
+            <RowDefinition Height="50"/>
             <!-- Add more RowDefinitions as needed, each with Height="200" -->
         </Grid.RowDefinitions>
         <TextBlock x:Name="PerformanceOverlayText" Text="Performance Overlay" Margin="0,0,0,8" FontWeight="SemiBold" Grid.Row="0"/>
@@ -29,11 +30,11 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <TextBlock Text="Low"    Grid.Column="0" HorizontalAlignment="Center"/>
-            <TextBlock Text="MedLo"  Grid.Column="1" HorizontalAlignment="Center"/>
-            <TextBlock Text="Medium" Grid.Column="2" HorizontalAlignment="Center"/>
-            <TextBlock Text="MedHi"  Grid.Column="3" HorizontalAlignment="Center"/>
-            <TextBlock Text="High"   Grid.Column="4" HorizontalAlignment="Center"/>
+            <TextBlock Text="None"     Grid.Column="0" HorizontalAlignment="Center"/>
+            <TextBlock Text="FPS"      Grid.Column="1" HorizontalAlignment="Center"/>
+            <TextBlock Text="Battery"  Grid.Column="2" HorizontalAlignment="Center"/>
+            <TextBlock Text="Detailed" Grid.Column="3" HorizontalAlignment="Center"/>
+            <TextBlock Text="Full"     Grid.Column="4" HorizontalAlignment="Center"/>
         </Grid>
         
         <Button x:Name="MyButton" Click="MyButton_Click" Grid.Row="3">Click Me</Button>
