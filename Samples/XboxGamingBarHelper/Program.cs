@@ -18,6 +18,8 @@ using System.Windows.Threading;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.AppService;
 using Windows.Foundation.Collections;
+using XboxGamingBarHelper.Performance;
+using XboxGamingBarHelper.RTSS;
 //using XboxGamingBarHelper.RTSS;
 //using Shared.Utilities;
 // using System.Windows.Controls;
@@ -27,11 +29,8 @@ namespace XboxGamingBarHelper
     internal class Program
     {
         private static AppServiceConnection connection = null;
-        static AutoResetEvent done = new AutoResetEvent(false);
 
         private static bool needToUpdate = false;
-
-        private static int osdLevel = 0;
 
         static async Task Main(string[] args)
         {
@@ -42,21 +41,14 @@ namespace XboxGamingBarHelper
 
             // await InitializeAppServiceConnection();
 
-            
 
+            Initialize();
             await InitializeAppServiceConnection();
-
-            //Thread bgThread = new Thread(ThreadProc);
-            //bgThread.Start(done);
-            //done.WaitOne();
         }
 
-        static void ThreadProc(object unused)
+        private static void Initialize()
         {
-            while (true)
-            {
-                Thread.Sleep(1000);
-            }
+            PerformanceManager.Initialize();
         }
 
         /// <summary>
@@ -80,8 +72,8 @@ namespace XboxGamingBarHelper
             needToUpdate = true;
             while (needToUpdate)
             {
-                await Task.Delay(1000);
-                Console.WriteLine($"OSD {OSD.GetOSDEntries().Length} APP {OSD.GetAppEntries().Length}");
+                await Task.Delay(500);
+                //Console.WriteLine($"OSD {OSD.GetOSDEntries().Length} APP {OSD.GetAppEntries().Length}");
                 //const string mapName = "RTSSSharedMemoryV2";
                 //int size = Marshal.SizeOf<RTSSSharedMemory>();
                 //using (var mmf = MemoryMappedFile.CreateOrOpen(mapName, size))
@@ -114,6 +106,9 @@ namespace XboxGamingBarHelper
                 //{
                 //    Console.WriteLine($"APP {appEntry.Name}");
                 //}
+
+                PerformanceManager.Update();
+                RTSSManager.Update();
             }
         }
 
