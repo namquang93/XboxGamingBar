@@ -1,4 +1,5 @@
 ﻿using RTSSSharedMemoryNET;
+using System;
 using System.Diagnostics;
 using XboxGamingBarHelper.Performance;
 using XboxGamingBarHelper.RTSS.OSDItems;
@@ -8,6 +9,7 @@ namespace XboxGamingBarHelper.RTSS
     internal static class RTSSManager
     {
         private const string OSDSeparator = " <C=6E006A>|<C> ";
+        private const string OSDAppName = "Xbox Gaming Bar OSD";
 
         internal static int OSDLevel;
         internal static OSD OSD;
@@ -29,26 +31,35 @@ namespace XboxGamingBarHelper.RTSS
 
         public static void Update()
         {
-            //if (OSDLevel == 0)
-            //{
-            //    if (OSD != null)
-            //    {
-            //        OSD.Update(string.Empty);
-            //        OSD.Dispose();
-            //        OSD = null;
-            //    }
+            Console.WriteLine($"OSD level {OSDLevel}");
+            if (OSDLevel == 0)
+            {
+                if (OSD != null)
+                {
+                    OSD.Update(string.Empty);
+                    OSD.Dispose();
+                    OSD = null;
+                }
 
-            //    return;
-            //}
+                var osdEntries = OSD.GetOSDEntries();
+                for (int i = 0; i < osdEntries.Length; i++)
+                {
+                    OSDEntry osdEntry = osdEntries[i];
+                    if (osdEntry.Owner == OSDAppName)
+                    {
+                        osdEntry.Text = string.Empty;
+                    }
+                }
+
+                return;
+            }
 
             if (OSD == null)
             {
-                OSD = new OSD("Xbox Gaming Bar OSD");
+                OSD = new OSD(OSDAppName);
                 //var osdEntry = new OSDEntry();
                 //var appEntry = new AppEntry();
             }
-
-            OSDLevel = 4;
 
             string osdString = string.Empty;
             for (int i = 0; i < OSDItems.Length; i++)

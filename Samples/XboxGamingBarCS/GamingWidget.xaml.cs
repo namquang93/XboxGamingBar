@@ -1,9 +1,11 @@
-﻿using System;
+﻿using Shared.Enums;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.ServiceModel.Channels;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.AppService;
 using Windows.Foundation;
@@ -27,6 +29,8 @@ namespace XboxGamingBarCS
     /// </summary>
     public sealed partial class GamingWidget : Page
     {
+        private bool isConnected;
+
         public GamingWidget()
         {
             this.InitializeComponent();
@@ -36,7 +40,7 @@ namespace XboxGamingBarCS
         {
             base.OnNavigatedTo(e);
 
-            if (ApiInformation.IsApiContractPresent("Windows.ApplicationModel.FullTrustAppContract", 1, 0))
+            if (ApiInformation.IsApiContractPresent("Windows.ApplicationModel.FullTrustAppContract", 1, 0) && App.Connection == null)
             {
                 App.AppServiceConnected += GamingWidget_AppServiceConnected;
                 App.AppServiceDisconnected += GamingWidget_AppServiceDisconnected;
@@ -50,12 +54,41 @@ namespace XboxGamingBarCS
         private async void GamingWidget_AppServiceConnected(object sender, AppServiceTriggerDetails e)
         {
             App.Connection.RequestReceived += AppServiceConnection_RequestReceived;
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            ValueSet request = new ValueSet
             {
-                Debug.WriteLine("AppService Connected");
-                // enable UI to access  the connection
-                // btnRegKey.IsEnabled = true;
-            });
+                { nameof(Command), (int)Command.Get },
+                { nameof(Function), (int)Function.OSD },
+            };
+            AppServiceResponse response = await App.Connection.SendMessageAsync(request);
+            if (response != null)
+            {
+                object value;
+                if (response.Message.TryGetValue(nameof(Value), out value))
+                {
+                    var level = (int)value;
+                    Debug.WriteLine($"Get OSD level {level} from desktop process");
+
+                    await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                    {
+                        PerformanceOverlaySlider.Value = level;
+                    });
+                }
+                else
+                {
+                    Debug.WriteLine("No Value in response from desktop process after connected???");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("No response from desktop process after connected???");
+            }
+                
+            //await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            //{
+            //    Debug.WriteLine("AppService Connected");
+            //    // enable UI to access  the connection
+            //    // btnRegKey.IsEnabled = true;
+            //});
         }
 
         /// <summary>
@@ -95,19 +128,29 @@ namespace XboxGamingBarCS
             });
         }
 
-        private async void MyButton_Click(object sender, RoutedEventArgs e)
+        private void MyButton_Click(object sender, RoutedEventArgs e)
         {
             MyButton.Content = "Clicked";
-
-            if (ApiInformation.IsApiContractPresent("Windows.ApplicationModel.FullTrustAppContract", 1, 0))
-            {
-                await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
-            }
         }
 
-        private void PerformanceOverlaySlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        private async void PerformanceOverlaySlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
-
+            var level = (int)e.NewValue;
+            ValueSet request = new ValueSet
+            {
+                { nameof(Command), (int)Command.Set },
+                { nameof(Function), (int)Function.OSD },
+                { nameof(Value), level }
+            };
+            AppServiceResponse response = await App.Connection.SendMessageAsync(request);
+            if (response != null)
+            {
+                Debug.WriteLine($"Set OSD level {level} to desktop process");
+            }
+            else
+            {
+                Debug.WriteLine("No response from desktop process");
+            }
         }
     }
 }

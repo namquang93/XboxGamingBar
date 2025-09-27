@@ -1,28 +1,11 @@
-﻿using Microsoft.Win32;
-using RTSSSharedMemoryNET;
-using Shared;
-using Shared.Functions;
+﻿using Shared.Enums;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO.MemoryMappedFiles;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Security.Policy;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Threading;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.AppService;
 using Windows.Foundation.Collections;
 using XboxGamingBarHelper.Performance;
 using XboxGamingBarHelper.RTSS;
-//using XboxGamingBarHelper.RTSS;
-//using Shared.Utilities;
-// using System.Windows.Controls;
 
 namespace XboxGamingBarHelper
 {
@@ -118,60 +101,86 @@ namespace XboxGamingBarHelper
         /// </summary>
         private static async void Connection_RequestReceived(AppServiceConnection sender, AppServiceRequestReceivedEventArgs args)
         {
-            // retrive the reg key name from the ValueSet in the request
-            string key = args.Request.Message["KEY"] as string;
-            int index = key.IndexOf('\\');
-            if (index > 0)
+            var action = (Command)args.Request.Message[nameof(Command)];
+            var function = (Function)args.Request.Message[nameof(Function)];
+            switch (action)
             {
-                // read the key values from the respective hive in the registry
-                string hiveName = key.Substring(0, key.IndexOf('\\'));
-                string keyName = key.Substring(key.IndexOf('\\') + 1);
-                RegistryHive hive = RegistryHive.ClassesRoot;
-
-                switch (hiveName)
-                {
-                    case "HKLM":
-                        hive = RegistryHive.LocalMachine;
-                        break;
-                    case "HKCU":
-                        hive = RegistryHive.CurrentUser;
-                        break;
-                    case "HKCR":
-                        hive = RegistryHive.ClassesRoot;
-                        break;
-                    case "HKU":
-                        hive = RegistryHive.Users;
-                        break;
-                    case "HKCC":
-                        hive = RegistryHive.CurrentConfig;
-                        break;
-                }
-
-                using (RegistryKey regKey = RegistryKey.OpenRemoteBaseKey(hive, "").OpenSubKey(keyName))
-                {
-                    // compose the response as ValueSet
+                case Command.Get:
                     ValueSet response = new ValueSet();
-                    if (regKey != null)
+                    switch (function)
                     {
-                        foreach (string valueName in regKey.GetValueNames())
-                        {
-                            response.Add(valueName, regKey.GetValue(valueName).ToString());
-                        }
+                        case Function.OSD:
+                            response.Add(nameof(Value), RTSSManager.OSDLevel);
+                            break;
                     }
-                    else
-                    {
-                        response.Add("ERROR", "KEY NOT FOUND");
-                    }
-                    // send the response back to the UWP
+
                     await args.Request.SendResponseAsync(response);
-                }
+                    break;
+                case Command.Set:
+                    
+                    switch (function)
+                    {
+                        case Function.OSD:
+                            var osdLevel = (int)args.Request.Message[nameof(Value)];
+                            RTSSManager.OSDLevel = osdLevel;
+                            break;
+                    }
+                    break;
             }
-            else
-            {
-                ValueSet response = new ValueSet();
-                response.Add("ERROR", "INVALID REQUEST");
-                await args.Request.SendResponseAsync(response);
-            }
+            // retrive the reg key name from the ValueSet in the request
+            //string key = args.Request.Message["KEY"] as string;
+            //int index = key.IndexOf('\\');
+            //if (index > 0)
+            //{
+            //    // read the key values from the respective hive in the registry
+            //    string hiveName = key.Substring(0, key.IndexOf('\\'));
+            //    string keyName = key.Substring(key.IndexOf('\\') + 1);
+            //    RegistryHive hive = RegistryHive.ClassesRoot;
+
+            //    switch (hiveName)
+            //    {
+            //        case "HKLM":
+            //            hive = RegistryHive.LocalMachine;
+            //            break;
+            //        case "HKCU":
+            //            hive = RegistryHive.CurrentUser;
+            //            break;
+            //        case "HKCR":
+            //            hive = RegistryHive.ClassesRoot;
+            //            break;
+            //        case "HKU":
+            //            hive = RegistryHive.Users;
+            //            break;
+            //        case "HKCC":
+            //            hive = RegistryHive.CurrentConfig;
+            //            break;
+            //    }
+
+            //    using (RegistryKey regKey = RegistryKey.OpenRemoteBaseKey(hive, "").OpenSubKey(keyName))
+            //    {
+            //        // compose the response as ValueSet
+            //        ValueSet response = new ValueSet();
+            //        if (regKey != null)
+            //        {
+            //            foreach (string valueName in regKey.GetValueNames())
+            //            {
+            //                response.Add(valueName, regKey.GetValue(valueName).ToString());
+            //            }
+            //        }
+            //        else
+            //        {
+            //            response.Add("ERROR", "KEY NOT FOUND");
+            //        }
+            //        // send the response back to the UWP
+            //        await args.Request.SendResponseAsync(response);
+            //    }
+            //}
+            //else
+            //{
+            //    ValueSet response = new ValueSet();
+            //    response.Add("ERROR", "INVALID REQUEST");
+            //    await args.Request.SendResponseAsync(response);
+            //}
         }
 
         /// <summary>
