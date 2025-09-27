@@ -49,6 +49,7 @@ namespace XboxGamingBarHelper
         private static void Initialize()
         {
             PerformanceManager.Initialize();
+            RTSSManager.Initialize();
         }
 
         /// <summary>

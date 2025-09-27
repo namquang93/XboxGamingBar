@@ -1,12 +1,26 @@
 ﻿using RTSSSharedMemoryNET;
 using System.Diagnostics;
+using XboxGamingBarHelper.Performance;
+using XboxGamingBarHelper.RTSS.OSDItems;
 
 namespace XboxGamingBarHelper.RTSS
 {
     internal static class RTSSManager
     {
+        private const string OSDSeparator = " <C=6E006A>|<C> ";
+
         internal static int OSDLevel;
         internal static OSD OSD;
+        internal static OSDItem[] OSDItems;
+
+        public static void Initialize()
+        {
+            OSDItems = new OSDItem[]
+            {
+                new OSDItem_FPS(),
+                new OSDItem_CPU(PerformanceManager.CPUUsage, PerformanceManager.CPUClock, PerformanceManager.CPUWattage, PerformanceManager.CPUTemperature),
+            };
+        }
 
         public static bool IsRTSSRunning()
         {
@@ -34,7 +48,23 @@ namespace XboxGamingBarHelper.RTSS
                 //var appEntry = new AppEntry();
             }
 
-            OSD.Update("Xbox Gaming Bar");
+            OSDLevel = 4;
+
+            string osdString = string.Empty;
+            for (int i = 0; i < OSDItems.Length; i++)
+            {
+                var osdItem = OSDItems[i];
+                if (i == 0)
+                {
+                    osdString = osdItem.GetOSDString(OSDLevel);
+                }
+                else
+                {
+                    osdString += OSDSeparator + osdItem.GetOSDString(OSDLevel);
+                }
+            }
+
+            OSD.Update(osdString);
         }
     }
 }

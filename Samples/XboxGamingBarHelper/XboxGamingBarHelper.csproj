@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{A3EDC1D2-3DFC-4956-A90C-FF274E90CCE5}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <RootNamespace>XboxGamingBarHelper</RootNamespace>
     <AssemblyName>XboxGamingBarHelper</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
@@ -71,6 +71,7 @@
       <HintPath>..\packages\System.CodeDom.9.0.0\lib\net462\System.CodeDom.dll</HintPath>
     </Reference>
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Management" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -88,10 +89,17 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\Sensor.cs" />
+    <Compile Include="Performance\HardwareSensor.cs" />
+    <Compile Include="Performance\HardwareSensorAttribute.cs" />
     <Compile Include="Performance\PerformanceManager.cs" />
+    <Compile Include="Performance\Sensors\CPUUsageSensor.cs" />
     <Compile Include="Performance\UpdateVisitor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RTSS\OSDItem.cs" />
+    <Compile Include="RTSS\OSDItems\OSDItem_CPU.cs" />
+    <Compile Include="RTSS\OSDItems\OSDItem_FPS.cs" />
     <Compile Include="RTSS\RTSSManager.cs" />
   </ItemGroup>
   <ItemGroup>
