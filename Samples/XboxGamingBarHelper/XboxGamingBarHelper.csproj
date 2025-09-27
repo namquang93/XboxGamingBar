@@ -101,6 +101,7 @@
     <Compile Include="RTSS\OSDItems\OSDItemBattery.cs" />
     <Compile Include="RTSS\OSDItems\OSDItemCPU.cs" />
     <Compile Include="RTSS\OSDItems\OSDItemFPS.cs" />
+    <Compile Include="RTSS\OSDItems\OSDItemGPU.cs" />
     <Compile Include="RTSS\OSDItems\OSDItemMemory.cs" />
     <Compile Include="RTSS\RTSSManager.cs" />
   </ItemGroup>

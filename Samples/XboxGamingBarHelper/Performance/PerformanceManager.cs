@@ -43,6 +43,10 @@ namespace XboxGamingBarHelper.Performance
         [HardwareSensor("GPU Core", HardwareType.GpuAmd, SensorType.Power)]
         private static ISensor gpuWattage;
         public static ISensor GPUWattage => gpuWattage;
+
+        [HardwareSensor("GPU VR SoC", HardwareType.GpuAmd, SensorType.Temperature)]
+        private static ISensor gpuTemperature;
+        public static ISensor GPUTemperature => gpuTemperature;
         #endregion
 
         #region Memory
