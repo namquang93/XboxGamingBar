@@ -25,16 +25,16 @@ namespace XboxGamingBarHelper.RTSS.OSDItems
                 case 3: // for level 3, only show CPU usage and temperature.
                     return new OSDItemValue[]
                     {
-                        new OSDItemValue(cpuUsageSensor != null && cpuUsageSensor.Value.HasValue ? cpuUsageSensor.Value.Value.ToString("0.0") : "N/A", "%"),
-                        new OSDItemValue(cpuTemperatureSensor != null && cpuTemperatureSensor.Value.HasValue ? cpuTemperatureSensor.Value.Value.ToString("0.0") : "N/A", "°C")
+                        new OSDItemValue(cpuUsageSensor != null ? cpuUsageSensor.Value.Value : -1.0f, "%"),
+                        new OSDItemValue(cpuTemperatureSensor != null ? cpuTemperatureSensor.Value.Value : -1.0f, "°C")
                     };
                 case 4: // for level 4, show CPU usage, clock speed, wattage and temperature.
                     return new OSDItemValue[]
                     {
-                        new OSDItemValue(cpuUsageSensor != null && cpuUsageSensor.Value.HasValue ? cpuUsageSensor.Value.Value.ToString("0.0") : "N/A", "%"),
-                        new OSDItemValue(cpuClockSensor != null && cpuClockSensor.Value.HasValue ? cpuClockSensor.Value.Value.ToString("0.0") : "N/A", "MHz"),
-                        new OSDItemValue(cpuWattageSensor != null && cpuWattageSensor.Value.HasValue ? cpuWattageSensor.Value.Value.ToString("0.0") : "N/A", "W"),
-                        new OSDItemValue(cpuTemperatureSensor != null && cpuTemperatureSensor.Value.HasValue ? cpuTemperatureSensor.Value.Value.ToString("0.0") : "N/A", "°C")
+                        new OSDItemValue(cpuUsageSensor != null ? cpuUsageSensor.Value.Value : -1.0f, "%"),
+                        new OSDItemValue(cpuClockSensor != null ? cpuClockSensor.Value.Value : -1.0f, "MHz"),
+                        new OSDItemValue(cpuWattageSensor != null ? cpuWattageSensor.Value.Value : -1.0f, "W"),
+                        new OSDItemValue(cpuTemperatureSensor != null ? cpuTemperatureSensor.Value.Value : -1.0f, "°C")
                     };
                 default: // otherwise, return nothing.
                     return base.GetValues(osdLevel);

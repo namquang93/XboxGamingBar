@@ -9,6 +9,7 @@ namespace XboxGamingBarHelper.RTSS
     internal static class RTSSManager
     {
         private const string OSDSeparator = " <C=6E006A>|<C> ";
+        private const string OSDBackground = "<P=0,0><L0><C=80000000><B=0,0>\b<C>";
         private const string OSDAppName = "Xbox Gaming Bar OSD";
 
         internal static int OSDLevel;
@@ -31,7 +32,8 @@ namespace XboxGamingBarHelper.RTSS
 
         public static void Update()
         {
-            Console.WriteLine($"OSD level {OSDLevel}");
+            // Console.WriteLine($"OSD level {OSDLevel}");
+            
             if (OSDLevel == 0)
             {
                 if (OSD != null)
@@ -57,21 +59,22 @@ namespace XboxGamingBarHelper.RTSS
             if (OSD == null)
             {
                 OSD = new OSD(OSDAppName);
-                //var osdEntry = new OSDEntry();
-                //var appEntry = new AppEntry();
             }
 
-            string osdString = string.Empty;
+            string osdString = OSDBackground;
             for (int i = 0; i < OSDItems.Length; i++)
             {
-                var osdItem = OSDItems[i];
+                var osdItemString = OSDItems[i].GetOSDString(OSDLevel);
+                if (string.IsNullOrEmpty(osdItemString))
+                    continue;
+
                 if (i == 0)
                 {
-                    osdString = osdItem.GetOSDString(OSDLevel);
+                    osdString += osdItemString;
                 }
                 else
                 {
-                    osdString += OSDSeparator + osdItem.GetOSDString(OSDLevel);
+                    osdString += OSDSeparator + osdItemString;
                 }
             }
 

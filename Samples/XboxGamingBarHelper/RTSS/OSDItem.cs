@@ -5,13 +5,13 @@ namespace XboxGamingBarHelper.RTSS
 {
     internal struct OSDItemValue
     {
-        string value;
-        public string Value => value;
+        float value;
+        public float Value => value;
 
         string unit;
         public string Unit => unit;
 
-        public OSDItemValue(string value, string unit)
+        public OSDItemValue(float value, string unit)
         {
             this.value = value;
             this.unit = unit;
@@ -38,9 +38,15 @@ namespace XboxGamingBarHelper.RTSS
 
         public virtual string GetOSDString(int osdLevel)
         {
-            var osdString = $"{GetNameString()} <C=FFFFFF>";
-
             var osdValues = GetValues(osdLevel);
+
+            if (osdValues == null || osdValues.Length == 0)
+            {
+                return string.Empty;
+            }
+
+            var osdString = $"{GetNameString()} <C=FFFFFF>";
+            
             if (osdValues == null || osdValues.Length == 0)
             {
                 return osdString + " N/A";
@@ -49,7 +55,14 @@ namespace XboxGamingBarHelper.RTSS
             for (int i = 0; i < osdValues.Length; i++)
             {
                 var osdValue = osdValues[i];
-                osdString += $"{osdValue.Value}<S=50> {osdValue.Unit}<S>";
+                if (osdValue.Value < 0)
+                {
+                    osdString += "N/A";
+                }
+                else
+                {
+                    osdString += $"{Math.Round(osdValue.Value)}<S=50> {osdValue.Unit}<S>";
+                }
                 if (i < osdValues.Length - 1)
                 {
                     osdString += " ";
