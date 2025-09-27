@@ -4,14 +4,14 @@ using System.Drawing;
 
 namespace XboxGamingBarHelper.RTSS.OSDItems
 {
-    internal class OSDItem_CPU : OSDItem
+    internal class OSDItemCPU : OSDItem
     {
         private ISensor cpuUsageSensor;
         private ISensor cpuClockSensor;
         private ISensor cpuWattageSensor;
         private ISensor cpuTemperatureSensor;
 
-        public OSDItem_CPU(ISensor cpuUsageSensor, ISensor cpuClockSensor, ISensor cpuWattageSensor, ISensor cpuTemperatureSensor) : base("CPU", Color.LimeGreen)
+        public OSDItemCPU(ISensor cpuUsageSensor, ISensor cpuClockSensor, ISensor cpuWattageSensor, ISensor cpuTemperatureSensor) : base("CPU", Color.LimeGreen)
         {
             this.cpuWattageSensor = cpuWattageSensor;
             this.cpuUsageSensor = cpuUsageSensor;

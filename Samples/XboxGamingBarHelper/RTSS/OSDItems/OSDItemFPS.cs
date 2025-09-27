@@ -1,6 +1,6 @@
 ﻿namespace XboxGamingBarHelper.RTSS.OSDItems
 {
-    internal class OSDItem_FPS : OSDItem
+    internal class OSDItemFPS : OSDItem
     {
         public override string GetOSDString(int osdLevel)
         {

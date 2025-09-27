@@ -9,12 +9,12 @@ using XboxGamingBarHelper.Performance.Sensors;
 
 namespace XboxGamingBarHelper.RTSS.OSDItems
 {
-    internal class OSDItem_Battery : OSDItem
+    internal class OSDItemBattery : OSDItem
     {
         private ISensor batteryPercentSensor;
         private ISensor batteryRemainTimeSensor;
 
-        public OSDItem_Battery(ISensor batteryPercentSensor, ISensor batteryRemainTimeSensor) : base("BATTERY", Color.DarkCyan)
+        public OSDItemBattery(ISensor batteryPercentSensor, ISensor batteryRemainTimeSensor) : base("BATTERY", Color.DarkCyan)
         {
             this.batteryPercentSensor = batteryPercentSensor;
             this.batteryRemainTimeSensor = batteryRemainTimeSensor;
