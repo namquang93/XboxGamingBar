@@ -22,6 +22,7 @@ namespace XboxGamingBarHelper.RTSS
             {
                 new OSDItemFPS(),
                 new OSDItemBattery(PerformanceManager.BatteryPercent, PerformanceManager.BatteryRemainTime),
+                new OSDItemMemory(PerformanceManager.MemoryUsage, PerformanceManager.MemoryUsed),
                 new OSDItemCPU(PerformanceManager.CPUUsage, PerformanceManager.CPUClock, PerformanceManager.CPUWattage, PerformanceManager.CPUTemperature),
             };
         }
