@@ -1,4 +1,5 @@
 ﻿using LibreHardwareMonitor.Hardware;
+using System.Collections.Generic;
 using System.Drawing;
 
 namespace XboxGamingBarHelper.RTSS.OSDItems
@@ -10,7 +11,7 @@ namespace XboxGamingBarHelper.RTSS.OSDItems
         private ISensor cpuWattageSensor;
         private ISensor cpuTemperatureSensor;
 
-        public OSDItem_CPU(ISensor cpuUsageSensor, ISensor cpuClockSensor, ISensor cpuWattageSensor, ISensor cpuTemperatureSensor) : base("CPU", Color.FromArgb(0x09, 0x79, 0x69))
+        public OSDItem_CPU(ISensor cpuUsageSensor, ISensor cpuClockSensor, ISensor cpuWattageSensor, ISensor cpuTemperatureSensor) : base("CPU", Color.LimeGreen)
         {
             this.cpuWattageSensor = cpuWattageSensor;
             this.cpuUsageSensor = cpuUsageSensor;
@@ -18,27 +19,25 @@ namespace XboxGamingBarHelper.RTSS.OSDItems
             this.cpuTemperatureSensor = cpuTemperatureSensor;
         }
 
-        protected override OSDItemValue[] GetValues(int osdLevel)
+        protected override List<OSDItemValue> GetValues(int osdLevel)
         {
-            switch (osdLevel)
+            var osdItems = base.GetValues(osdLevel);
+
+            // for level 3, only show CPU usage and temperature.
+            if (osdLevel >= 3)
             {
-                case 3: // for level 3, only show CPU usage and temperature.
-                    return new OSDItemValue[]
-                    {
-                        new OSDItemValue(cpuUsageSensor != null ? cpuUsageSensor.Value.Value : -1.0f, "%"),
-                        new OSDItemValue(cpuTemperatureSensor != null ? cpuTemperatureSensor.Value.Value : -1.0f, "°C")
-                    };
-                case 4: // for level 4, show CPU usage, clock speed, wattage and temperature.
-                    return new OSDItemValue[]
-                    {
-                        new OSDItemValue(cpuUsageSensor != null ? cpuUsageSensor.Value.Value : -1.0f, "%"),
-                        new OSDItemValue(cpuClockSensor != null ? cpuClockSensor.Value.Value : -1.0f, "MHz"),
-                        new OSDItemValue(cpuWattageSensor != null ? cpuWattageSensor.Value.Value : -1.0f, "W"),
-                        new OSDItemValue(cpuTemperatureSensor != null ? cpuTemperatureSensor.Value.Value : -1.0f, "°C")
-                    };
-                default: // otherwise, return nothing.
-                    return base.GetValues(osdLevel);
+                osdItems.Add(new OSDItemValue(cpuUsageSensor != null ? cpuUsageSensor.Value.Value : -1.0f, "%"));
+                osdItems.Add(new OSDItemValue(cpuTemperatureSensor != null ? cpuTemperatureSensor.Value.Value : -1.0f, "°C"));
             }
+
+            // for level 4, show CPU usage, clock speed, wattage and temperature.
+            if (osdLevel >= 4)
+            {
+                osdItems.Add(new OSDItemValue(cpuClockSensor != null ? cpuClockSensor.Value.Value : -1.0f, "MHz"));
+                osdItems.Add(new OSDItemValue(cpuWattageSensor != null ? cpuWattageSensor.Value.Value : -1.0f, "W"));
+            }
+
+            return osdItems;
         }
     }
 }

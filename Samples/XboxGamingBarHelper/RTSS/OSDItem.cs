@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 
 namespace XboxGamingBarHelper.RTSS
@@ -33,26 +34,26 @@ namespace XboxGamingBarHelper.RTSS
         protected OSDItem(string name, Color color)
         {
             this.name = name;
-            this.colorCode = ColorTranslator.ToHtml(color).Remove(0, 1);
+            this.colorCode = $"{color.R:X2}{color.G:X2}{color.B:X2}";
         }
 
         public virtual string GetOSDString(int osdLevel)
         {
             var osdValues = GetValues(osdLevel);
 
-            if (osdValues == null || osdValues.Length == 0)
+            if (osdValues == null || osdValues.Count == 0)
             {
                 return string.Empty;
             }
 
             var osdString = $"{GetNameString()} <C=FFFFFF>";
             
-            if (osdValues == null || osdValues.Length == 0)
+            if (osdValues == null || osdValues.Count == 0)
             {
                 return osdString + " N/A";
             }
 
-            for (int i = 0; i < osdValues.Length; i++)
+            for (int i = 0; i < osdValues.Count; i++)
             {
                 var osdValue = osdValues[i];
                 if (osdValue.Value < 0)
@@ -63,7 +64,7 @@ namespace XboxGamingBarHelper.RTSS
                 {
                     osdString += $"{Math.Round(osdValue.Value)}<S=50> {osdValue.Unit}<S>";
                 }
-                if (i < osdValues.Length - 1)
+                if (i < osdValues.Count - 1)
                 {
                     osdString += " ";
                 }
@@ -78,9 +79,9 @@ namespace XboxGamingBarHelper.RTSS
             return $"<C={colorCode}>{name}<C>";
         }
 
-        protected virtual OSDItemValue[] GetValues(int osdLevel)
+        protected virtual List<OSDItemValue> GetValues(int osdLevel)
         {
-            return Array.Empty<OSDItemValue>();
+            return new List<OSDItemValue>();
         }
     }
 }

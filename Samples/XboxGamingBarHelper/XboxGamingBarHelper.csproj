@@ -98,6 +98,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RTSS\OSDItem.cs" />
+    <Compile Include="RTSS\OSDItems\OSDItem_Battery.cs" />
     <Compile Include="RTSS\OSDItems\OSDItem_CPU.cs" />
     <Compile Include="RTSS\OSDItems\OSDItem_FPS.cs" />
     <Compile Include="RTSS\RTSSManager.cs" />
