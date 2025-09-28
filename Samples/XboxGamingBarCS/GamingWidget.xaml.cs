@@ -128,11 +128,6 @@ namespace XboxGamingBarCS
             });
         }
 
-        private void MyButton_Click(object sender, RoutedEventArgs e)
-        {
-            MyButton.Content = "Clicked";
-        }
-
         private async void PerformanceOverlaySlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
             var level = (int)e.NewValue;

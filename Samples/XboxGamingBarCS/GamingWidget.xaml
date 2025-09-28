@@ -7,22 +7,22 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid x:Name="MainGrid" Margin="10,10,10,10">
+    <Grid x:Name="MainGrid" Margin="15,15,15,15">
         <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
             <RowDefinition Height="50"/>
-            <RowDefinition Height="50"/>
-            <RowDefinition Height="50"/>
+            <RowDefinition Height="30"/>
             <RowDefinition Height="50"/>
             <!-- Add more RowDefinitions as needed, each with Height="200" -->
         </Grid.RowDefinitions>
-        <TextBlock x:Name="PerformanceOverlayText" Text="Performance Overlay" Margin="0,0,0,8" FontWeight="SemiBold" Grid.Row="0"/>
-        <Slider x:Name="PerformanceOverlaySlider" Grid.Row="1"
+        <TextBlock x:Name="PerformanceOverlayText" Text="Performance Overlay" Margin="0,0,0,0" FontWeight="SemiBold" FontSize="18" Grid.Row="0"/>
+        <Slider x:Name="PerformanceOverlaySlider" Grid.Row="1" Margin="10,0,10,0"
             Minimum="0" Maximum="4"
             TickFrequency="1"
             TickPlacement="BottomRight"
             ValueChanged="PerformanceOverlaySlider_ValueChanged"/>
 
-        <Grid Margin="0,4,0,0" Grid.Row="2">
+        <Grid Margin="-18,-20,-18,0" Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
@@ -30,13 +30,11 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <TextBlock Text="None"     Grid.Column="0" HorizontalAlignment="Center"/>
-            <TextBlock Text="FPS"      Grid.Column="1" HorizontalAlignment="Center"/>
-            <TextBlock Text="Battery"  Grid.Column="2" HorizontalAlignment="Center"/>
-            <TextBlock Text="Detailed" Grid.Column="3" HorizontalAlignment="Center"/>
-            <TextBlock Text="Full"     Grid.Column="4" HorizontalAlignment="Center"/>
+            <TextBlock Text="None"     Grid.Column="0" HorizontalAlignment="Center" FontSize="16"/>
+            <TextBlock Text="FPS"      Grid.Column="1" HorizontalAlignment="Center" FontSize="16"/>
+            <TextBlock Text="Battery"  Grid.Column="2" HorizontalAlignment="Center" FontSize="16"/>
+            <TextBlock Text="Detailed" Grid.Column="3" HorizontalAlignment="Center" FontSize="16"/>
+            <TextBlock Text="Full"     Grid.Column="4" HorizontalAlignment="Center" FontSize="16"/>
         </Grid>
-        
-        <Button x:Name="MyButton" Click="MyButton_Click" Grid.Row="3">Click Me</Button>
     </Grid>
 </Page>

@@ -54,11 +54,11 @@
                 <PinningSupported>true</PinningSupported>
                 <Window>
                   <Size>
-                    <Height>824</Height>
+                    <Height>400</Height>
                     <Width>464</Width>
-                    <MinHeight>824</MinHeight>
+                    <MinHeight>400</MinHeight>
                     <MinWidth>464</MinWidth>
-                    <MaxHeight>824</MaxHeight>
+                    <MaxHeight>400</MaxHeight>
                     <MaxWidth>900</MaxWidth>
                   </Size>
                   <ResizeSupported>
