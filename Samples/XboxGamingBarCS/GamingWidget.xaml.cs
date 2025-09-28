@@ -29,8 +29,6 @@ namespace XboxGamingBarCS
     /// </summary>
     public sealed partial class GamingWidget : Page
     {
-        private bool isConnected;
-
         public GamingWidget()
         {
             this.InitializeComponent();

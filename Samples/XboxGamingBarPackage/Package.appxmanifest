@@ -51,7 +51,7 @@
                              Id="GamingWidget"
                              DisplayName="Gaming"
                              Description="Xbox Game Bar widget for changing system settings during game sessions with gamepad."
-                             PublicFolder="GameBar">
+                             PublicFolder="Images">
             <uap3:Properties>
               <GameBarWidget Type="Standard">
                 <HomeMenuVisible>true</HomeMenuVisible>
