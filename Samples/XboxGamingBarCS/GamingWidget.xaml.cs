@@ -11,6 +11,8 @@ using Windows.ApplicationModel.AppService;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Foundation.Metadata;
+using Windows.System;
+using Windows.System.Diagnostics;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -38,8 +40,46 @@ namespace XboxGamingBarCS
         {
             base.OnNavigatedTo(e);
 
-            if (ApiInformation.IsApiContractPresent("Windows.ApplicationModel.FullTrustAppContract", 1, 0) && App.Connection == null)
+            var helperIsRunning = false;
+            DiagnosticAccessStatus diagnosticAccessStatus = await AppDiagnosticInfo.RequestAccessAsync();
+            if (diagnosticAccessStatus == DiagnosticAccessStatus.Allowed)
             {
+                IReadOnlyList<ProcessDiagnosticInfo> processes = ProcessDiagnosticInfo.GetForProcesses();
+                helperIsRunning = processes.Where(x => x.ExecutableFileName == "XboxGamingBarHelper.exe").FirstOrDefault() != null;
+            }
+
+            if (helperIsRunning)
+            {
+                if (App.Connection == null)
+                {
+                    Debug.WriteLine("No AppServiceConnection yet, trying to connect to an existing full trust process");
+
+                    App.Connection = new AppServiceConnection
+                    {
+                        AppServiceName = "XboxGamingBarService",
+                        PackageFamilyName = Package.Current.Id.FamilyName
+                    };
+
+                    var status = await App.Connection.OpenAsync();
+                    if (status != AppServiceConnectionStatus.Success)
+                    {
+                        Debug.WriteLine($"Can't connect to any existing full trust process ({status}). Try to run it now.");
+                        App.Connection = null;
+                    }
+                    else
+                    {
+                        Debug.WriteLine("Connected to an existing full trust process.");
+                    }
+                }
+                else
+                {
+                    Debug.WriteLine("Already have connection to the full trust process, no need to launch.");
+                }
+            }
+
+            if (App.Connection == null && ApiInformation.IsApiContractPresent("Windows.ApplicationModel.FullTrustAppContract", 1, 0))
+            {
+                Debug.WriteLine("Launching a new full trust process.");
                 App.AppServiceConnected += GamingWidget_AppServiceConnected;
                 App.AppServiceDisconnected += GamingWidget_AppServiceDisconnected;
                 await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
