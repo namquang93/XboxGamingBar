@@ -93,6 +93,7 @@
     <Compile Include="Performance\HardwareSensor.cs" />
     <Compile Include="Performance\HardwareSensorAttribute.cs" />
     <Compile Include="Performance\PerformanceManager.cs" />
+    <Compile Include="Performance\RyzenAdj.cs" />
     <Compile Include="Performance\Sensors\CPUUsageSensor.cs" />
     <Compile Include="Performance\UpdateVisitor.cs" />
     <Compile Include="Program.cs" />
@@ -116,5 +117,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <None Include="Libraries\libryzenadj.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Libraries\WinRing0x64.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

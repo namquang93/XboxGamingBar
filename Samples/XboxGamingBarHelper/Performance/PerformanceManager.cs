@@ -12,6 +12,7 @@ namespace XboxGamingBarHelper.Performance
     {
         private static Computer computer;
         private static IVisitor updateVisitor;
+        private static IntPtr ryzenAdjHandle;
 
         #region CPU
         [HardwareSensor("CPU Total", HardwareType.Cpu, SensorType.Load)]
@@ -112,6 +113,16 @@ namespace XboxGamingBarHelper.Performance
                         Debug.WriteLine("Found hardware Sensor: {0}, value: {1}, type: {2}", sensor.Name, sensor.Value, sensor.SensorType.ToString());
                     }
                 }
+            }
+
+            ryzenAdjHandle = RyzenAdj.init_ryzenadj();
+            if (ryzenAdjHandle == IntPtr.Zero)
+            {
+                Debug.WriteLine("Failed to initialize RyzenAdj");
+            }
+            else
+            {
+                Debug.WriteLine("RyzenAdj initialized successfully");
             }
         }
 
