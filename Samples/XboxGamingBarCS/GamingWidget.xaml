@@ -22,6 +22,7 @@
         <Slider x:Name="PerformanceOverlaySlider" Grid.Row="1" Margin="10,0,10,0"
             Minimum="0" Maximum="4"
             TickFrequency="1"
+            SnapsTo="StepValues"
             TickPlacement="BottomRight"
             ValueChanged="PerformanceOverlaySlider_ValueChanged"/>
 
@@ -44,6 +45,7 @@
         <Slider x:Name="TDPSlider" Grid.Row="5" Margin="10,0,30,0"
             Minimum="4" Maximum="33"
             TickFrequency="1"
+            SnapsTo="Ticks"
             TickPlacement="BottomRight"
             ValueChanged="TDPSlider_ValueChanged"/>
     </Grid>
