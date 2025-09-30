@@ -118,13 +118,13 @@ namespace XboxGamingBarHelper.Performance
             ryzenAdjHandle = RyzenAdj.init_ryzenadj();
             if (ryzenAdjHandle == IntPtr.Zero)
             {
-                Console.WriteLine("Failed to initialize RyzenAdj");
+                Debug.WriteLine("Failed to initialize RyzenAdj");
             }
             else
             {
                 RyzenAdj.refresh_table(ryzenAdjHandle);
                 // RyzenAdj.set_fast_limit(ryzenAdjHandle, 30000);
-                Console.WriteLine($"RyzenAdj initialized successfully {RyzenAdj.get_fast_limit(ryzenAdjHandle)} {RyzenAdj.get_fast_value(ryzenAdjHandle)} {RyzenAdj.get_slow_limit(ryzenAdjHandle)} {RyzenAdj.get_slow_value(ryzenAdjHandle)} {RyzenAdj.get_stapm_limit(ryzenAdjHandle)} {RyzenAdj.get_stapm_value(ryzenAdjHandle)}");
+                Debug.WriteLine($"RyzenAdj initialized successfully {RyzenAdj.get_fast_limit(ryzenAdjHandle)} {RyzenAdj.get_slow_limit(ryzenAdjHandle)} {RyzenAdj.get_stapm_limit(ryzenAdjHandle)}");
             }
         }
 

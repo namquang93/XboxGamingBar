@@ -185,5 +185,10 @@ namespace XboxGamingBarCS
                 Debug.WriteLine("No response from desktop process");
             }
         }
+
+        private void TDPSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        {
+            TDPValueText.Text = $"{((int)e.NewValue).ToString()}W";
+        }
     }
 }
