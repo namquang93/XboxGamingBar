@@ -123,7 +123,7 @@ namespace XboxGamingBarHelper.Performance
             else
             {
                 RyzenAdj.refresh_table(ryzenAdjHandle);
-                RyzenAdj.set_fast_limit(ryzenAdjHandle, 30000);
+                // RyzenAdj.set_fast_limit(ryzenAdjHandle, 30000);
                 Console.WriteLine($"RyzenAdj initialized successfully {RyzenAdj.get_fast_limit(ryzenAdjHandle)} {RyzenAdj.get_fast_value(ryzenAdjHandle)} {RyzenAdj.get_slow_limit(ryzenAdjHandle)} {RyzenAdj.get_slow_value(ryzenAdjHandle)} {RyzenAdj.get_stapm_limit(ryzenAdjHandle)} {RyzenAdj.get_stapm_value(ryzenAdjHandle)}");
             }
         }
@@ -134,6 +134,35 @@ namespace XboxGamingBarHelper.Performance
                 return;
 
             computer.Accept(updateVisitor);
+        }
+
+        public static int GetTDP()
+        {
+            if (ryzenAdjHandle == IntPtr.Zero)
+            {
+                Debug.WriteLine("RyzenAdj not initialized");
+                return 10;
+            }
+
+            RyzenAdj.refresh_table(ryzenAdjHandle);
+            return (int)RyzenAdj.get_fast_limit(ryzenAdjHandle);
+        }
+
+        public static void SetTDP(int tdp)
+        {
+            if (ryzenAdjHandle == IntPtr.Zero)
+            {
+                Debug.WriteLine("RyzenAdj not initialized");
+                return;
+            }
+            //RyzenAdj.refresh_table(ryzenAdjHandle);
+            RyzenAdj.set_fast_limit(ryzenAdjHandle, (uint)(tdp * 1000));
+            RyzenAdj.set_slow_limit(ryzenAdjHandle, (uint)(tdp * 1000));
+            RyzenAdj.set_stapm_limit(ryzenAdjHandle, (uint)(tdp * 1000));
+#if DEBUG
+            RyzenAdj.refresh_table(ryzenAdjHandle);
+            Debug.WriteLine($"Set TDP to {tdp}, current TDP is {RyzenAdj.get_fast_limit(ryzenAdjHandle)}");
+#endif
         }
     }
 }

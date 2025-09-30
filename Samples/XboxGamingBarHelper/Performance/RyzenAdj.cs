@@ -30,22 +30,10 @@ namespace XboxGamingBarHelper.Performance
         public static extern float get_stapm_limit(IntPtr ry);
 
         [DllImport(RYZEN_ADJ_PATH)]
-        public static extern float get_stapm_value(IntPtr ry);
-
-        [DllImport(RYZEN_ADJ_PATH)]
-        public static extern float get_stapm_time(IntPtr ry);
-
-        [DllImport(RYZEN_ADJ_PATH)]
         public static extern float get_fast_limit(IntPtr ry);
 
         [DllImport(RYZEN_ADJ_PATH)]
-        public static extern float get_fast_value(IntPtr ry);
-
-        [DllImport(RYZEN_ADJ_PATH)]
         public static extern float get_slow_limit(IntPtr ry);
-
-        [DllImport(RYZEN_ADJ_PATH)]
-        public static extern float get_slow_value(IntPtr ry);
 
     }
 }
