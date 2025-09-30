@@ -9,7 +9,7 @@ namespace XboxGamingBarHelper.Performance
 {
     internal class RyzenAdj
     {
-        private const string RYZEN_ADJ_PATH = "Libraries\\libryzenadj.dll";
+        private const string RYZEN_ADJ_PATH = "libryzenadj.dll";
 
         [DllImport(RYZEN_ADJ_PATH)]
         public static extern IntPtr init_ryzenadj();
