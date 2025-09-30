@@ -92,12 +92,17 @@ namespace XboxGamingBarCS
         private async void GamingWidget_AppServiceConnected(object sender, AppServiceTriggerDetails e)
         {
             App.Connection.RequestReceived += AppServiceConnection_RequestReceived;
-            ValueSet request = new ValueSet
+
+            // Sync OSD.
+            ValueSet request;
+            AppServiceResponse response;
+
+            request = new ValueSet
             {
                 { nameof(Command), (int)Command.Get },
                 { nameof(Function), (int)Function.OSD },
             };
-            AppServiceResponse response = await App.Connection.SendMessageAsync(request);
+            response = await App.Connection.SendMessageAsync(request);
             if (response != null)
             {
                 object value;
@@ -120,7 +125,37 @@ namespace XboxGamingBarCS
             {
                 Debug.WriteLine("No response from desktop process after connected???");
             }
-                
+
+            // Sync TDP.
+            request = new ValueSet
+            {
+                { nameof(Command), (int)Command.Get },
+                { nameof(Function), (int)Function.TDP },
+            };
+            response = await App.Connection.SendMessageAsync(request);
+            if (response != null)
+            {
+                object value;
+                if (response.Message.TryGetValue(nameof(Value), out value))
+                {
+                    var tdp = (int)value;
+                    Debug.WriteLine($"Get TDP limit {tdp}W from desktop process");
+
+                    await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                    {
+                        TDPSlider.Value = tdp;
+                    });
+                }
+                else
+                {
+                    Debug.WriteLine("No Value in response from desktop process after connected???");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("No response from desktop process after connected???");
+            }
+
             //await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             //{
             //    Debug.WriteLine("AppService Connected");
@@ -169,26 +204,58 @@ namespace XboxGamingBarCS
         private async void PerformanceOverlaySlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
             var level = (int)e.NewValue;
-            ValueSet request = new ValueSet
+
+            if (App.Connection != null)
             {
-                { nameof(Command), (int)Command.Set },
-                { nameof(Function), (int)Function.OSD },
-                { nameof(Value), level }
-            };
-            AppServiceResponse response = await App.Connection.SendMessageAsync(request);
-            if (response != null)
-            {
-                Debug.WriteLine($"Set OSD level {level} to desktop process");
+                ValueSet request = new ValueSet
+                {
+                    { nameof(Command), (int)Command.Set },
+                    { nameof(Function), (int)Function.OSD },
+                    { nameof(Value), level }
+                };
+                AppServiceResponse response = await App.Connection.SendMessageAsync(request);
+                if (response != null)
+                {
+                    Debug.WriteLine($"Set OSD level {level} to desktop process");
+                }
+                else
+                {
+                    Debug.WriteLine($"No response from desktop process when trying to change OSD level {level}.");
+                }
             }
             else
             {
-                Debug.WriteLine("No response from desktop process");
+                Debug.WriteLine("No connection!");
             }
         }
 
-        private void TDPSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        private async void TDPSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
             TDPValueText.Text = $"{((int)e.NewValue).ToString()}W";
+            
+            if (App.Connection != null)
+            {
+                var tdp = (int)e.NewValue;
+                ValueSet request = new ValueSet
+                {
+                    { nameof(Command), (int)Command.Set },
+                    { nameof(Function), (int)Function.TDP },
+                    { nameof(Value), tdp }
+                };
+                AppServiceResponse response = await App.Connection.SendMessageAsync(request);
+                if (response != null)
+                {
+                    Debug.WriteLine($"Set TDP limit {tdp}W to desktop process");
+                }
+                else
+                {
+                    Debug.WriteLine($"No response from desktop process when trying to limit TDP {tdp}W");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("No connection!");
+            }
         }
     }
 }
