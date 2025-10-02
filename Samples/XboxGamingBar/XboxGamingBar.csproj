@@ -7,8 +7,8 @@
     <ProjectGuid>{94D05A38-04B0-4EA4-AD28-4ADFE4719E84}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>XboxGamingBarCS</RootNamespace>
-    <AssemblyName>XboxGamingBarCS</AssemblyName>
+    <RootNamespace>XboxGamingBar</RootNamespace>
+    <AssemblyName>XboxGamingBar</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.19041.0</TargetPlatformVersion>

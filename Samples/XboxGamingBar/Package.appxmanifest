@@ -9,7 +9,7 @@
   IgnorableNamespaces="uap uap3 mp rescap">
 
   <Identity
-    Name="XboxGamingBarCS"
+    Name="XboxGamingBar"
     Publisher="CN=Play'n Build, O=Play'n Build, L=Redmond, S=Washington, C=US"
     Version="1.0.0.0" />
 
@@ -32,7 +32,7 @@
   <Applications>
     <Application Id="App"
       Executable="$targetnametoken$.exe"
-      EntryPoint="XboxGamingBarCS.App">
+      EntryPoint="XboxGamingBar.App">
       <uap:VisualElements
         DisplayName="Xbox Gaming Bar"
         Square150x150Logo="Assets\Square150x150Logo.png"
