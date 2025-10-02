@@ -1,8 +1,11 @@
 ﻿using NLog;
+using Shared.Data;
 using Shared.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.AppService;
 using Windows.Foundation.Collections;
@@ -26,6 +29,7 @@ namespace XboxGamingBar
     public sealed partial class GamingWidget : Page
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         public GamingWidget()
         {
             this.InitializeComponent();
@@ -72,6 +76,10 @@ namespace XboxGamingBar
                     Logger.Info("Already have connection to the full trust process, no need to launch.");
                 }
             }
+            else
+            {
+                Logger.Info("No previously launched full trust process.");
+            }
 
             if (App.Connection == null && ApiInformation.IsApiContractPresent("Windows.ApplicationModel.FullTrustAppContract", 1, 0) && App.FullTrustLaunchState != FullTrustLaunchState.Launching && App.FullTrustLaunchState != FullTrustLaunchState.Reconnecting)
             {
@@ -83,6 +91,25 @@ namespace XboxGamingBar
             }
         }
 
+        public async Task GamingWidget_LeavingBackground(object sender, LeavingBackgroundEventArgs e)
+        {
+            if (App.Connection != null)
+            {
+                Logger.Info("GamingWidget LeavingBackground, sync UI now.");
+                await SyncUI();
+            }
+            else
+            {
+                Logger.Info("GamingWidget LeavingBackground but not connected to the full trust process");
+            }
+        }
+
+        public async Task GamingWidget_EnteredBackground(object sender, EnteredBackgroundEventArgs e)
+        {
+            Logger.Info("GamingWidget EnterBackground");
+            await Task.Delay(100);
+        }
+
         /// <summary>
         /// When the desktop process is connected, get ready to send/receive requests
         /// </summary>
@@ -90,6 +117,24 @@ namespace XboxGamingBar
         {
             App.FullTrustLaunchState = FullTrustLaunchState.Launched;
             App.Connection.RequestReceived += AppServiceConnection_RequestReceived;
+
+            await SyncUI();
+
+            //await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            //{
+            //    Logger.Info("AppService Connected");
+            //    // enable UI to access  the connection
+            //    // btnRegKey.IsEnabled = true;
+            //});
+        }
+
+        private async Task SyncUI()
+        {
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                PerformanceOverlaySlider.IsEnabled = false;
+                TDPSlider.IsEnabled = false;
+            });
 
             // Sync OSD.
             ValueSet request;
@@ -157,12 +202,43 @@ namespace XboxGamingBar
             }
             //LoadingProgressRing.Visibility = Visibility.Collapsed;
 
-            //await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-            //{
-            //    Logger.Info("AppService Connected");
-            //    // enable UI to access  the connection
-            //    // btnRegKey.IsEnabled = true;
-            //});
+            // Sync current game.
+            request = new ValueSet
+            {
+                { nameof(Command), (int)Command.Get },
+                { nameof(Function), (int)Function.CurrentGame },
+            };
+            response = await App.Connection.SendMessageAsync(request);
+            if (response != null)
+            {
+                object value;
+                if (response.Message.TryGetValue(nameof(Value), out value))
+                {
+                    var runningGameString = (string)value;
+                    var runningGame = JsonSerializer.Deserialize<RunningGame>(runningGameString);
+                    Logger.Info($"Get current game ProcessId={runningGame.ProcessId} Name={runningGame.Name} Path={runningGame.Path} IsForeground={runningGame.IsForeground} (\"{runningGameString}\") from desktop process");
+
+                    await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                    {
+                        if (runningGame.IsValid())
+                        {
+                            CurrentGameText.Text = $"Per-game profile for {runningGame.Name}{(runningGame.IsForeground ? string.Empty : "*")}";
+                        }
+                        else
+                        {
+                            CurrentGameText.Text = $"No game detected";
+                        }
+                    });
+                }
+                else
+                {
+                    Logger.Info("No Value in response from desktop process after connected???");
+                }
+            }
+            else
+            {
+                Logger.Info("No response from desktop process after connected???");
+            }
         }
 
         /// <summary>
@@ -227,7 +303,7 @@ namespace XboxGamingBar
             }
             else
             {
-                Logger.Info("No connection!");
+                Logger.Info("No connection for performance overlay!");
             }
         }
 
@@ -256,7 +332,7 @@ namespace XboxGamingBar
             }
             else
             {
-                Logger.Info("No connection!");
+                Logger.Info("No connection for TDP!");
             }
         }
     }

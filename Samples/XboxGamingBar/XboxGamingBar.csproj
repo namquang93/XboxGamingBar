@@ -198,6 +198,9 @@
     <PackageReference Include="NLog">
       <Version>6.0.4</Version>
     </PackageReference>
+    <PackageReference Include="System.Text.Json">
+      <Version>9.0.9</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Shared\Shared.csproj">

@@ -1,15 +1,20 @@
 ﻿using Microsoft.Gaming.XboxGameBar;
+using NLog;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.AppService;
 using Windows.ApplicationModel.Background;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -31,9 +36,11 @@ namespace XboxGamingBar
         public static AppServiceConnection Connection = null;
         public static event EventHandler AppServiceDisconnected;
         public static event EventHandler<AppServiceTriggerDetails> AppServiceConnected;
-        public static bool IsForeground = false;
+        //public static bool IsForeground = false;
 
-        private XboxGameBarWidget gamingWidget = null;
+        private XboxGameBarWidget xboxGameBarWidget = null;
+        private GamingWidget gamingWidget = null;
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -45,16 +52,34 @@ namespace XboxGamingBar
             this.Suspending += OnSuspending;
             this.EnteredBackground += App_EnteredBackground;
             this.LeavingBackground += App_LeavingBackground;
+            //var installedLocation = Windows.ApplicationModel.Package.Current.InstalledLocation.Path;
+            //var localFolder = ApplicationData.Current.LocalFolder.Path;
+            //var localCache = ApplicationData.Current.LocalCacheFolder.Path;
+            //Logger.Info($"App initializing {installedLocation} {localFolder} {localCache}");
         }
 
-        private void App_LeavingBackground(object sender, LeavingBackgroundEventArgs e)
+        private async void App_LeavingBackground(object sender, LeavingBackgroundEventArgs e)
         {
-            IsForeground = true;
+            if (gamingWidget != null)
+            {
+                await gamingWidget.GamingWidget_LeavingBackground(sender, e);
+            }
+            else
+            {
+                Logger.Info("Can't get GamingWidget LeavingBackground???");
+            }
         }
 
-        private void App_EnteredBackground(object sender, EnteredBackgroundEventArgs e)
+        private async void App_EnteredBackground(object sender, EnteredBackgroundEventArgs e)
         {
-            IsForeground = false;
+            if (gamingWidget != null)
+            {
+                await gamingWidget.GamingWidget_EnteredBackground(sender, e);
+            }
+            else
+            {
+                Logger.Info("Can't get GamingWidget EnteredBackground???");
+            }
         }
 
         /// <summary>
@@ -62,6 +87,7 @@ namespace XboxGamingBar
         /// </summary>
         protected override void OnBackgroundActivated(BackgroundActivatedEventArgs args)
         {
+            Logger.Info("App background activated");
             base.OnBackgroundActivated(args);
 
             if (args.TaskInstance.TriggerDetails is AppServiceTriggerDetails details)
@@ -84,6 +110,7 @@ namespace XboxGamingBar
         /// </summary>
         private void OnTaskCanceled(IBackgroundTaskInstance sender, BackgroundTaskCancellationReason reason)
         {
+            Logger.Info("App task canceled");
             AppServiceDeferral?.Complete();
             AppServiceDeferral = null;
             Connection = null;
@@ -92,6 +119,7 @@ namespace XboxGamingBar
 
         protected override void OnActivated(IActivatedEventArgs args)
         {
+            Logger.Info("App activated");
             XboxGameBarWidgetActivatedEventArgs widgetArgs = null;
             if (args.Kind == ActivationKind.Protocol)
             {
@@ -134,11 +162,9 @@ namespace XboxGamingBar
                     Window.Current.Content = rootFrame;
 
                     // Create Game Bar widget object which bootstraps the connection with Game Bar
-                    gamingWidget = new XboxGameBarWidget(
-                        widgetArgs,
-                        Window.Current.CoreWindow,
-                        rootFrame);
+                    xboxGameBarWidget = new XboxGameBarWidget(widgetArgs, Window.Current.CoreWindow, rootFrame);
                     rootFrame.Navigate(typeof(GamingWidget));
+                    gamingWidget = rootFrame.Content as GamingWidget;
 
                     Window.Current.Closed += GamingWidgetWindow_Closed;
 
@@ -153,6 +179,8 @@ namespace XboxGamingBar
 
         private void GamingWidgetWindow_Closed(object sender, Windows.UI.Core.CoreWindowEventArgs e)
         {
+            Logger.Info("App gaming widget closed");
+            xboxGameBarWidget = null;
             gamingWidget = null;
             Window.Current.Closed -= GamingWidgetWindow_Closed;
         }
@@ -164,6 +192,7 @@ namespace XboxGamingBar
         /// <param name="e">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
+            Logger.Info("App launched");
             Frame rootFrame = Window.Current.Content as Frame;
 
             // Do not repeat app initialization when the Window already has content,
@@ -222,8 +251,10 @@ namespace XboxGamingBar
         /// <param name="e">Details about the suspend request.</param>
         private void OnSuspending(object sender, SuspendingEventArgs e)
         {
+            Logger.Info("App suspending");
             var deferral = e.SuspendingOperation.GetDeferral();
 
+            xboxGameBarWidget = null;
             gamingWidget = null;
 
             deferral.Complete();

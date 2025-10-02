@@ -4,5 +4,6 @@
     {
         OSD,
         TDP,
+        CurrentGame,
     }
 }

@@ -6,11 +6,15 @@ using Windows.ApplicationModel.AppService;
 using Windows.Foundation.Collections;
 using XboxGamingBarHelper.Performance;
 using XboxGamingBarHelper.RTSS;
+using XboxGamingBarHelper.System;
+using System.Text.Json;
+using NLog;
 
 namespace XboxGamingBarHelper
 {
     internal class Program
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private static AppServiceConnection connection = null;
 
         private static bool needToUpdate = false;
@@ -81,6 +85,11 @@ namespace XboxGamingBarHelper
                             break;
                         case Function.TDP:
                             response.Add(nameof(Value), PerformanceManager.GetTDP());
+                            break;
+                        case Function.CurrentGame:
+                            var currentGameInfo = JsonSerializer.Serialize(SystemManager.GetRunningGame());
+                            Logger.Info($"Current game {currentGameInfo}");
+                            response.Add(nameof(Value), currentGameInfo);
                             break;
                     }
 

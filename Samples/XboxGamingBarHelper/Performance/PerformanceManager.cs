@@ -2,11 +2,8 @@
 using NLog;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using RTSSSharedMemoryNET;
-using XboxGamingBarHelper.Windows;
 
 namespace XboxGamingBarHelper.Performance
 {
@@ -113,7 +110,7 @@ namespace XboxGamingBarHelper.Performance
                     if (hardwareSensorFields.TryGetValue((sensor.Name, hardware.HardwareType, sensor.SensorType), out FieldInfo fieldInfo))
                     {
                         fieldInfo.SetValue(null, sensor);
-                        Logger.Info("Found hardware Sensor: {0}, value: {1}, type: {2}", sensor.Name, sensor.Value, sensor.SensorType.ToString());
+                        // Logger.Info("Found hardware Sensor: {0}, value: {1}, type: {2}", sensor.Name, sensor.Value, sensor.SensorType.ToString());
                     }
                 }
             }
@@ -121,7 +118,7 @@ namespace XboxGamingBarHelper.Performance
             ryzenAdjHandle = RyzenAdj.init_ryzenadj();
             if (ryzenAdjHandle == IntPtr.Zero)
             {
-                Logger.Info("Failed to initialize RyzenAdj");
+                Logger.Error("Failed to initialize RyzenAdj");
             }
             else
             {
@@ -137,22 +134,6 @@ namespace XboxGamingBarHelper.Performance
                 return;
 
             computer.Accept(updateVisitor);
-
-            var appEntries = OSD.GetAppEntries();
-            foreach (var appEntry in appEntries)
-            {
-                if (appEntry == null) continue;
-
-                if (appEntry.InstantaneousFrames > 0)
-                {
-                    Logger.Info($"App {appEntry.Name} process id {appEntry.ProcessId} fps {appEntry.VideoFramerate} InstantaneousFrames={appEntry.InstantaneousFrames} StatFramerateAvg={appEntry.StatFramerateAvg} StatFramerateMax={appEntry.StatFramerateMax} StatFramerateMin={appEntry.StatFramerateMin}");
-                }
-            }
-            var foregroundProcess = WindowsManager.GetForegroundProcess();
-            if (foregroundProcess != null)
-                Logger.Info($"{foregroundProcess.ProcessName} {foregroundProcess.Id}");
-            else
-                Logger.Info("Can't get foreground process");
         }
 
         public static int GetTDP()
