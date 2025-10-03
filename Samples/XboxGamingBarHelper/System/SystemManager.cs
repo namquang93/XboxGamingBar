@@ -22,6 +22,7 @@ namespace XboxGamingBarHelper.System
             "unity.exe",
             "unrealeditor.exe",
             "eacefsubprocess.exe",
+            "rider64.exe"
         };
 
         private static int GetForegroundProcessId()
