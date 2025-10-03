@@ -135,6 +135,7 @@ namespace XboxGamingBar
             {
                 PerformanceOverlaySlider.IsEnabled = false;
                 TDPSlider.IsEnabled = false;
+                GameProfileToggle.Visibility = Visibility.Collapsed;
             });
 
             // Sync OSD.
@@ -226,11 +227,13 @@ namespace XboxGamingBar
                     {
                         if (runningGame.IsValid())
                         {
-                            CurrentGameText.Text = $"{runningGame.Name}{(runningGame.IsForeground ? string.Empty : "*")} Profile";
+                            CurrentGameText.Text = $"{runningGame.Name}{(runningGame.IsForeground ? string.Empty : "*")}";
+                            GameProfileToggle.Visibility = Visibility.Visible;
                         }
                         else
                         {
                             CurrentGameText.Text = $"No game detected";
+                            GameProfileToggle.Visibility = Visibility.Collapsed;
                         }
                     });
                 }
