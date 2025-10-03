@@ -226,7 +226,7 @@ namespace XboxGamingBar
                     {
                         if (runningGame.IsValid())
                         {
-                            CurrentGameText.Text = $"Per-game profile for {runningGame.Name}{(runningGame.IsForeground ? string.Empty : "*")}";
+                            CurrentGameText.Text = $"{runningGame.Name}{(runningGame.IsForeground ? string.Empty : "*")} Profile";
                         }
                         else
                         {
