@@ -3,9 +3,10 @@ using Shared.Data;
 using Shared.Enums;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text.Json;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.AppService;
 using Windows.Foundation.Collections;
@@ -215,8 +216,11 @@ namespace XboxGamingBar
                 if (response.Message.TryGetValue(nameof(Value), out value))
                 {
                     var runningGameString = (string)value;
-                    var runningGame = JsonSerializer.Deserialize<RunningGame>(runningGameString);
+                    var serializer = new XmlSerializer(typeof(RunningGame));
+                    var reader = new StringReader(runningGameString);
+                    var runningGame = (RunningGame)serializer.Deserialize(reader);
                     Logger.Info($"Get current game ProcessId={runningGame.ProcessId} Name={runningGame.Name} Path={runningGame.Path} IsForeground={runningGame.IsForeground} (\"{runningGameString}\") from desktop process");
+                    reader.Dispose();
 
                     await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                     {

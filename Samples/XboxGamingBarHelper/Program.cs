@@ -1,14 +1,16 @@
-﻿using Shared.Enums;
+﻿using NLog;
+using Shared.Data;
+using Shared.Enums;
 using System;
+using System.IO;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.AppService;
 using Windows.Foundation.Collections;
 using XboxGamingBarHelper.Performance;
 using XboxGamingBarHelper.RTSS;
 using XboxGamingBarHelper.System;
-using System.Text.Json;
-using NLog;
 
 namespace XboxGamingBarHelper
 {
@@ -87,9 +89,13 @@ namespace XboxGamingBarHelper
                             response.Add(nameof(Value), PerformanceManager.GetTDP());
                             break;
                         case Function.CurrentGame:
-                            var currentGameInfo = JsonSerializer.Serialize(SystemManager.GetRunningGame());
+                            var serializer = new XmlSerializer(typeof(RunningGame));
+                            var writer = new StringWriter();
+                            serializer.Serialize(writer, SystemManager.GetRunningGame());
+                            var currentGameInfo = writer.ToString();
                             Logger.Info($"Current game {currentGameInfo}");
                             response.Add(nameof(Value), currentGameInfo);
+                            writer.Dispose();
                             break;
                     }
 

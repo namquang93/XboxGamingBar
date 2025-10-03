@@ -1,21 +1,28 @@
 ﻿namespace Shared.Data
 {
-    using System;
-    using System.Text.Json.Serialization;
+    using System.Xml.Serialization;
 
     /// <summary>
     /// Contain information related to a running game.
     /// </summary>
-    [Serializable]
+    [XmlRoot("RunningGame")]
     public struct RunningGame
     {
-        public int ProcessId { get; }
-        public string Name { get; }
-        public string Path { get;}
-        public uint FPS { get; }
-        public bool IsForeground { get; }
+        [XmlElement("ProcessId")]
+        public int ProcessId;
 
-        [JsonConstructor]
+        [XmlElement("Name")]
+        public string Name;
+
+        [XmlElement("Path")]
+        public string Path;
+
+        [XmlElement("FPS")]
+        public uint FPS;
+
+        [XmlElement("IsForeground")]
+        public bool IsForeground;
+
         public RunningGame(int processId, string name, string path, uint fps, bool isForeground)
         {
             ProcessId = processId;
