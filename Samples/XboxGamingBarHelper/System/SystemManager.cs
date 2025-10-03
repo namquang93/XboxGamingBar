@@ -14,7 +14,15 @@ namespace XboxGamingBarHelper.System
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-        private static readonly string[] IgnoredProcesses = { "rustdesk.exe", "anydesk.exe", "parsecd.exe", "unity.exe", "unrealeditor.exe" };
+        private static readonly string[] IgnoredProcesses = 
+        {
+            "rustdesk.exe",
+            "anydesk.exe",
+            "parsecd.exe",
+            "unity.exe",
+            "unrealeditor.exe",
+            "eacefsubprocess.exe",
+        };
 
         private static int GetForegroundProcessId()
         {
