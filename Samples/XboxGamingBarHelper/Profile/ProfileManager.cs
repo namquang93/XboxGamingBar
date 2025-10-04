@@ -12,6 +12,12 @@ namespace XboxGamingBarHelper.Profile
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         private const string PROFILE_FOLDER_NAME = "profiles";
+        private const string GLOBAL_PROFILE_NAME = "global";
+        private const string GLOBAL_PROFILE_FILE_NAME = "global.xml";
+
+
+        private static GameProfile GlobalProfile;
+        private static GameProfile CurrentProfile;
 
         public static void Initialize()
         {
@@ -20,11 +26,29 @@ namespace XboxGamingBarHelper.Profile
             {
                 Directory.CreateDirectory(gameProfilesFolder);
             }
+
+            // Load global profile.
+            var globalProfilePath = GetGlobalProfilePath();
+            if (!File.Exists(globalProfilePath))
+            {
+                // Create global profile path when it's not previously exist.
+                GlobalProfile = new GameProfile(GLOBAL_PROFILE_NAME, GLOBAL_PROFILE_NAME, true, 25);
+                GlobalProfile.ToFile(globalProfilePath);
+            }
+            else
+            {
+                GlobalProfile = GameProfile.FromFile(globalProfilePath);
+            }
         }
 
         public static string GetGameProfilesFolder()
         {
             return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, PROFILE_FOLDER_NAME);
+        }
+
+        public static string GetGlobalProfilePath()
+        {
+            return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, GLOBAL_PROFILE_FILE_NAME);
         }
 
         public static string GetGameProfilePath(GameProfileKey gameProfileKey)
@@ -44,31 +68,24 @@ namespace XboxGamingBarHelper.Profile
 
         public static bool TryLoadGameProfile(GameProfileKey gameProfileKey, out GameProfile gameProfile)
         {
-            var gameProfilePath = GetGameProfilePath(gameProfileKey);
-            if (!File.Exists(gameProfilePath))
-            {
-                Logger.Info($"Game profile not found at that {gameProfilePath}");
-                gameProfile = new GameProfile();
-                return false;
-            }
-
-            var serializer = new XmlSerializer(typeof(GameProfile));
-            var reader = new StreamReader(gameProfilePath);
-            gameProfile = (GameProfile)serializer.Deserialize(reader);
-            reader.Close();
-            reader.Dispose();
-            return true;
+            gameProfile = GameProfile.FromFile(GetGameProfilePath(gameProfileKey));
+            return gameProfile.IsValid();
         }
 
         public static void SaveGameProfile(GameProfile gameProfile)
         {
-            var serializer = new XmlSerializer(typeof(GameProfile));
-            var gameProfilePath = GetGameProfilePath(gameProfile.Key);
-            using (TextWriter writer = new StreamWriter(gameProfilePath))
+            if (!gameProfile.IsValid())
             {
-                serializer.Serialize(writer, gameProfile);
+                Logger.Info("Can't save invalid game profile.");
+                return;
             }
-            Logger.Info($"Save game profile to {gameProfilePath}");
+
+            gameProfile.ToFile(GetGameProfilePath(gameProfile.Key));
+        }
+
+        public static void UpdateProfileTDP()
+        {
+
         }
     }
 }

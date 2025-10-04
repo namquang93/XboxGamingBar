@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using NLog;
+using System.IO;
 using System.Xml.Serialization;
 
 namespace Shared.Data
@@ -6,6 +7,8 @@ namespace Shared.Data
     [XmlRoot("GameProfile")]
     public struct GameProfile
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         [XmlElement("Key")]
         public GameProfileKey Key;
 
@@ -45,6 +48,33 @@ namespace Shared.Data
             var gameProfile = (GameProfile)serializer.Deserialize(reader);
             reader.Dispose();
             return gameProfile;
+        }
+
+        public static GameProfile FromFile(string path)
+        {
+            if (!File.Exists(path))
+            {
+                Logger.Info($"Game profile not found at that {path}");
+                return new GameProfile();
+            }
+
+            var serializer = new XmlSerializer(typeof(GameProfile));
+            var reader = new StreamReader(path);
+            var gameProfile = (GameProfile)serializer.Deserialize(reader);
+            reader.Close();
+            reader.Dispose();
+
+            return gameProfile;
+        }
+
+        public void ToFile(string path)
+        {
+            var serializer = new XmlSerializer(typeof(GameProfile));
+            using (TextWriter writer = new StreamWriter(path))
+            {
+                serializer.Serialize(writer, this);
+            }
+            Logger.Info($"Save game profile {Key.Name} to {path}");
         }
     }
 }
