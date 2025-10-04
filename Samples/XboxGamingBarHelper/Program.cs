@@ -7,6 +7,7 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.AppService;
 using Windows.Foundation.Collections;
 using XboxGamingBarHelper.Performance;
+using XboxGamingBarHelper.Profile;
 using XboxGamingBarHelper.RTSS;
 using XboxGamingBarHelper.System;
 
@@ -37,6 +38,7 @@ namespace XboxGamingBarHelper
         {
             PerformanceManager.Initialize();
             RTSSManager.Initialize();
+            ProfileManager.Initialize();
             SystemManager.RunningGameChanged += OnRunningGameChanged;
         }
 
@@ -130,6 +132,17 @@ namespace XboxGamingBarHelper
                         case Function.TDP:
                             var tdpLimit = (int)args.Request.Message[nameof(Value)];
                             PerformanceManager.SetTDP(tdpLimit);
+                            break;
+                        case Function.GameProfile:
+                            var isPerGameProfile = (bool)args.Request.Message[nameof(Value)];
+                            if (SystemManager.RunningGame.IsValid())
+                            {
+                                ProfileManager.SaveGameProfile(new GameProfile(SystemManager.RunningGame.Name, SystemManager.RunningGame.Path, isPerGameProfile, PerformanceManager.GetTDP()));
+                            }
+                            else
+                            {
+                                Logger.Info($"Running game is invalid.");
+                            }
                             break;
                     }
                     break;

@@ -30,6 +30,8 @@ namespace XboxGamingBar
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
+        private RunningGame RunningGame { get; set; }
+
         public GamingWidget()
         {
             this.InitializeComponent();
@@ -215,10 +217,7 @@ namespace XboxGamingBar
                 object value;
                 if (response.Message.TryGetValue(nameof(Value), out value))
                 {
-                    var runningGameString = (string)value;
-                    var runningGame = RunningGame.FromString(runningGameString);
-                    Logger.Info($"Get current game ProcessId={runningGame.ProcessId} Name={runningGame.Name} Path={runningGame.Path} IsForeground={runningGame.IsForeground} (\"{runningGameString}\") from desktop process");
-                    await SyncRunningGame(runningGame);
+                    await SyncRunningGame(RunningGame.FromString((string)value));
                 }
                 else
                 {
@@ -233,6 +232,7 @@ namespace XboxGamingBar
 
         private IAsyncAction SyncRunningGame(RunningGame runningGame)
         {
+            RunningGame = runningGame;
             return Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 if (runningGame.IsValid())
@@ -379,7 +379,38 @@ namespace XboxGamingBar
             }
             else
             {
-                Logger.Info("No connection for TDP!");
+                Logger.Warn("No connection for TDP!");
+            }
+        }
+
+        private async void GameProfileToggle_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (!RunningGame.IsValid())
+            {
+                Logger.Warn("Running game is invaid, can't change profile.");
+                return;
+            }
+
+            if (App.Connection == null)
+            {
+                Logger.Warn("No connection for game profile!");
+                return;
+            }
+
+            ValueSet request = new ValueSet
+            {
+                { nameof(Command), (int)Command.Set },
+                { nameof(Function), (int)Function.GameProfile },
+                { nameof(Value), GameProfileToggle.IsOn }
+            };
+            AppServiceResponse response = await App.Connection.SendMessageAsync(request);
+            if (response != null)
+            {
+                Logger.Info($"Set game profile  to desktop process");
+            }
+            else
+            {
+                Logger.Info($"Can't save per-game profile.");
             }
         }
     }

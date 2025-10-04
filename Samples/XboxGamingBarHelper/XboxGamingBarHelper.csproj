@@ -150,6 +150,7 @@
     <Compile Include="Performance\RyzenAdj.cs" />
     <Compile Include="Performance\Sensors\CPUUsageSensor.cs" />
     <Compile Include="Performance\UpdateVisitor.cs" />
+    <Compile Include="Profile\ProfileManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RTSS\OSDItem.cs" />
