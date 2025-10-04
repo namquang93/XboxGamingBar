@@ -2,9 +2,7 @@
 using Shared.Data;
 using Shared.Enums;
 using System;
-using System.IO;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.AppService;
 using Windows.Foundation.Collections;
@@ -39,6 +37,32 @@ namespace XboxGamingBarHelper
         {
             PerformanceManager.Initialize();
             RTSSManager.Initialize();
+            SystemManager.RunningGameChanged += OnRunningGameChanged;
+        }
+
+        private static async void OnRunningGameChanged(object sender, RunningGameChangedEventArgs e)
+        {
+            if (connection == null)
+            {
+                Logger.Info("No connection yet, can't broadcast running game changed.");
+                return;
+            }
+
+            ValueSet request = new ValueSet
+            {
+                { nameof(Command), (int)Command.Update },
+                { nameof(Function),(int)Function.CurrentGame },
+                { nameof(Value), e.NewRunningGame.ToString() }
+            };
+            AppServiceResponse response = await connection.SendMessageAsync(request);
+            if (response.Message.TryGetValue(nameof(Value), out var result))
+            {
+                Logger.Info($"Update running game {(string)result}.");
+            }
+            else
+            {
+                Logger.Info("Can't update current game.");
+            }
         }
 
         /// <summary>
@@ -63,9 +87,10 @@ namespace XboxGamingBarHelper
             while (needToUpdate)
             {
                 await Task.Delay(500);
-                
+
                 PerformanceManager.Update();
                 RTSSManager.Update();
+                SystemManager.Update();
             }
         }
 
@@ -89,20 +114,13 @@ namespace XboxGamingBarHelper
                             response.Add(nameof(Value), PerformanceManager.GetTDP());
                             break;
                         case Function.CurrentGame:
-                            var serializer = new XmlSerializer(typeof(RunningGame));
-                            var writer = new StringWriter();
-                            serializer.Serialize(writer, SystemManager.GetRunningGame());
-                            var currentGameInfo = writer.ToString();
-                            Logger.Info($"Current game {currentGameInfo}");
-                            response.Add(nameof(Value), currentGameInfo);
-                            writer.Dispose();
+                            response.Add(nameof(Value), SystemManager.RunningGame.ToString());
                             break;
                     }
 
                     await args.Request.SendResponseAsync(response);
                     break;
                 case Command.Set:
-                    
                     switch (function)
                     {
                         case Function.OSD:
@@ -116,60 +134,6 @@ namespace XboxGamingBarHelper
                     }
                     break;
             }
-            // retrive the reg key name from the ValueSet in the request
-            //string key = args.Request.Message["KEY"] as string;
-            //int index = key.IndexOf('\\');
-            //if (index > 0)
-            //{
-            //    // read the key values from the respective hive in the registry
-            //    string hiveName = key.Substring(0, key.IndexOf('\\'));
-            //    string keyName = key.Substring(key.IndexOf('\\') + 1);
-            //    RegistryHive hive = RegistryHive.ClassesRoot;
-
-            //    switch (hiveName)
-            //    {
-            //        case "HKLM":
-            //            hive = RegistryHive.LocalMachine;
-            //            break;
-            //        case "HKCU":
-            //            hive = RegistryHive.CurrentUser;
-            //            break;
-            //        case "HKCR":
-            //            hive = RegistryHive.ClassesRoot;
-            //            break;
-            //        case "HKU":
-            //            hive = RegistryHive.Users;
-            //            break;
-            //        case "HKCC":
-            //            hive = RegistryHive.CurrentConfig;
-            //            break;
-            //    }
-
-            //    using (RegistryKey regKey = RegistryKey.OpenRemoteBaseKey(hive, "").OpenSubKey(keyName))
-            //    {
-            //        // compose the response as ValueSet
-            //        ValueSet response = new ValueSet();
-            //        if (regKey != null)
-            //        {
-            //            foreach (string valueName in regKey.GetValueNames())
-            //            {
-            //                response.Add(valueName, regKey.GetValue(valueName).ToString());
-            //            }
-            //        }
-            //        else
-            //        {
-            //            response.Add("ERROR", "KEY NOT FOUND");
-            //        }
-            //        // send the response back to the UWP
-            //        await args.Request.SendResponseAsync(response);
-            //    }
-            //}
-            //else
-            //{
-            //    ValueSet response = new ValueSet();
-            //    response.Add("ERROR", "INVALID REQUEST");
-            //    await args.Request.SendResponseAsync(response);
-            //}
         }
 
         /// <summary>

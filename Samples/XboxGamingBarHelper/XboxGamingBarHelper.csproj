@@ -160,6 +160,7 @@
     <Compile Include="RTSS\OSDItems\OSDItemMemory.cs" />
     <Compile Include="RTSS\OSDItemValue.cs" />
     <Compile Include="RTSS\RTSSManager.cs" />
+    <Compile Include="System\RunningGameChangedEventArgs.cs" />
     <Compile Include="Windows\Win32.cs" />
     <Compile Include="System\SystemManager.cs" />
   </ItemGroup>

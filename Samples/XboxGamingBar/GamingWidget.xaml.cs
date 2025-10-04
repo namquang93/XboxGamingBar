@@ -3,12 +3,11 @@ using Shared.Data;
 using Shared.Enums;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.AppService;
+using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Foundation.Metadata;
 using Windows.System;
@@ -217,25 +216,9 @@ namespace XboxGamingBar
                 if (response.Message.TryGetValue(nameof(Value), out value))
                 {
                     var runningGameString = (string)value;
-                    var serializer = new XmlSerializer(typeof(RunningGame));
-                    var reader = new StringReader(runningGameString);
-                    var runningGame = (RunningGame)serializer.Deserialize(reader);
+                    var runningGame = RunningGame.FromString(runningGameString);
                     Logger.Info($"Get current game ProcessId={runningGame.ProcessId} Name={runningGame.Name} Path={runningGame.Path} IsForeground={runningGame.IsForeground} (\"{runningGameString}\") from desktop process");
-                    reader.Dispose();
-
-                    await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                    {
-                        if (runningGame.IsValid())
-                        {
-                            CurrentGameText.Text = $"{runningGame.Name}{(runningGame.IsForeground ? string.Empty : "*")}";
-                            GameProfileToggle.Visibility = Visibility.Visible;
-                        }
-                        else
-                        {
-                            CurrentGameText.Text = $"No game detected";
-                            GameProfileToggle.Visibility = Visibility.Collapsed;
-                        }
-                    });
+                    await SyncRunningGame(runningGame);
                 }
                 else
                 {
@@ -246,6 +229,23 @@ namespace XboxGamingBar
             {
                 Logger.Info("No response from desktop process after connected???");
             }
+        }
+
+        private IAsyncAction SyncRunningGame(RunningGame runningGame)
+        {
+            return Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                if (runningGame.IsValid())
+                {
+                    CurrentGameText.Text = $"{runningGame.Name}{(runningGame.IsForeground ? string.Empty : "*")}";
+                    GameProfileToggle.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    CurrentGameText.Text = $"No game detected";
+                    GameProfileToggle.Visibility = Visibility.Collapsed;
+                }
+            });
         }
 
         /// <summary>
@@ -271,12 +271,52 @@ namespace XboxGamingBar
         /// </summary>
         private async void AppServiceConnection_RequestReceived(AppServiceConnection sender, AppServiceRequestReceivedEventArgs args)
         {
-            double d1 = (double)args.Request.Message["D1"];
-            double d2 = (double)args.Request.Message["D2"];
-            double result = d1 + d2;
+            Logger.Info($"Receive message {args.Request.Message.ToString()} from helper.");
 
-            ValueSet response = new ValueSet();
-            response.Add("RESULT", result);
+            if (!args.Request.Message.TryGetValue(nameof(Command), out var commandObject))
+            {
+                Logger.Error("Invalid message command.");
+                return;
+            }
+            var command = (Command)commandObject;
+
+            if (!args.Request.Message.TryGetValue(nameof(Function), out var functionObject))
+            {
+                Logger.Error("Invalid message function.");
+                return;
+            }
+            var function = (Function)functionObject;
+
+            if (!args.Request.Message.TryGetValue(nameof(Value), out var valueObject))
+            {
+                Logger.Error("Invalid message value.");
+                return;
+            }
+            var value = (string)valueObject;
+
+            var result = "fail";
+            switch (command)
+            {
+                case Command.Get:
+                    Logger.Error("Received invalid get command");
+                    break;
+                case Command.Set:
+                    Logger.Error("Received invalid set command");
+                    break;
+                case Command.Update:
+                    switch (function)
+                    {
+                        case Function.CurrentGame:
+                            result = "success";
+                            await SyncRunningGame(RunningGame.FromString(value));
+                            break;
+                    }
+                    break;
+            }
+            ValueSet response = new ValueSet
+            {
+                { nameof(Value), result }
+            };
             await args.Request.SendResponseAsync(response);
 
             // log the request in the UI for demo purposes

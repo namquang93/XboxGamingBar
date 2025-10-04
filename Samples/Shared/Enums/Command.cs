@@ -4,5 +4,6 @@
     {
         Get,
         Set,
+        Update,
     }
 }

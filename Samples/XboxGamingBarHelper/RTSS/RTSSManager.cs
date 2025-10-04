@@ -1,5 +1,4 @@
 ﻿using RTSSSharedMemoryNET;
-using System;
 using System.Diagnostics;
 using XboxGamingBarHelper.Performance;
 using XboxGamingBarHelper.RTSS.OSDItems;

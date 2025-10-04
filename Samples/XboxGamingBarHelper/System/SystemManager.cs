@@ -10,6 +10,8 @@ using XboxGamingBarHelper.Windows;
 
 namespace XboxGamingBarHelper.System
 {
+    internal delegate void RunningGameChangedEventHandler(object sender, RunningGameChangedEventArgs e);
+
     internal static class SystemManager
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
@@ -24,6 +26,9 @@ namespace XboxGamingBarHelper.System
             "eacefsubprocess.exe",
             "rider64.exe"
         };
+
+        public static RunningGame RunningGame { get; private set; }
+        public static RunningGameChangedEventHandler RunningGameChanged;
 
         private static int GetForegroundProcessId()
         {
@@ -46,7 +51,16 @@ namespace XboxGamingBarHelper.System
 
         private static string GetWindowTitle(int processId)
         {
-            var process = Process.GetProcessById(processId);
+            Process process;
+            try
+            {
+                process = Process.GetProcessById(processId);
+            }
+            catch (ArgumentException e)
+            {
+                Logger.Error($"Error {e} while trying to get process {processId}");
+                process = null;
+            }
             if (process == null)
             {
                 Logger.Error($"Can't get process id {processId}");
@@ -73,7 +87,7 @@ namespace XboxGamingBarHelper.System
             return sb.ToString();
         }
 
-        public static RunningGame GetRunningGame()
+        private static RunningGame GetRunningGame()
         {
             var appEntries = OSD.GetAppEntries();
             var runningGame = new RunningGame();
@@ -129,6 +143,16 @@ namespace XboxGamingBarHelper.System
             }
 
             return runningGame;
+        }
+
+        public static void Update()
+        {
+            var newRunningGame = GetRunningGame();
+            if (RunningGame != newRunningGame)
+            {
+                RunningGameChanged.Invoke(null, new RunningGameChangedEventArgs(RunningGame, newRunningGame));
+                RunningGame = newRunningGame;
+            }
         }
     }
 }
