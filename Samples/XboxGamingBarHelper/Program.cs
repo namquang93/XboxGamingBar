@@ -65,6 +65,37 @@ namespace XboxGamingBarHelper
             {
                 Logger.Info("Can't update current game.");
             }
+
+            if (!ProfileManager.TryLoadGameProfile(new GameProfileKey(e.NewRunningGame.Name, e.NewRunningGame.Path), out GameProfile gameProfile))
+            {
+                gameProfile = ProfileManager.GlobalProfile;
+                Logger.Info($"New running game {e.NewRunningGame.Name} doesn't have profile, use global profile.");
+            }
+
+            ProfileManager.CurrentProfile = gameProfile;
+            if (gameProfile.Use)
+            {
+                Logger.Info($"New running game {e.NewRunningGame.Name} have profile in used, apply it.");
+                request = new ValueSet
+                    {
+                        { nameof(Command), (int)Command.Update },
+                        { nameof(Function),(int)Function.TDP },
+                        { nameof(Value), gameProfile.TDP }
+                    };
+                response = await connection.SendMessageAsync(request);
+                if (response.Message.TryGetValue(nameof(Value), out result))
+                {
+                    Logger.Info($"Update game profile TDP {(string)result}.");
+                }
+                else
+                {
+                    Logger.Info("Can't update game profile TDP.");
+                }
+            }
+            else
+            {
+                Logger.Info($"New running game {e.NewRunningGame.Name} have profile in used, do not apply it.");
+            }
         }
 
         /// <summary>

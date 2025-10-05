@@ -188,11 +188,7 @@ namespace XboxGamingBar
                     var tdp = (int)value;
                     Logger.Info($"Get TDP limit {tdp}W from desktop process");
 
-                    await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                    {
-                        TDPSlider.IsEnabled = true;
-                        TDPSlider.Value = tdp;
-                    });
+                    await SyncTDP(tdp);
                 }
                 else
                 {
@@ -228,6 +224,15 @@ namespace XboxGamingBar
             {
                 Logger.Info("No response from desktop process after connected???");
             }
+        }
+
+        private IAsyncAction SyncTDP(int tdp)
+        {
+            return Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                TDPSlider.IsEnabled = true;
+                TDPSlider.Value = tdp;
+            });
         }
 
         private IAsyncAction SyncRunningGame(RunningGame runningGame)
@@ -273,26 +278,33 @@ namespace XboxGamingBar
         {
             Logger.Info($"Receive message {args.Request.Message.ToString()} from helper.");
 
+            Command command;
             if (!args.Request.Message.TryGetValue(nameof(Command), out var commandObject))
             {
                 Logger.Error("Invalid message command.");
-                return;
+                command = Command.Get;
             }
-            var command = (Command)commandObject;
+            else
+            {
+                command = (Command)commandObject;
+            }
 
+            Function function;
             if (!args.Request.Message.TryGetValue(nameof(Function), out var functionObject))
             {
                 Logger.Error("Invalid message function.");
-                return;
+                function = Function.TDP;
             }
-            var function = (Function)functionObject;
+            else
+            {
+                function = (Function)functionObject;
+            }
 
             if (!args.Request.Message.TryGetValue(nameof(Value), out var valueObject))
             {
                 Logger.Error("Invalid message value.");
-                return;
             }
-            var value = (string)valueObject;
+            
 
             var result = "fail";
             switch (command)
@@ -306,9 +318,15 @@ namespace XboxGamingBar
                 case Command.Update:
                     switch (function)
                     {
+                        case Function.TDP:
+                            result = "success";
+                            var intValue = (int)valueObject;
+                            await SyncTDP(intValue);
+                            break;
                         case Function.CurrentGame:
                             result = "success";
-                            await SyncRunningGame(RunningGame.FromString(value));
+                            var stringValue = (string)valueObject;
+                            await SyncRunningGame(RunningGame.FromString(stringValue));
                             break;
                     }
                     break;
@@ -318,12 +336,6 @@ namespace XboxGamingBar
                 { nameof(Value), result }
             };
             await args.Request.SendResponseAsync(response);
-
-            // log the request in the UI for demo purposes
-            await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-            {
-                //tbRequests.Text += string.Format("Request: {0} + {1} --> Response = {2}\r\n", d1, d2, result);
-            });
         }
 
         private async void PerformanceOverlaySlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)

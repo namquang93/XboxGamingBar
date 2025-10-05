@@ -2,8 +2,6 @@
 using Shared.Data;
 using System;
 using System.IO;
-using System.Xml.Linq;
-using System.Xml.Serialization;
 
 namespace XboxGamingBarHelper.Profile
 {
@@ -16,8 +14,8 @@ namespace XboxGamingBarHelper.Profile
         private const string GLOBAL_PROFILE_FILE_NAME = "global.xml";
 
 
-        private static GameProfile GlobalProfile;
-        private static GameProfile CurrentProfile;
+        public static GameProfile GlobalProfile { get; private set; }
+        public static GameProfile CurrentProfile { get; set; }
 
         public static void Initialize()
         {
@@ -39,6 +37,7 @@ namespace XboxGamingBarHelper.Profile
             {
                 GlobalProfile = GameProfile.FromFile(globalProfilePath);
             }
+            CurrentProfile = GlobalProfile;
         }
 
         public static string GetGameProfilesFolder()
@@ -68,6 +67,11 @@ namespace XboxGamingBarHelper.Profile
 
         public static bool TryLoadGameProfile(GameProfileKey gameProfileKey, out GameProfile gameProfile)
         {
+            if (!gameProfileKey.IsValid())
+            {
+                gameProfile = new GameProfile();
+                return false;
+            }
             gameProfile = GameProfile.FromFile(GetGameProfilePath(gameProfileKey));
             return gameProfile.IsValid();
         }
