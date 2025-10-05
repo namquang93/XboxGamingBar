@@ -5,5 +5,6 @@
         Get,
         Set,
         Update,
+        PropertyChanged,
     }
 }

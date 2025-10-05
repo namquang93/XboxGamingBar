@@ -28,32 +28,7 @@ namespace XboxGamingBarHelper
 
         static async Task Main(string[] args)
         {
-            // Console.Title = "Xbox Gaming Bar Helper";
-            // Console.WriteLine($"OSD {OSD.GetOSDEntries().Length} APP {OSD.GetAppEntries().Length}");
-            // Console.WriteLine("\r\nPress any key to exit ...");
-            // Console.ReadLine();
-
-            // await InitializeAppServiceConnection();
-
-
-            Initialize();
-            await InitializeAppServiceConnection();
-        }
-
-        private static void Initialize()
-        {
-            performanceManager = new PerformanceManager();
-            Managers.Add(performanceManager);
-
-            rtssManager = new RTSSManager(performanceManager);
-            Managers.Add(rtssManager);
-
-            profileManager = new ProfileManager();
-            Managers.Add(profileManager);
-
-            systemManager = new SystemManager();
-            Managers.Add(systemManager);
-            systemManager.RunningGameChanged += OnRunningGameChanged;
+            await Initialize();
         }
 
         private static async void OnRunningGameChanged(object sender, RunningGameChangedEventArgs e)
@@ -115,13 +90,26 @@ namespace XboxGamingBarHelper
         /// <summary>
         /// Open connection to UWP app service
         /// </summary>
-        private static async Task InitializeAppServiceConnection()
+        private static async Task Initialize()
         {
             connection = new AppServiceConnection();
             connection.AppServiceName = "XboxGamingBarService";
             connection.PackageFamilyName = Package.Current.Id.FamilyName;
             connection.RequestReceived += Connection_RequestReceived;
             connection.ServiceClosed += Connection_ServiceClosed;
+
+            performanceManager = new PerformanceManager();
+            Managers.Add(performanceManager);
+
+            rtssManager = new RTSSManager(performanceManager);
+            Managers.Add(rtssManager);
+
+            profileManager = new ProfileManager();
+            Managers.Add(profileManager);
+
+            systemManager = new SystemManager();
+            Managers.Add(systemManager);
+            systemManager.RunningGameChanged += OnRunningGameChanged;
 
             AppServiceConnectionStatus status = await connection.OpenAsync();
             if (status != AppServiceConnectionStatus.Success)

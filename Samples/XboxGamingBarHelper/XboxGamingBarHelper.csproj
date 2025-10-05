@@ -143,6 +143,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\AppServiceConnectionProperty.cs" />
     <Compile Include="Core\IManager.cs" />
     <Compile Include="Core\Manager.cs" />
     <Compile Include="Core\Sensor.cs" />
@@ -151,6 +152,7 @@
     <Compile Include="Performance\PerformanceManager.cs" />
     <Compile Include="Performance\RyzenAdj.cs" />
     <Compile Include="Performance\Sensors\CPUUsageSensor.cs" />
+    <Compile Include="Performance\TDPProperty.cs" />
     <Compile Include="Performance\UpdateVisitor.cs" />
     <Compile Include="Profile\ProfileManager.cs" />
     <Compile Include="Program.cs" />
