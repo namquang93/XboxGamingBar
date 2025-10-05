@@ -7,12 +7,13 @@ using System.Linq;
 using System.Text;
 using Shared.Data;
 using XboxGamingBarHelper.Windows;
+using XboxGamingBarHelper.Core;
 
 namespace XboxGamingBarHelper.System
 {
     internal delegate void RunningGameChangedEventHandler(object sender, RunningGameChangedEventArgs e);
 
-    internal static class SystemManager
+    internal class SystemManager : Manager
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
@@ -27,8 +28,8 @@ namespace XboxGamingBarHelper.System
             "rider64.exe"
         };
 
-        public static RunningGame RunningGame { get; private set; }
-        public static RunningGameChangedEventHandler RunningGameChanged;
+        public RunningGame RunningGame { get; private set; }
+        public RunningGameChangedEventHandler RunningGameChanged;
 
         private static int GetForegroundProcessId()
         {
@@ -145,8 +146,10 @@ namespace XboxGamingBarHelper.System
             return runningGame;
         }
 
-        public static void Update()
+        public override void Update()
         {
+            base.Update();
+
             var newRunningGame = GetRunningGame();
             if (RunningGame != newRunningGame)
             {

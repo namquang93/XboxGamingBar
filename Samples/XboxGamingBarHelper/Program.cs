@@ -2,10 +2,12 @@
 using Shared.Data;
 using Shared.Enums;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.AppService;
 using Windows.Foundation.Collections;
+using XboxGamingBarHelper.Core;
 using XboxGamingBarHelper.Performance;
 using XboxGamingBarHelper.Profile;
 using XboxGamingBarHelper.RTSS;
@@ -18,7 +20,11 @@ namespace XboxGamingBarHelper
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private static AppServiceConnection connection = null;
 
-        private static bool needToUpdate = false;
+        private static PerformanceManager performanceManager;
+        private static RTSSManager rtssManager;
+        private static ProfileManager profileManager;
+        private static SystemManager systemManager;
+        private static List<IManager> Managers = new List<IManager>();
 
         static async Task Main(string[] args)
         {
@@ -36,10 +42,18 @@ namespace XboxGamingBarHelper
 
         private static void Initialize()
         {
-            PerformanceManager.Initialize();
-            RTSSManager.Initialize();
-            ProfileManager.Initialize();
-            SystemManager.RunningGameChanged += OnRunningGameChanged;
+            performanceManager = new PerformanceManager();
+            Managers.Add(performanceManager);
+
+            rtssManager = new RTSSManager(performanceManager);
+            Managers.Add(rtssManager);
+
+            profileManager = new ProfileManager();
+            Managers.Add(profileManager);
+
+            systemManager = new SystemManager();
+            Managers.Add(systemManager);
+            systemManager.RunningGameChanged += OnRunningGameChanged;
         }
 
         private static async void OnRunningGameChanged(object sender, RunningGameChangedEventArgs e)
@@ -68,11 +82,11 @@ namespace XboxGamingBarHelper
 
             if (!ProfileManager.TryLoadGameProfile(new GameProfileKey(e.NewRunningGame.Name, e.NewRunningGame.Path), out GameProfile gameProfile))
             {
-                gameProfile = ProfileManager.GlobalProfile;
+                gameProfile = profileManager.GlobalProfile;
                 Logger.Info($"New running game {e.NewRunningGame.Name} doesn't have profile, use global profile.");
             }
 
-            ProfileManager.CurrentProfile = gameProfile;
+            profileManager.CurrentProfile = gameProfile;
             if (gameProfile.Use)
             {
                 Logger.Info($"New running game {e.NewRunningGame.Name} have profile in used, apply it.");
@@ -112,18 +126,17 @@ namespace XboxGamingBarHelper
             AppServiceConnectionStatus status = await connection.OpenAsync();
             if (status != AppServiceConnectionStatus.Success)
             {
-                needToUpdate = false;
                 return;
             }
 
-            needToUpdate = true;
-            while (needToUpdate)
+            while (true)
             {
                 await Task.Delay(500);
 
-                PerformanceManager.Update();
-                RTSSManager.Update();
-                SystemManager.Update();
+                foreach (var manager in Managers)
+                {
+                    manager.Update();
+                }
             }
         }
 
@@ -141,13 +154,13 @@ namespace XboxGamingBarHelper
                     switch (function)
                     {
                         case Function.OSD:
-                            response.Add(nameof(Value), RTSSManager.OSDLevel);
+                            response.Add(nameof(Value), rtssManager.OSDLevel);
                             break;
                         case Function.TDP:
-                            response.Add(nameof(Value), PerformanceManager.GetTDP());
+                            response.Add(nameof(Value), performanceManager.GetTDP());
                             break;
                         case Function.CurrentGame:
-                            response.Add(nameof(Value), SystemManager.RunningGame.ToString());
+                            response.Add(nameof(Value), systemManager.RunningGame.ToString());
                             break;
                     }
 
@@ -158,17 +171,17 @@ namespace XboxGamingBarHelper
                     {
                         case Function.OSD:
                             var osdLevel = (int)args.Request.Message[nameof(Value)];
-                            RTSSManager.OSDLevel = osdLevel;
+                            rtssManager.OSDLevel = osdLevel;
                             break;
                         case Function.TDP:
                             var tdpLimit = (int)args.Request.Message[nameof(Value)];
-                            PerformanceManager.SetTDP(tdpLimit);
+                            performanceManager.SetTDP(tdpLimit);
                             break;
                         case Function.GameProfile:
                             var isPerGameProfile = (bool)args.Request.Message[nameof(Value)];
-                            if (SystemManager.RunningGame.IsValid())
+                            if (systemManager.RunningGame.IsValid())
                             {
-                                ProfileManager.SaveGameProfile(new GameProfile(SystemManager.RunningGame.Name, SystemManager.RunningGame.Path, isPerGameProfile, PerformanceManager.GetTDP()));
+                                ProfileManager.SaveGameProfile(new GameProfile(systemManager.RunningGame.Name, systemManager.RunningGame.Path, isPerGameProfile, performanceManager.GetTDP()));
                             }
                             else
                             {

@@ -2,10 +2,11 @@
 using Shared.Data;
 using System;
 using System.IO;
+using XboxGamingBarHelper.Core;
 
 namespace XboxGamingBarHelper.Profile
 {
-    internal static class ProfileManager
+    internal class ProfileManager : Manager
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
@@ -14,10 +15,10 @@ namespace XboxGamingBarHelper.Profile
         private const string GLOBAL_PROFILE_FILE_NAME = "global.xml";
 
 
-        public static GameProfile GlobalProfile { get; private set; }
-        public static GameProfile CurrentProfile { get; set; }
+        public GameProfile GlobalProfile { get; private set; }
+        public GameProfile CurrentProfile { get; set; }
 
-        public static void Initialize()
+        public ProfileManager()
         {
             var gameProfilesFolder = GetGameProfilesFolder();
             if (!Directory.Exists(gameProfilesFolder))
@@ -85,11 +86,6 @@ namespace XboxGamingBarHelper.Profile
             }
 
             gameProfile.ToFile(GetGameProfilePath(gameProfile.Key));
-        }
-
-        public static void UpdateProfileTDP()
-        {
-
         }
     }
 }

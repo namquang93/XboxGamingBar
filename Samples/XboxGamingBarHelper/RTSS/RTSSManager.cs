@@ -1,39 +1,41 @@
 ﻿using RTSSSharedMemoryNET;
 using System.Diagnostics;
+using XboxGamingBarHelper.Core;
 using XboxGamingBarHelper.Performance;
 using XboxGamingBarHelper.RTSS.OSDItems;
 
 namespace XboxGamingBarHelper.RTSS
 {
-    internal static class RTSSManager
+    internal class RTSSManager : Manager
     {
         private const string OSDSeparator = " <C=6E006A>|<C> ";
         private const string OSDBackground = "<P=0,0><L0><C=80000000><B=0,0>\b<C>";
         private const string OSDAppName = "Xbox Gaming Bar OSD";
 
-        internal static int OSDLevel;
-        internal static OSD OSD;
-        internal static OSDItem[] OSDItems;
+        internal int OSDLevel;
+        internal OSD OSD;
+        internal OSDItem[] OSDItems;
 
-        public static void Initialize()
+        public RTSSManager(PerformanceManager performanceManager)
         {
             OSDItems = new OSDItem[]
             {
                 new OSDItemFPS(),
-                new OSDItemBattery(PerformanceManager.BatteryPercent, PerformanceManager.BatteryRemainTime),
-                new OSDItemMemory(PerformanceManager.MemoryUsage, PerformanceManager.MemoryUsed),
-                new OSDItemCPU(PerformanceManager.CPUUsage, PerformanceManager.CPUClock, PerformanceManager.CPUWattage, PerformanceManager.CPUTemperature),
-                new OSDItemGPU(PerformanceManager.GPUUsage, PerformanceManager.GPUClock, PerformanceManager.GPUWattage, PerformanceManager.GPUTemperature),
+                new OSDItemBattery(performanceManager.BatteryPercent, performanceManager.BatteryRemainTime),
+                new OSDItemMemory(performanceManager.MemoryUsage, performanceManager.MemoryUsed),
+                new OSDItemCPU(performanceManager.CPUUsage, performanceManager.CPUClock, performanceManager.CPUWattage, performanceManager.CPUTemperature),
+                new OSDItemGPU(performanceManager.GPUUsage, performanceManager.GPUClock, performanceManager.GPUWattage, performanceManager.GPUTemperature),
             };
         }
 
-        public static bool IsRTSSRunning()
+        internal static bool IsRTSSRunning()
         {
             return Process.GetProcessesByName("RTSS").Length > 0;
         }
 
-        public static void Update()
+        public override void Update()
         {
+            base.Update();
             // Console.WriteLine($"OSD level {OSDLevel}");
             
             if (OSDLevel == 0)

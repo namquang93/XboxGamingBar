@@ -52,7 +52,7 @@ namespace XboxGamingBar
             }
             else
             {
-                Logger.Info("Can't get GamingWidget LeavingBackground???");
+                Logger.Warn("Can't get GamingWidget LeavingBackground???");
             }
         }
 
@@ -64,7 +64,7 @@ namespace XboxGamingBar
             }
             else
             {
-                Logger.Info("Can't get GamingWidget EnteredBackground???");
+                Logger.Warn("Can't get GamingWidget EnteredBackground???");
             }
         }
 
