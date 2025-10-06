@@ -31,6 +31,11 @@ namespace XboxGamingBarHelper.System
         public RunningGame RunningGame { get; private set; }
         public RunningGameChangedEventHandler RunningGameChanged;
 
+        public SystemManager()
+        {
+            RunningGame = GetRunningGame();
+        }
+
         private static int GetForegroundProcessId()
         {
             IntPtr foregroundWindowHandle = Win32.GetForegroundWindow();
@@ -135,7 +140,7 @@ namespace XboxGamingBarHelper.System
                 // If it's not the foreground process, use the application that has the highest frames-per-second.
                 if (appEntry.InstantaneousFrames <= runningGame.FPS)
                 {
-                    Logger.Debug($"Found game {appPath} running under lower FPS that current running game {runningGame.Name}");
+                    Logger.Debug($"Found game {appPath} running under lower FPS that current running game {runningGame.GameId.Name}");
                     continue;
                 }
 

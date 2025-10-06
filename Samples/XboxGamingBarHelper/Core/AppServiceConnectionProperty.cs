@@ -20,12 +20,6 @@ namespace XboxGamingBarHelper.Core
             get { return function; }
         }
 
-        public AppServiceConnectionProperty() : base()
-        {
-            connection = null;
-            function = Function.OSD;
-        }
-
         public AppServiceConnectionProperty(T initialValue) : base(initialValue)
         {
             connection = null;

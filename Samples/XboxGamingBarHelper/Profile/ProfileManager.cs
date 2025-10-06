@@ -6,6 +6,8 @@ using XboxGamingBarHelper.Core;
 
 namespace XboxGamingBarHelper.Profile
 {
+    internal delegate void OnProfileChanged(object sender, ProfileChangedEventArgs e);
+
     internal class ProfileManager : Manager
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
@@ -14,9 +16,24 @@ namespace XboxGamingBarHelper.Profile
         private const string GLOBAL_PROFILE_NAME = "global";
         private const string GLOBAL_PROFILE_FILE_NAME = "global.xml";
 
+        public OnProfileChanged ProfileChanged;
 
         public GameProfile GlobalProfile { get; private set; }
-        public GameProfile CurrentProfile { get; set; }
+
+        private GameProfile currentProfile;
+        public GameProfile CurrentProfile
+        {
+            get { return currentProfile; }
+            set
+            {
+                if (currentProfile != value)
+                {
+                    var oldProfile = currentProfile;
+                    currentProfile = value;
+                    ProfileChanged.Invoke(this, new ProfileChangedEventArgs(oldProfile, currentProfile));
+                }
+            }
+        }
 
         public ProfileManager()
         {
@@ -51,7 +68,7 @@ namespace XboxGamingBarHelper.Profile
             return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, GLOBAL_PROFILE_FILE_NAME);
         }
 
-        public static string GetGameProfilePath(GameProfileKey gameProfileKey)
+        public static string GetGameProfilePath(GameId gameProfileKey)
         {
             return Path.Combine(GetGameProfilesFolder(), $"{Path.GetFileNameWithoutExtension(gameProfileKey.Path)}.xml");
         }
@@ -66,7 +83,7 @@ namespace XboxGamingBarHelper.Profile
             return HasGameProfile(gameProfileKey.Path);
         }*/
 
-        public static bool TryLoadGameProfile(GameProfileKey gameProfileKey, out GameProfile gameProfile)
+        public static bool TryLoadGameProfile(GameId gameProfileKey, out GameProfile gameProfile)
         {
             if (!gameProfileKey.IsValid())
             {
@@ -85,7 +102,7 @@ namespace XboxGamingBarHelper.Profile
                 return;
             }
 
-            gameProfile.ToFile(GetGameProfilePath(gameProfile.Key));
+            gameProfile.ToFile(GetGameProfilePath(gameProfile.GameId));
         }
     }
 }

@@ -13,10 +13,7 @@
         public int ProcessId;
 
         [XmlElement("Name")]
-        public string Name;
-
-        [XmlElement("Path")]
-        public string Path;
+        public GameId GameId;
 
         [XmlElement("FPS")]
         public uint FPS;
@@ -27,8 +24,7 @@
         public RunningGame(int processId, string name, string path, uint fps, bool isForeground)
         {
             ProcessId = processId;
-            Name = name;
-            Path = path;
+            GameId = new GameId(name, path);
             FPS = fps;
             IsForeground = isForeground;
         }
@@ -46,7 +42,7 @@
             if (ReferenceEquals(g1, null) || ReferenceEquals(g2, null))
                 return false;
 
-            return g1.Name == g2.Name && g1.Path == g2.Path;
+            return g1.GameId == g2.GameId;
         }
 
         public static bool operator !=(RunningGame p1, RunningGame p2)
@@ -65,7 +61,7 @@
 
         public override int GetHashCode()
         {
-            return Name.GetHashCode() ^ Path.GetHashCode();
+            return GameId.GetHashCode();
         }
 
         // Export to xml string.

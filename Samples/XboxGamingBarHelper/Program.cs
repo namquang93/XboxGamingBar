@@ -20,11 +20,17 @@ namespace XboxGamingBarHelper
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private static AppServiceConnection connection = null;
 
+        // Managers
         private static PerformanceManager performanceManager;
         private static RTSSManager rtssManager;
         private static ProfileManager profileManager;
         private static SystemManager systemManager;
         private static List<IManager> Managers = new List<IManager>();
+
+        // Properties
+        private static OSDProperty osd;
+        private static TDPProperty tdp;
+        private static RunningGameProperty runningGame;
 
         static async Task Main(string[] args)
         {
@@ -55,16 +61,16 @@ namespace XboxGamingBarHelper
                 Logger.Info("Can't update current game.");
             }
 
-            if (!ProfileManager.TryLoadGameProfile(new GameProfileKey(e.NewRunningGame.Name, e.NewRunningGame.Path), out GameProfile gameProfile))
+            if (!ProfileManager.TryLoadGameProfile(e.NewRunningGame.GameId, out GameProfile gameProfile))
             {
                 gameProfile = profileManager.GlobalProfile;
-                Logger.Info($"New running game {e.NewRunningGame.Name} doesn't have profile, use global profile.");
+                Logger.Info($"New running game {e.NewRunningGame.GameId.Name} doesn't have profile, use global profile.");
             }
 
             profileManager.CurrentProfile = gameProfile;
             if (gameProfile.Use)
             {
-                Logger.Info($"New running game {e.NewRunningGame.Name} have profile in used, apply it.");
+                Logger.Info($"New running game {e.NewRunningGame.GameId.Name} have profile in used, apply it.");
                 request = new ValueSet
                     {
                         { nameof(Command), (int)Command.Update },
@@ -83,7 +89,7 @@ namespace XboxGamingBarHelper
             }
             else
             {
-                Logger.Info($"New running game {e.NewRunningGame.Name} have profile in used, do not apply it.");
+                Logger.Info($"New running game {e.NewRunningGame.GameId.Name} have profile in used, do not apply it.");
             }
         }
 
@@ -92,12 +98,14 @@ namespace XboxGamingBarHelper
         /// </summary>
         private static async Task Initialize()
         {
+            // Initialize app service connection.
             connection = new AppServiceConnection();
             connection.AppServiceName = "XboxGamingBarService";
             connection.PackageFamilyName = Package.Current.Id.FamilyName;
             connection.RequestReceived += Connection_RequestReceived;
             connection.ServiceClosed += Connection_ServiceClosed;
 
+            // Initialize managers.
             performanceManager = new PerformanceManager();
             Managers.Add(performanceManager);
 
@@ -110,6 +118,10 @@ namespace XboxGamingBarHelper
             systemManager = new SystemManager();
             Managers.Add(systemManager);
             systemManager.RunningGameChanged += OnRunningGameChanged;
+
+            // Initialize properties.
+            runningGame = new RunningGameProperty(systemManager.RunningGame, connection, Function.CurrentGame);
+            osd = new OSDProperty(rtssManager.osdLevel, runningGame, connection, Function.OSD);
 
             AppServiceConnectionStatus status = await connection.OpenAsync();
             if (status != AppServiceConnectionStatus.Success)
@@ -142,7 +154,7 @@ namespace XboxGamingBarHelper
                     switch (function)
                     {
                         case Function.OSD:
-                            response.Add(nameof(Content), rtssManager.OSDLevel);
+                            response.Add(nameof(Content), rtssManager.osdLevel);
                             break;
                         case Function.TDP:
                             response.Add(nameof(Content), performanceManager.GetTDP());
@@ -159,7 +171,7 @@ namespace XboxGamingBarHelper
                     {
                         case Function.OSD:
                             var osdLevel = (int)args.Request.Message[nameof(Content)];
-                            rtssManager.OSDLevel = osdLevel;
+                            rtssManager.osdLevel = osdLevel;
                             break;
                         case Function.TDP:
                             var tdpLimit = (int)args.Request.Message[nameof(Content)];
@@ -169,7 +181,7 @@ namespace XboxGamingBarHelper
                             var isPerGameProfile = (bool)args.Request.Message[nameof(Content)];
                             if (systemManager.RunningGame.IsValid())
                             {
-                                ProfileManager.SaveGameProfile(new GameProfile(systemManager.RunningGame.Name, systemManager.RunningGame.Path, isPerGameProfile, performanceManager.GetTDP()));
+                                ProfileManager.SaveGameProfile(new GameProfile(systemManager.RunningGame.GameId, isPerGameProfile, performanceManager.GetTDP()));
                             }
                             else
                             {

@@ -242,7 +242,7 @@ namespace XboxGamingBar
             {
                 if (runningGame.IsValid())
                 {
-                    CurrentGameText.Text = $"{runningGame.Name}{(runningGame.IsForeground ? string.Empty : "*")}";
+                    CurrentGameText.Text = $"{runningGame.GameId.Name}{(runningGame.IsForeground ? string.Empty : "*")}";
                     GameProfileToggle.Visibility = Visibility.Visible;
                 }
                 else

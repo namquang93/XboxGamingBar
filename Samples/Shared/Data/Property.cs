@@ -44,13 +44,6 @@ namespace Shared.Data
             get { return childProperties; }
         }
 
-        public Property()
-        {
-            parentProperty = null;
-            childProperties = new List<IProperty>();
-            value = default;
-        }
-
         public Property(T initialValue)
         {
             parentProperty = null;

@@ -12,13 +12,13 @@ namespace XboxGamingBarHelper.RTSS
         private const string OSDBackground = "<P=0,0><L0><C=80000000><B=0,0>\b<C>";
         private const string OSDAppName = "Xbox Gaming Bar OSD";
 
-        internal int OSDLevel;
-        internal OSD OSD;
-        internal OSDItem[] OSDItems;
+        internal int osdLevel;
+        internal OSD osd;
+        internal OSDItem[] osdItems;
 
         public RTSSManager(PerformanceManager performanceManager)
         {
-            OSDItems = new OSDItem[]
+            osdItems = new OSDItem[]
             {
                 new OSDItemFPS(),
                 new OSDItemBattery(performanceManager.BatteryPercent, performanceManager.BatteryRemainTime),
@@ -38,13 +38,13 @@ namespace XboxGamingBarHelper.RTSS
             base.Update();
             // Console.WriteLine($"OSD level {OSDLevel}");
             
-            if (OSDLevel == 0)
+            if (osdLevel == 0)
             {
-                if (OSD != null)
+                if (osd != null)
                 {
-                    OSD.Update(string.Empty);
-                    OSD.Dispose();
-                    OSD = null;
+                    osd.Update(string.Empty);
+                    osd.Dispose();
+                    osd = null;
                 }
 
                 var osdEntries = OSD.GetOSDEntries();
@@ -60,15 +60,15 @@ namespace XboxGamingBarHelper.RTSS
                 return;
             }
 
-            if (OSD == null)
+            if (osd == null)
             {
-                OSD = new OSD(OSDAppName);
+                osd = new OSD(OSDAppName);
             }
 
             string osdString = OSDBackground;
-            for (int i = 0; i < OSDItems.Length; i++)
+            for (int i = 0; i < osdItems.Length; i++)
             {
-                var osdItemString = OSDItems[i].GetOSDString(OSDLevel);
+                var osdItemString = osdItems[i].GetOSDString(osdLevel);
                 if (string.IsNullOrEmpty(osdItemString))
                     continue;
 
@@ -82,7 +82,7 @@ namespace XboxGamingBarHelper.RTSS
                 }
             }
 
-            OSD.Update(osdString);
+            osd.Update(osdString);
         }
     }
 }

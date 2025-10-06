@@ -9,8 +9,8 @@ namespace Shared.Data
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-        [XmlElement("Key")]
-        public GameProfileKey Key;
+        [XmlElement("GameId")]
+        public GameId GameId;
 
         [XmlElement("Use")]
         public bool Use;
@@ -18,16 +18,53 @@ namespace Shared.Data
         [XmlElement("TDP")]
         public int TDP;
 
+        public GameProfile(GameId gameId, bool use, int tdp)
+        {
+            GameId = gameId;
+            Use = use;
+            TDP = tdp;
+        }
+
         public GameProfile(string name, string path, bool use, int tdp)
         {
-            Key = new GameProfileKey(name, path);
+            GameId = new GameId(name, path);
             Use = use;
             TDP = tdp;
         }
 
         public bool IsValid()
         {
-            return Key.IsValid();
+            return GameId.IsValid();
+        }
+
+        public static bool operator ==(GameProfile g1, GameProfile g2)
+        {
+            if (ReferenceEquals(g1, g2))
+                return true;
+
+            if (ReferenceEquals(g1, null) || ReferenceEquals(g2, null))
+                return false;
+
+            return g1.GameId == g2.GameId;
+        }
+
+        public static bool operator !=(GameProfile p1, GameProfile p2)
+        {
+            return !(p1 == p2);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is GameProfile other)
+            {
+                return this == other;
+            }
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return GameId.GetHashCode();
         }
 
         // Export to xml string.
@@ -74,7 +111,7 @@ namespace Shared.Data
             {
                 serializer.Serialize(writer, this);
             }
-            Logger.Info($"Save game profile {Key.Name} to {path}");
+            Logger.Info($"Save game profile {GameId.Name} to {path}");
         }
     }
 }
