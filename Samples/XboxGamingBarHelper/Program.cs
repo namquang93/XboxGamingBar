@@ -43,10 +43,10 @@ namespace XboxGamingBarHelper
             {
                 { nameof(Command), (int)Command.Update },
                 { nameof(Function),(int)Function.CurrentGame },
-                { nameof(Value), e.NewRunningGame.ToString() }
+                { nameof(Content), e.NewRunningGame.ToString() }
             };
             AppServiceResponse response = await connection.SendMessageAsync(request);
-            if (response.Message.TryGetValue(nameof(Value), out var result))
+            if (response.Message.TryGetValue(nameof(Content), out var result))
             {
                 Logger.Info($"Update running game {(string)result}.");
             }
@@ -69,10 +69,10 @@ namespace XboxGamingBarHelper
                     {
                         { nameof(Command), (int)Command.Update },
                         { nameof(Function),(int)Function.TDP },
-                        { nameof(Value), gameProfile.TDP }
+                        { nameof(Content), gameProfile.TDP }
                     };
                 response = await connection.SendMessageAsync(request);
-                if (response.Message.TryGetValue(nameof(Value), out result))
+                if (response.Message.TryGetValue(nameof(Content), out result))
                 {
                     Logger.Info($"Update game profile TDP {(string)result}.");
                 }
@@ -142,13 +142,13 @@ namespace XboxGamingBarHelper
                     switch (function)
                     {
                         case Function.OSD:
-                            response.Add(nameof(Value), rtssManager.OSDLevel);
+                            response.Add(nameof(Content), rtssManager.OSDLevel);
                             break;
                         case Function.TDP:
-                            response.Add(nameof(Value), performanceManager.GetTDP());
+                            response.Add(nameof(Content), performanceManager.GetTDP());
                             break;
                         case Function.CurrentGame:
-                            response.Add(nameof(Value), systemManager.RunningGame.ToString());
+                            response.Add(nameof(Content), systemManager.RunningGame.ToString());
                             break;
                     }
 
@@ -158,15 +158,15 @@ namespace XboxGamingBarHelper
                     switch (function)
                     {
                         case Function.OSD:
-                            var osdLevel = (int)args.Request.Message[nameof(Value)];
+                            var osdLevel = (int)args.Request.Message[nameof(Content)];
                             rtssManager.OSDLevel = osdLevel;
                             break;
                         case Function.TDP:
-                            var tdpLimit = (int)args.Request.Message[nameof(Value)];
+                            var tdpLimit = (int)args.Request.Message[nameof(Content)];
                             performanceManager.SetTDP(tdpLimit);
                             break;
                         case Function.GameProfile:
-                            var isPerGameProfile = (bool)args.Request.Message[nameof(Value)];
+                            var isPerGameProfile = (bool)args.Request.Message[nameof(Content)];
                             if (systemManager.RunningGame.IsValid())
                             {
                                 ProfileManager.SaveGameProfile(new GameProfile(systemManager.RunningGame.Name, systemManager.RunningGame.Path, isPerGameProfile, performanceManager.GetTDP()));

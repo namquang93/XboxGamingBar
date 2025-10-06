@@ -8,7 +8,7 @@ using Windows.Foundation.Collections;
 
 namespace XboxGamingBarHelper.Core
 {
-    internal class AppServiceConnectionProperty<T> : Property<T>
+    internal abstract class AppServiceConnectionProperty<T> : Property<T>
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
@@ -54,12 +54,12 @@ namespace XboxGamingBarHelper.Core
                 {
                     { nameof(Command), (int)Command.PropertyChanged },
                     { nameof(Function),(int)function },
-                    { nameof(Shared.Enums.Value), Value.ToString() }
                 };
+                request = AddContent(request);
                 var response = await connection.SendMessageAsync(request);
                 if (response != null)
                 {
-                    if (response.Message.TryGetValue(nameof(Shared.Enums.Value), out object responseValue))
+                    if (response.Message.TryGetValue(nameof(Shared.Enums.Content), out object responseValue))
                     {
                         Logger.Info($"Notify property {function} changed {responseValue}.");
                     }
@@ -77,6 +77,12 @@ namespace XboxGamingBarHelper.Core
             {
                 Logger.Warn("No app service connection, can't notify widget about property value changes.");
             }
+        }
+
+        protected virtual ValueSet AddContent(ValueSet inValueSet)
+        {
+            inValueSet.Add(nameof(Content), Value);
+            return inValueSet;
         }
     }
 }

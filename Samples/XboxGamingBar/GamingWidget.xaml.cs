@@ -152,7 +152,7 @@ namespace XboxGamingBar
             if (response != null)
             {
                 object value;
-                if (response.Message.TryGetValue(nameof(Value), out value))
+                if (response.Message.TryGetValue(nameof(Shared.Enums.Content), out value))
                 {
                     var level = (int)value;
                     Logger.Info($"Get OSD level {level} from desktop process");
@@ -183,7 +183,7 @@ namespace XboxGamingBar
             if (response != null)
             {
                 object value;
-                if (response.Message.TryGetValue(nameof(Value), out value))
+                if (response.Message.TryGetValue(nameof(Shared.Enums.Content), out value))
                 {
                     var tdp = (int)value;
                     Logger.Info($"Get TDP limit {tdp}W from desktop process");
@@ -211,7 +211,7 @@ namespace XboxGamingBar
             if (response != null)
             {
                 object value;
-                if (response.Message.TryGetValue(nameof(Value), out value))
+                if (response.Message.TryGetValue(nameof(Shared.Enums.Content), out value))
                 {
                     await SyncRunningGame(RunningGame.FromString((string)value));
                 }
@@ -300,7 +300,7 @@ namespace XboxGamingBar
                 function = (Function)functionObject;
             }
 
-            if (!args.Request.Message.TryGetValue(nameof(Value), out var valueObject))
+            if (!args.Request.Message.TryGetValue(nameof(Shared.Enums.Content), out var valueObject))
             {
                 Logger.Error("Invalid message value.");
             }
@@ -333,7 +333,7 @@ namespace XboxGamingBar
             }
             ValueSet response = new ValueSet
             {
-                { nameof(Value), result }
+                { nameof(Shared.Enums.Content), result }
             };
             await args.Request.SendResponseAsync(response);
         }
@@ -348,7 +348,7 @@ namespace XboxGamingBar
                 {
                     { nameof(Command), (int)Command.Set },
                     { nameof(Function), (int)Function.OSD },
-                    { nameof(Value), level }
+                    { nameof(Shared.Enums.Content), level }
                 };
                 AppServiceResponse response = await App.Connection.SendMessageAsync(request);
                 if (response != null)
@@ -377,7 +377,7 @@ namespace XboxGamingBar
                 {
                     { nameof(Command), (int)Command.Set },
                     { nameof(Function), (int)Function.TDP },
-                    { nameof(Value), tdp }
+                    { nameof(Shared.Enums.Content), tdp }
                 };
                 AppServiceResponse response = await App.Connection.SendMessageAsync(request);
                 if (response != null)
@@ -413,7 +413,7 @@ namespace XboxGamingBar
             {
                 { nameof(Command), (int)Command.Set },
                 { nameof(Function), (int)Function.GameProfile },
-                { nameof(Value), GameProfileToggle.IsOn }
+                { nameof(Shared.Enums.Content), GameProfileToggle.IsOn }
             };
             AppServiceResponse response = await App.Connection.SendMessageAsync(request);
             if (response != null)
