@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Windows.ApplicationModel.AppService;
 using XboxGamingBarHelper.Core;
 
 namespace XboxGamingBarHelper.Performance
@@ -72,7 +73,7 @@ namespace XboxGamingBarHelper.Performance
         public ISensor BatteryRemainTime => batteryRemainTime;
         #endregion
 
-        internal PerformanceManager()
+        internal PerformanceManager(AppServiceConnection connection) : base(connection)
         {
             // Initialize the computer sensors
             computer = new Computer

@@ -46,26 +46,14 @@ namespace XboxGamingBar
 
         private async void App_LeavingBackground(object sender, LeavingBackgroundEventArgs e)
         {
-            if (gamingWidget != null)
-            {
-                await gamingWidget.GamingWidget_LeavingBackground(sender, e);
-            }
-            else
-            {
-                Logger.Warn("Can't get GamingWidget LeavingBackground???");
-            }
+            if (gamingWidget == null) return;
+
+            await gamingWidget.GamingWidget_LeavingBackground(sender, e);
         }
 
-        private async void App_EnteredBackground(object sender, EnteredBackgroundEventArgs e)
+        private void App_EnteredBackground(object sender, EnteredBackgroundEventArgs e)
         {
-            if (gamingWidget != null)
-            {
-                await gamingWidget.GamingWidget_EnteredBackground(sender, e);
-            }
-            else
-            {
-                Logger.Warn("Can't get GamingWidget EnteredBackground???");
-            }
+            gamingWidget?.GamingWidget_EnteredBackground(sender, e);
         }
 
         /// <summary>
@@ -206,7 +194,7 @@ namespace XboxGamingBar
                     // When the navigation stack isn't restored navigate to the first page,
                     // configuring the new page by passing required information as a navigation
                     // parameter
-                    // rootFrame.Navigate(typeof(GamingWidget), e.Arguments);
+                    rootFrame.Navigate(typeof(GamingWidget), e.Arguments);
                 }
                 // Ensure the current window is active
                 Window.Current.Activate();

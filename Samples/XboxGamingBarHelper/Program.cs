@@ -11,7 +11,7 @@ using XboxGamingBarHelper.Core;
 using XboxGamingBarHelper.Performance;
 using XboxGamingBarHelper.Profile;
 using XboxGamingBarHelper.RTSS;
-using XboxGamingBarHelper.System;
+using XboxGamingBarHelper.Systems;
 
 namespace XboxGamingBarHelper
 {
@@ -25,7 +25,7 @@ namespace XboxGamingBarHelper
         private static RTSSManager rtssManager;
         private static ProfileManager profileManager;
         private static SystemManager systemManager;
-        private static List<IManager> Managers = new List<IManager>();
+        private static List<IManager> Managers;
 
         // Properties
         private static OSDProperty osd;
@@ -37,60 +37,24 @@ namespace XboxGamingBarHelper
             await Initialize();
         }
 
-        private static async void OnRunningGameChanged(object sender, RunningGameChangedEventArgs e)
+        private static void OnProfileChanged(object sender, ProfileChangedEventArgs e)
         {
-            if (connection == null)
+            if (e.NewProfile.Use)
             {
-                Logger.Info("No connection yet, can't broadcast running game changed.");
-                return;
-            }
-
-            ValueSet request = new ValueSet
-            {
-                { nameof(Command), (int)Command.Update },
-                { nameof(Function),(int)Function.CurrentGame },
-                { nameof(Content), e.NewRunningGame.ToString() }
-            };
-            AppServiceResponse response = await connection.SendMessageAsync(request);
-            if (response.Message.TryGetValue(nameof(Content), out var result))
-            {
-                Logger.Info($"Update running game {(string)result}.");
+                Logger.Info($"Use profile {e.NewProfile.GameId.Name}'s TDP limit {e.NewProfile.TDP}");
+                tdp.Value = e.NewProfile.TDP;
             }
             else
             {
-                Logger.Info("Can't update current game.");
+                Logger.Info($"Not using profile {e.NewProfile.GameId.Name}'s TDP limit {e.NewProfile.TDP}");
             }
+        }
 
-            if (!ProfileManager.TryLoadGameProfile(e.NewRunningGame.GameId, out GameProfile gameProfile))
-            {
-                gameProfile = profileManager.GlobalProfile;
-                Logger.Info($"New running game {e.NewRunningGame.GameId.Name} doesn't have profile, use global profile.");
-            }
-
+        private static void OnRunningGameChanged(object sender, RunningGameChangedEventArgs e)
+        {
+            runningGame.Value = e.NewRunningGame;
+            ProfileManager.TryLoadGameProfile(e.NewRunningGame.GameId, out GameProfile gameProfile);
             profileManager.CurrentProfile = gameProfile;
-            if (gameProfile.Use)
-            {
-                Logger.Info($"New running game {e.NewRunningGame.GameId.Name} have profile in used, apply it.");
-                request = new ValueSet
-                    {
-                        { nameof(Command), (int)Command.Update },
-                        { nameof(Function),(int)Function.TDP },
-                        { nameof(Content), gameProfile.TDP }
-                    };
-                response = await connection.SendMessageAsync(request);
-                if (response.Message.TryGetValue(nameof(Content), out result))
-                {
-                    Logger.Info($"Update game profile TDP {(string)result}.");
-                }
-                else
-                {
-                    Logger.Info("Can't update game profile TDP.");
-                }
-            }
-            else
-            {
-                Logger.Info($"New running game {e.NewRunningGame.GameId.Name} have profile in used, do not apply it.");
-            }
         }
 
         /// <summary>
@@ -106,28 +70,25 @@ namespace XboxGamingBarHelper
             connection.ServiceClosed += Connection_ServiceClosed;
 
             // Initialize managers.
-            performanceManager = new PerformanceManager();
-            Managers.Add(performanceManager);
-
-            rtssManager = new RTSSManager(performanceManager);
-            Managers.Add(rtssManager);
-
-            profileManager = new ProfileManager();
-            Managers.Add(profileManager);
-
-            systemManager = new SystemManager();
-            Managers.Add(systemManager);
-            systemManager.RunningGameChanged += OnRunningGameChanged;
+            performanceManager = new PerformanceManager(connection);
+            rtssManager = new RTSSManager(performanceManager, connection);
+            profileManager = new ProfileManager(connection);
+            systemManager = new SystemManager(connection);
+            Managers = new List<IManager> { performanceManager, rtssManager, profileManager, systemManager };
 
             // Initialize properties.
-            runningGame = new RunningGameProperty(systemManager.RunningGame, connection, Function.CurrentGame);
-            osd = new OSDProperty(rtssManager.osdLevel, runningGame, connection, Function.OSD);
+            runningGame = new RunningGameProperty(systemManager.RunningGame, systemManager);
+            osd = new OSDProperty(rtssManager.osdLevel, runningGame, rtssManager);
+            tdp = new TDPProperty(performanceManager.GetTDP(), runningGame, performanceManager);
 
             AppServiceConnectionStatus status = await connection.OpenAsync();
             if (status != AppServiceConnectionStatus.Success)
             {
                 return;
             }
+
+            profileManager.ProfileChanged += OnProfileChanged;
+            systemManager.RunningGameChanged += OnRunningGameChanged;
 
             while (true)
             {
@@ -157,10 +118,10 @@ namespace XboxGamingBarHelper
                             response.Add(nameof(Content), rtssManager.osdLevel);
                             break;
                         case Function.TDP:
-                            response.Add(nameof(Content), performanceManager.GetTDP());
+                            response.Add(nameof(Content), tdp.Value);
                             break;
                         case Function.CurrentGame:
-                            response.Add(nameof(Content), systemManager.RunningGame.ToString());
+                            response.Add(nameof(Content), runningGame.ToString());
                             break;
                     }
 
@@ -174,8 +135,7 @@ namespace XboxGamingBarHelper
                             rtssManager.osdLevel = osdLevel;
                             break;
                         case Function.TDP:
-                            var tdpLimit = (int)args.Request.Message[nameof(Content)];
-                            performanceManager.SetTDP(tdpLimit);
+                            tdp.Value = (int)args.Request.Message[nameof(Content)];
                             break;
                         case Function.GameProfile:
                             var isPerGameProfile = (bool)args.Request.Message[nameof(Content)];

@@ -4,7 +4,5 @@
     {
         Get,
         Set,
-        Update,
-        PropertyChanged,
     }
 }

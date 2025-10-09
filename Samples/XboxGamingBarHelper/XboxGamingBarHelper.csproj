@@ -135,7 +135,7 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Runtime.WindowsRuntime, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETCore\v4.5\System.Runtime.WindowsRuntime.dll</HintPath>
+      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETCore\v4.5\System.Runtime.WindowsRuntime.dll</HintPath>
     </Reference>
     <Reference Include="Windows">
       <HintPath>C:\Program Files (x86)\Windows Kits\10\UnionMetadata\10.0.22621.0\Windows.winmd</HintPath>
@@ -143,7 +143,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\AppServiceConnectionProperty.cs" />
+    <Compile Include="Core\HelperProperty.cs" />
     <Compile Include="Core\IManager.cs" />
     <Compile Include="Core\Manager.cs" />
     <Compile Include="Core\Sensor.cs" />
@@ -167,10 +167,10 @@
     <Compile Include="RTSS\OSDItemValue.cs" />
     <Compile Include="RTSS\OSDProperty.cs" />
     <Compile Include="RTSS\RTSSManager.cs" />
-    <Compile Include="System\RunningGameChangedEventArgs.cs" />
-    <Compile Include="System\RunningGameProperty.cs" />
+    <Compile Include="Systems\RunningGameChangedEventArgs.cs" />
+    <Compile Include="Systems\RunningGameProperty.cs" />
     <Compile Include="Windows\Win32.cs" />
-    <Compile Include="System\SystemManager.cs" />
+    <Compile Include="Systems\SystemManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

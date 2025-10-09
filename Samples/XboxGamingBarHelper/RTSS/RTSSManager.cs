@@ -1,5 +1,6 @@
 ﻿using RTSSSharedMemoryNET;
 using System.Diagnostics;
+using Windows.ApplicationModel.AppService;
 using XboxGamingBarHelper.Core;
 using XboxGamingBarHelper.Performance;
 using XboxGamingBarHelper.RTSS.OSDItems;
@@ -16,7 +17,7 @@ namespace XboxGamingBarHelper.RTSS
         internal OSD osd;
         internal OSDItem[] osdItems;
 
-        public RTSSManager(PerformanceManager performanceManager)
+        public RTSSManager(PerformanceManager performanceManager, AppServiceConnection connection) : base(connection)
         {
             osdItems = new OSDItem[]
             {

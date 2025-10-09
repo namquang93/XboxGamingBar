@@ -1,14 +1,15 @@
 ﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.ComponentModel;
 
 namespace Shared.Data
 {
-    public interface IProperty
+    public interface IProperty : INotifyPropertyChanged
     {
         IProperty ParentProperty { get; }
 
         List<IProperty> ChildProperties { get; }
 
-        Task PropertyValueChanged();
+        bool TryGetValue<ValueType>(out ValueType value);
+        bool TrySetValue(object value);
     }
 }

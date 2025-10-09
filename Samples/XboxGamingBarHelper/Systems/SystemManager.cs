@@ -8,8 +8,9 @@ using System.Text;
 using Shared.Data;
 using XboxGamingBarHelper.Windows;
 using XboxGamingBarHelper.Core;
+using Windows.ApplicationModel.AppService;
 
-namespace XboxGamingBarHelper.System
+namespace XboxGamingBarHelper.Systems
 {
     internal delegate void RunningGameChangedEventHandler(object sender, RunningGameChangedEventArgs e);
 
@@ -28,10 +29,38 @@ namespace XboxGamingBarHelper.System
             "rider64.exe"
         };
 
-        public RunningGame RunningGame { get; private set; }
-        public RunningGameChangedEventHandler RunningGameChanged;
+        private RunningGame runningGame;
+        public RunningGame RunningGame
+        {
+            get
+            {
+                return runningGame;
+            }
+            private set
+            {
+                runningGame = value;
+            }
+        }
 
-        public SystemManager()
+        private RunningGameChangedEventHandler runningGameChanged;
+        public event RunningGameChangedEventHandler RunningGameChanged
+        {
+            add {
+                if (value == null)
+                {
+                    Logger.Warn("Can't add null listener to running game changed event.");
+                    return;
+                }
+
+                value.Invoke(this, new RunningGameChangedEventArgs(new RunningGame(), RunningGame));
+                runningGameChanged += value;
+            }
+            remove {
+                runningGameChanged -= value;
+            }
+        }
+
+        public SystemManager(AppServiceConnection connection) : base(connection)
         {
             RunningGame = GetRunningGame();
         }
@@ -158,8 +187,9 @@ namespace XboxGamingBarHelper.System
             var newRunningGame = GetRunningGame();
             if (RunningGame != newRunningGame)
             {
-                RunningGameChanged.Invoke(null, new RunningGameChangedEventArgs(RunningGame, newRunningGame));
+                var oldRunningGame = RunningGame;
                 RunningGame = newRunningGame;
+                runningGameChanged?.Invoke(null, new RunningGameChangedEventArgs(oldRunningGame, newRunningGame));
             }
         }
     }

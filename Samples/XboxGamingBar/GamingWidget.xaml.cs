@@ -3,7 +3,6 @@ using Shared.Data;
 using Shared.Enums;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.AppService;
@@ -17,6 +16,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Navigation;
+using XboxGamingBar.Data;
 using XboxGamingBar.Internal;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
@@ -30,11 +30,41 @@ namespace XboxGamingBar
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-        private RunningGame RunningGame { get; set; }
+        private OSDProperty osdProperty;
+        private TDPProperty tdpProperty;
+        private List<FunctionalProperty> properties;
+
+        public int TDP
+        {
+            get
+            {
+                Logger.Info($"Got TDP {tdpProperty.Value}.");
+                return tdpProperty?.Value ?? 25;
+            }
+            set
+            {
+                if (tdpProperty.Value != value)
+                {
+                    tdpProperty.Value = value;
+                    Logger.Info($"Set TDP to {tdpProperty.Value}.");
+                }
+                else
+                {
+                    Logger.Info($"Unchanged TDP {value}.");
+                }
+            }
+        }
 
         public GamingWidget()
         {
             this.InitializeComponent();
+            this.tdpProperty = new TDPProperty(25, TDPSlider);
+            this.osdProperty = new OSDProperty(0, PerformanceOverlaySlider);
+            this.properties = new List<FunctionalProperty>()
+            {
+                tdpProperty,
+                osdProperty,
+            };
         }
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
@@ -45,8 +75,22 @@ namespace XboxGamingBar
             DiagnosticAccessStatus diagnosticAccessStatus = await AppDiagnosticInfo.RequestAccessAsync();
             if (diagnosticAccessStatus == DiagnosticAccessStatus.Allowed)
             {
+                var processesDebug = string.Empty;
                 IReadOnlyList<ProcessDiagnosticInfo> processes = ProcessDiagnosticInfo.GetForProcesses();
-                helperIsRunning = processes.Where(x => x.ExecutableFileName == "XboxGamingBarHelper.exe").FirstOrDefault() != null;
+                foreach (var process in processes)
+                {
+                    if (process.ExecutableFileName.Contains("XboxGamingBarHelper.exe"))
+                    {
+                        helperIsRunning = true;
+                    }
+                    processesDebug = $"{processesDebug}, {process.ExecutableFileName}";
+                }
+                processesDebug = processesDebug.Remove(0, 2);
+                Logger.Info($"{(helperIsRunning ? "Found" : "No")} previously launched helper in [{processesDebug}].");
+            }
+            else
+            {
+                Logger.Info("Widget is not allowed to detect previously launched helper.");
             }
 
             if (helperIsRunning && App.FullTrustLaunchState == FullTrustLaunchState.NotLaunched)
@@ -106,10 +150,9 @@ namespace XboxGamingBar
             }
         }
 
-        public async Task GamingWidget_EnteredBackground(object sender, EnteredBackgroundEventArgs e)
+        public void GamingWidget_EnteredBackground(object sender, EnteredBackgroundEventArgs e)
         {
             Logger.Info("GamingWidget EnterBackground");
-            await Task.Delay(100);
         }
 
         /// <summary>
@@ -130,114 +173,42 @@ namespace XboxGamingBar
             //});
         }
 
-        private async Task SyncUI()
+        private async Task<T> GetProperty<T>(Function function)
         {
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-            {
-                PerformanceOverlaySlider.IsEnabled = false;
-                TDPSlider.IsEnabled = false;
-                GameProfileToggle.Visibility = Visibility.Collapsed;
-            });
-
-            // Sync OSD.
             ValueSet request;
             AppServiceResponse response;
 
             request = new ValueSet
             {
                 { nameof(Command), (int)Command.Get },
-                { nameof(Function), (int)Function.OSD },
+                { nameof(Function), (int)function },
             };
             response = await App.Connection.SendMessageAsync(request);
-            if (response != null)
+            if (response != null && response.Message.TryGetValue(nameof(Content), out object value))
             {
-                object value;
-                if (response.Message.TryGetValue(nameof(Shared.Enums.Content), out value))
-                {
-                    var level = (int)value;
-                    Logger.Info($"Get OSD level {level} from desktop process");
+                var propertyValue = (T)value;
+                Logger.Info($"Get property {function} {propertyValue} from desktop process");
 
-                    await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                    {
-                        PerformanceOverlaySlider.IsEnabled = true;
-                        PerformanceOverlaySlider.Value = level;
-                    });
-                }
-                else
-                {
-                    Logger.Info("No Value in response from desktop process after connected???");
-                }
+                return propertyValue;
             }
             else
             {
                 Logger.Info("No response from desktop process after connected???");
-            }
-
-            // Sync TDP.
-            request = new ValueSet
-            {
-                { nameof(Command), (int)Command.Get },
-                { nameof(Function), (int)Function.TDP },
-            };
-            response = await App.Connection.SendMessageAsync(request);
-            if (response != null)
-            {
-                object value;
-                if (response.Message.TryGetValue(nameof(Shared.Enums.Content), out value))
-                {
-                    var tdp = (int)value;
-                    Logger.Info($"Get TDP limit {tdp}W from desktop process");
-
-                    await SyncTDP(tdp);
-                }
-                else
-                {
-                    Logger.Info("No Value in response from desktop process after connected???");
-                }
-            }
-            else
-            {
-                Logger.Info("No response from desktop process after connected???");
-            }
-            //LoadingProgressRing.Visibility = Visibility.Collapsed;
-
-            // Sync current game.
-            request = new ValueSet
-            {
-                { nameof(Command), (int)Command.Get },
-                { nameof(Function), (int)Function.CurrentGame },
-            };
-            response = await App.Connection.SendMessageAsync(request);
-            if (response != null)
-            {
-                object value;
-                if (response.Message.TryGetValue(nameof(Shared.Enums.Content), out value))
-                {
-                    await SyncRunningGame(RunningGame.FromString((string)value));
-                }
-                else
-                {
-                    Logger.Info("No Value in response from desktop process after connected???");
-                }
-            }
-            else
-            {
-                Logger.Info("No response from desktop process after connected???");
+                return default;
             }
         }
 
-        private IAsyncAction SyncTDP(int tdp)
+        private async Task SyncUI()
         {
-            return Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            foreach (var property in properties)
             {
-                TDPSlider.IsEnabled = true;
-                TDPSlider.Value = tdp;
-            });
+                await property.SyncProperty();
+            }
         }
 
         private IAsyncAction SyncRunningGame(RunningGame runningGame)
         {
-            RunningGame = runningGame;
+            //RunningGame = runningGame;
             return Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 if (runningGame.IsValid())
@@ -300,7 +271,7 @@ namespace XboxGamingBar
                 function = (Function)functionObject;
             }
 
-            if (!args.Request.Message.TryGetValue(nameof(Shared.Enums.Content), out var valueObject))
+            if (!args.Request.Message.TryGetValue(nameof(Content), out var valueObject))
             {
                 Logger.Error("Invalid message value.");
             }
@@ -313,15 +284,11 @@ namespace XboxGamingBar
                     Logger.Error("Received invalid get command");
                     break;
                 case Command.Set:
-                    Logger.Error("Received invalid set command");
-                    break;
-                case Command.Update:
                     switch (function)
                     {
                         case Function.TDP:
                             result = "success";
-                            var intValue = (int)valueObject;
-                            await SyncTDP(intValue);
+                            TDP = (int)valueObject;
                             break;
                         case Function.CurrentGame:
                             result = "success";
@@ -333,7 +300,7 @@ namespace XboxGamingBar
             }
             ValueSet response = new ValueSet
             {
-                { nameof(Shared.Enums.Content), result }
+                { nameof(Content), result }
             };
             await args.Request.SendResponseAsync(response);
         }
@@ -348,7 +315,7 @@ namespace XboxGamingBar
                 {
                     { nameof(Command), (int)Command.Set },
                     { nameof(Function), (int)Function.OSD },
-                    { nameof(Shared.Enums.Content), level }
+                    { nameof(Content), level }
                 };
                 AppServiceResponse response = await App.Connection.SendMessageAsync(request);
                 if (response != null)
@@ -377,7 +344,7 @@ namespace XboxGamingBar
                 {
                     { nameof(Command), (int)Command.Set },
                     { nameof(Function), (int)Function.TDP },
-                    { nameof(Shared.Enums.Content), tdp }
+                    { nameof(Content), tdp }
                 };
                 AppServiceResponse response = await App.Connection.SendMessageAsync(request);
                 if (response != null)
@@ -397,11 +364,11 @@ namespace XboxGamingBar
 
         private async void GameProfileToggle_Toggled(object sender, RoutedEventArgs e)
         {
-            if (!RunningGame.IsValid())
-            {
-                Logger.Warn("Running game is invaid, can't change profile.");
-                return;
-            }
+            //if (!RunningGame.IsValid())
+            //{
+            //    Logger.Warn("Running game is invaid, can't change profile.");
+            //    return;
+            //}
 
             if (App.Connection == null)
             {
@@ -413,7 +380,7 @@ namespace XboxGamingBar
             {
                 { nameof(Command), (int)Command.Set },
                 { nameof(Function), (int)Function.GameProfile },
-                { nameof(Shared.Enums.Content), GameProfileToggle.IsOn }
+                { nameof(Content), GameProfileToggle.IsOn }
             };
             AppServiceResponse response = await App.Connection.SendMessageAsync(request);
             if (response != null)
@@ -424,6 +391,11 @@ namespace XboxGamingBar
             {
                 Logger.Info($"Can't save per-game profile.");
             }
+        }
+
+        public string FormatWattageValue(int value)
+        {
+            return $"{value}W"; // Example: format as a number with 2 decimal places
         }
     }
 }

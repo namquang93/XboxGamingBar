@@ -1,14 +1,21 @@
 ﻿using Shared.Data;
 using Shared.Enums;
-using Windows.ApplicationModel.AppService;
+using System.Runtime.CompilerServices;
 using XboxGamingBarHelper.Core;
 
 namespace XboxGamingBarHelper.RTSS
 {
-    internal class OSDProperty : AppServiceConnectionProperty<int>
+    internal class OSDProperty : HelperProperty<int, RTSSManager>
     {
-        public OSDProperty(int initialValue, IProperty initialParentProperty, AppServiceConnection initialConnection, Function initialFunction) : base(initialValue, initialParentProperty, initialConnection, initialFunction)
+        public OSDProperty(int inValue, IProperty inParentProperty, RTSSManager inManager) : base(inValue, inParentProperty, Function.OSD, inManager)
         {
+        }
+
+        protected override void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
+        {
+            base.NotifyPropertyChanged(propertyName);
+
+            Manager.osdLevel = Value;
         }
     }
 }

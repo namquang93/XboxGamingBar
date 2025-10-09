@@ -1,37 +1,16 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using NLog;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace Shared.Data
 {
-    /// <summary>
-    /// Contains value for something, like the TDP, or OSD level.
-    /// </summary>
-    /// <typeparam name="T">Type of that value. Int or bool or what so ever.</typeparam>
-    public class Property<T> : IProperty
+    public abstract class Property : IProperty
     {
-        public delegate void OnPropertyValueChanged(object sender, PropertyValueChangedEventArgs<T> e);
-
-        public OnPropertyValueChanged propertyValueChanged;
-
-        private T value;
-        public T Value
-        {
-            get { return  value; }
-            set
-            {
-                if (!EqualityComparer<T>.Default.Equals(this.value, value))
-                {
-                    this.value = value;
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                    PropertyValueChanged();
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                    propertyValueChanged.Invoke(this, new PropertyValueChangedEventArgs<T>(this.value));
-                }
-            }
-        }
+        protected static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         private readonly IProperty parentProperty;
-
         public IProperty ParentProperty
         {
             get { return parentProperty; }
@@ -39,36 +18,35 @@ namespace Shared.Data
 
         private readonly List<IProperty> childProperties;
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual async void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
         public List<IProperty> ChildProperties
         {
             get { return childProperties; }
         }
 
-        public Property(T initialValue)
+        protected Property()
         {
             parentProperty = null;
             childProperties = new List<IProperty>();
-            value = initialValue;
         }
 
-        public Property(T initialValue, IProperty initialParentProperty)
+        protected Property(IProperty inParentProperty)
         {
-            parentProperty = initialParentProperty;
-            initialParentProperty.ChildProperties.Add(this);
+            parentProperty = inParentProperty;
             childProperties = new List<IProperty>();
-            value = initialValue;
+            if (parentProperty != null && !parentProperty.ChildProperties.Contains(this))
+            {
+                parentProperty.ChildProperties.Add(this);
+            }
         }
 
-        public override string ToString()
-        {
-            return value.ToString();
-        }
-
-#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-        public virtual async Task PropertyValueChanged()
-#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
-        {
-            
-        }
+        public abstract bool TryGetValue<GetValueType>(out GetValueType value);
+        public abstract bool TrySetValue(object value);
     }
 }

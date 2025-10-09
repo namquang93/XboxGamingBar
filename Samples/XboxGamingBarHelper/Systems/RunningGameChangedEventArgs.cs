@@ -1,6 +1,6 @@
 ﻿using Shared.Data;
 
-namespace XboxGamingBarHelper.System
+namespace XboxGamingBarHelper.Systems
 {
     internal class RunningGameChangedEventArgs
     {
