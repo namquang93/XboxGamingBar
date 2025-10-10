@@ -47,8 +47,7 @@
             TickFrequency="1"
             SnapsTo="StepValues"
             TickPlacement="BottomRight"
-            IsEnabled="False"
-            ValueChanged="PerformanceOverlaySlider_ValueChanged"/>
+            IsEnabled="False"/>
         <Grid Margin="-18,0,-18,0" Grid.Row="5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>

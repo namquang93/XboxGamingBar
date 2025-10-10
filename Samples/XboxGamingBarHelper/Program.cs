@@ -31,6 +31,7 @@ namespace XboxGamingBarHelper
         private static OSDProperty osd;
         private static TDPProperty tdp;
         private static RunningGameProperty runningGame;
+        private static HelperProperties properties;
 
         static async Task Main(string[] args)
         {
@@ -80,6 +81,7 @@ namespace XboxGamingBarHelper
             runningGame = new RunningGameProperty(systemManager.RunningGame, systemManager);
             osd = new OSDProperty(rtssManager.osdLevel, runningGame, rtssManager);
             tdp = new TDPProperty(performanceManager.GetTDP(), runningGame, performanceManager);
+            properties = new HelperProperties(runningGame, osd, tdp);
 
             AppServiceConnectionStatus status = await connection.OpenAsync();
             if (status != AppServiceConnectionStatus.Success)
@@ -106,51 +108,8 @@ namespace XboxGamingBarHelper
         /// </summary>
         private static async void Connection_RequestReceived(AppServiceConnection sender, AppServiceRequestReceivedEventArgs args)
         {
-            var action = (Command)args.Request.Message[nameof(Command)];
-            var function = (Function)args.Request.Message[nameof(Function)];
-            switch (action)
-            {
-                case Command.Get:
-                    ValueSet response = new ValueSet();
-                    switch (function)
-                    {
-                        case Function.OSD:
-                            response.Add(nameof(Content), rtssManager.osdLevel);
-                            break;
-                        case Function.TDP:
-                            response.Add(nameof(Content), tdp.Value);
-                            break;
-                        case Function.CurrentGame:
-                            response.Add(nameof(Content), runningGame.ToString());
-                            break;
-                    }
-
-                    await args.Request.SendResponseAsync(response);
-                    break;
-                case Command.Set:
-                    switch (function)
-                    {
-                        case Function.OSD:
-                            var osdLevel = (int)args.Request.Message[nameof(Content)];
-                            rtssManager.osdLevel = osdLevel;
-                            break;
-                        case Function.TDP:
-                            tdp.Value = (int)args.Request.Message[nameof(Content)];
-                            break;
-                        case Function.GameProfile:
-                            var isPerGameProfile = (bool)args.Request.Message[nameof(Content)];
-                            if (systemManager.RunningGame.IsValid())
-                            {
-                                ProfileManager.SaveGameProfile(new GameProfile(systemManager.RunningGame.GameId, isPerGameProfile, performanceManager.GetTDP()));
-                            }
-                            else
-                            {
-                                Logger.Info($"Running game is invalid.");
-                            }
-                            break;
-                    }
-                    break;
-            }
+            Logger.Info($"Helper received message {args.Request.Message.ToDebugString()} from widget.");
+            await properties.OnRequestReceived(args.Request);
         }
 
         /// <summary>

@@ -37,14 +37,14 @@ namespace XboxGamingBar.Data
             return App.Connection.SendMessageAsync(request).AsTask();
         }
 
-        public override async Task SyncProperty()
+        public override async Task Sync()
         {
             if (Control != null && Owner != null)
             {
                 await Owner.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { Control.IsEnabled = false; });
             }
 
-            await base.SyncProperty();
+            await base.Sync();
 
             if (Control != null && Owner != null)
             {

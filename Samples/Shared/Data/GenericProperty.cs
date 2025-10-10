@@ -72,7 +72,7 @@ namespace Shared.Data
             return false;
         }
 
-        public override bool TrySetValue(object value)
+        public override bool SetValue(object value)
         {
             try
             {
@@ -81,8 +81,21 @@ namespace Shared.Data
             }
             catch (Exception e)
             {
-                Logger.Error($"Exception {e} while trying to set value.");
+                Logger.Error($"Exception {e} while trying to set {Function} value.");
                 return false;
+            }
+        }
+
+        public override object GetValue()
+        {
+            try
+            {
+                return Value;
+            }
+            catch (Exception e)
+            {
+                Logger.Error($"Exception {e} while trying to get {Function} value.");
+                return null;
             }
         }
     }

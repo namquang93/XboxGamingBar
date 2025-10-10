@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 
 namespace Shared.Data
 {
@@ -47,6 +48,10 @@ namespace Shared.Data
         }
 
         public abstract bool TryGetValue<GetValueType>(out GetValueType value);
-        public abstract bool TrySetValue(object value);
+
+        public abstract bool SetValue(object value);
+
+        public abstract object GetValue();
+        public abstract Task Sync();
     }
 }

@@ -84,7 +84,9 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Data\OSDProperty.cs" />
+    <Compile Include="Data\SliderProperty.cs" />
     <Compile Include="Data\TDPProperty.cs" />
+    <Compile Include="Data\WidgetProperties.cs" />
     <Compile Include="Data\WidgetProperty.cs" />
     <Compile Include="GamingWidget.xaml.cs">
       <DependentUpon>GamingWidget.xaml</DependentUpon>

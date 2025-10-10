@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
+using System.Threading.Tasks;
 
 namespace Shared.Data
 {
@@ -10,6 +11,11 @@ namespace Shared.Data
         List<IProperty> ChildProperties { get; }
 
         bool TryGetValue<ValueType>(out ValueType value);
-        bool TrySetValue(object value);
+
+        bool SetValue(object value);
+
+        object GetValue();
+
+        Task Sync();
     }
 }

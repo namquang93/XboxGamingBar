@@ -71,6 +71,7 @@ namespace XboxGamingBarHelper.Performance
         [HardwareSensor("Remaining Time (Estimated)", HardwareType.Battery, SensorType.TimeSpan)]
         private ISensor batteryRemainTime;
         public ISensor BatteryRemainTime => batteryRemainTime;
+        // Discharge Rate
         #endregion
 
         internal PerformanceManager(AppServiceConnection connection) : base(connection)

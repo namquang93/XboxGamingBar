@@ -2,7 +2,6 @@
 using Shared.Data;
 using Shared.Enums;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.AppService;
@@ -12,7 +11,6 @@ using Windows.Foundation.Metadata;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Navigation;
 using XboxGamingBar.Data;
 
@@ -29,18 +27,14 @@ namespace XboxGamingBar
 
         private readonly OSDProperty osdProperty;
         private readonly TDPProperty tdpProperty;
-        private readonly List<FunctionalProperty> properties;
+        private readonly WidgetProperties properties;
 
         public GamingWidget()
         {
             InitializeComponent();
             tdpProperty = new TDPProperty(4, TDPSlider, this);
             osdProperty = new OSDProperty(0, PerformanceOverlaySlider, this);
-            properties = new List<FunctionalProperty>()
-            {
-                tdpProperty,
-                osdProperty,
-            };
+            properties = new WidgetProperties(osdProperty, tdpProperty);
         }
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
@@ -66,7 +60,7 @@ namespace XboxGamingBar
             if (App.Connection != null)
             {
                 Logger.Info("GamingWidget LeavingBackground, sync UI now.");
-                await SyncProperties();
+                await properties.Sync();
             }
             else
             {
@@ -85,7 +79,7 @@ namespace XboxGamingBar
         private async void GamingWidget_AppServiceConnected(object sender, AppServiceTriggerDetails e)
         {
             App.Connection.RequestReceived += AppServiceConnection_RequestReceived;
-            await SyncProperties();
+            await properties.Sync();
 
             //await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             //{
@@ -93,32 +87,6 @@ namespace XboxGamingBar
             //    // enable UI to access  the connection
             //    // btnRegKey.IsEnabled = true;
             //});
-        }
-
-        private async Task SyncProperties()
-        {
-            foreach (var property in properties)
-            {
-                await property.SyncProperty();
-            }
-        }
-
-        private IAsyncAction SyncRunningGame(RunningGame runningGame)
-        {
-            //RunningGame = runningGame;
-            return Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-            {
-                if (runningGame.IsValid())
-                {
-                    CurrentGameText.Text = $"{runningGame.GameId.Name}{(runningGame.IsForeground ? string.Empty : "*")}";
-                    GameProfileToggle.Visibility = Visibility.Visible;
-                }
-                else
-                {
-                    CurrentGameText.Text = $"No game detected";
-                    GameProfileToggle.Visibility = Visibility.Collapsed;
-                }
-            });
         }
 
         /// <summary>
@@ -143,90 +111,8 @@ namespace XboxGamingBar
         /// </summary>
         private async void AppServiceConnection_RequestReceived(AppServiceConnection sender, AppServiceRequestReceivedEventArgs args)
         {
-            Logger.Info($"Receive message {args.Request.Message.ToString()} from helper.");
-
-            Command command;
-            if (!args.Request.Message.TryGetValue(nameof(Command), out var commandObject))
-            {
-                Logger.Error("Invalid message command.");
-                command = Command.Get;
-            }
-            else
-            {
-                command = (Command)commandObject;
-            }
-
-            Function function;
-            if (!args.Request.Message.TryGetValue(nameof(Function), out var functionObject))
-            {
-                Logger.Error("Invalid message function.");
-                function = Function.TDP;
-            }
-            else
-            {
-                function = (Function)functionObject;
-            }
-
-            if (!args.Request.Message.TryGetValue(nameof(Content), out var valueObject))
-            {
-                Logger.Error("Invalid message value.");
-            }
-            
-
-            var result = "fail";
-            switch (command)
-            {
-                case Command.Get:
-                    Logger.Error("Received invalid get command");
-                    break;
-                case Command.Set:
-                    switch (function)
-                    {
-                        case Function.TDP:
-                            result = "success";
-                            //TDP = (int)valueObject;
-                            break;
-                        case Function.CurrentGame:
-                            result = "success";
-                            var stringValue = (string)valueObject;
-                            await SyncRunningGame(RunningGame.FromString(stringValue));
-                            break;
-                    }
-                    break;
-            }
-            ValueSet response = new ValueSet
-            {
-                { nameof(Content), result }
-            };
-            await args.Request.SendResponseAsync(response);
-        }
-
-        private async void PerformanceOverlaySlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
-        {
-            var level = (int)e.NewValue;
-
-            if (App.Connection != null)
-            {
-                ValueSet request = new ValueSet
-                {
-                    { nameof(Command), (int)Command.Set },
-                    { nameof(Function), (int)Function.OSD },
-                    { nameof(Content), level }
-                };
-                AppServiceResponse response = await App.Connection.SendMessageAsync(request);
-                if (response != null)
-                {
-                    Logger.Info($"Set OSD level {level} to desktop process");
-                }
-                else
-                {
-                    Logger.Info($"No response from desktop process when trying to change OSD level {level}.");
-                }
-            }
-            else
-            {
-                Logger.Info("No connection for performance overlay!");
-            }
+            Logger.Info($"Widget received message {args.Request.Message.ToDebugString()} from helper.");
+            await properties.OnRequestReceived(args.Request);
         }
 
         private async void GameProfileToggle_Toggled(object sender, RoutedEventArgs e)
@@ -252,7 +138,7 @@ namespace XboxGamingBar
             AppServiceResponse response = await App.Connection.SendMessageAsync(request);
             if (response != null)
             {
-                Logger.Info($"Set game profile  to desktop process");
+                Logger.Info($"Set game profile to desktop process");
             }
             else
             {

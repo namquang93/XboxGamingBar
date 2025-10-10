@@ -71,7 +71,7 @@ namespace Shared.Data
             }
         }
 
-        public virtual async Task SyncProperty()
+        public override async Task Sync()
         {
             var request = new ValueSet
             {
@@ -91,9 +91,9 @@ namespace Shared.Data
             {
                 if (response.Message.TryGetValue(nameof(Content), out object responseValue))
                 {
-                    if (TrySetValue(responseValue))
+                    if (SetValue(responseValue))
                     {
-                        Logger.Info($"Sync {function} value {responseValue}.");
+                        Logger.Info($"Sync {function} value {responseValue} successfully.");
                     }
                     else
                     {

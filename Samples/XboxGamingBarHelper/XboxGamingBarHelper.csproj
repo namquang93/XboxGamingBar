@@ -143,6 +143,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\HelperProperties.cs" />
     <Compile Include="Core\HelperProperty.cs" />
     <Compile Include="Core\IManager.cs" />
     <Compile Include="Core\Manager.cs" />
