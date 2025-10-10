@@ -22,12 +22,16 @@ namespace Shared.Data
                     this.value = value;
                     NotifyPropertyChanged();
                 }
+                else
+                {
+                    Logger.Info($"{Function} has same value, nothing changed.");
+                }
             }
         }
 
         public static explicit operator ValueType(GenericProperty<ValueType> property)
         {
-            return property.value;
+            return property.Value;
         }
 
         public GenericProperty(ValueType inValue) : base()
@@ -60,7 +64,7 @@ namespace Shared.Data
         {
             if (typeof(GetValueType).IsAssignableFrom(typeof(ValueType)))
             {
-                value = (GetValueType)(object)this.value;
+                value = (GetValueType)(object)Value;
                 return true;
             }
 
@@ -72,7 +76,7 @@ namespace Shared.Data
         {
             try
             {
-                this.value = (ValueType)value;
+                Value = (ValueType)value;
                 return true;
             }
             catch (Exception e)

@@ -8,7 +8,6 @@ using Windows.ApplicationModel.Background;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-using XboxGamingBar.Internal;
 
 namespace XboxGamingBar
 {
@@ -18,11 +17,9 @@ namespace XboxGamingBar
     sealed partial class App : Application
     {
         public static BackgroundTaskDeferral AppServiceDeferral = null;
-        public static FullTrustLaunchState FullTrustLaunchState = FullTrustLaunchState.NotLaunched;
         public static AppServiceConnection Connection = null;
         public static event EventHandler AppServiceDisconnected;
         public static event EventHandler<AppServiceTriggerDetails> AppServiceConnected;
-        //public static bool IsForeground = false;
 
         private XboxGameBarWidget xboxGameBarWidget = null;
         private GamingWidget gamingWidget = null;
@@ -194,7 +191,7 @@ namespace XboxGamingBar
                     // When the navigation stack isn't restored navigate to the first page,
                     // configuring the new page by passing required information as a navigation
                     // parameter
-                    rootFrame.Navigate(typeof(GamingWidget), e.Arguments);
+                    // rootFrame.Navigate(typeof(GamingWidget), e.Arguments);
                 }
                 // Ensure the current window is active
                 Window.Current.Activate();

@@ -9,15 +9,12 @@ using Windows.ApplicationModel.AppService;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Foundation.Metadata;
-using Windows.System;
-using Windows.System.Diagnostics;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Navigation;
 using XboxGamingBar.Data;
-using XboxGamingBar.Internal;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -30,37 +27,16 @@ namespace XboxGamingBar
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-        private OSDProperty osdProperty;
-        private TDPProperty tdpProperty;
-        private List<FunctionalProperty> properties;
-
-        public int TDP
-        {
-            get
-            {
-                Logger.Info($"Got TDP {tdpProperty.Value}.");
-                return tdpProperty?.Value ?? 25;
-            }
-            set
-            {
-                if (tdpProperty.Value != value)
-                {
-                    tdpProperty.Value = value;
-                    Logger.Info($"Set TDP to {tdpProperty.Value}.");
-                }
-                else
-                {
-                    Logger.Info($"Unchanged TDP {value}.");
-                }
-            }
-        }
+        private readonly OSDProperty osdProperty;
+        private readonly TDPProperty tdpProperty;
+        private readonly List<FunctionalProperty> properties;
 
         public GamingWidget()
         {
-            this.InitializeComponent();
-            this.tdpProperty = new TDPProperty(25, TDPSlider);
-            this.osdProperty = new OSDProperty(0, PerformanceOverlaySlider);
-            this.properties = new List<FunctionalProperty>()
+            InitializeComponent();
+            tdpProperty = new TDPProperty(4, TDPSlider, this);
+            osdProperty = new OSDProperty(0, PerformanceOverlaySlider, this);
+            properties = new List<FunctionalProperty>()
             {
                 tdpProperty,
                 osdProperty,
@@ -71,68 +47,16 @@ namespace XboxGamingBar
         {
             base.OnNavigatedTo(e);
 
-            var helperIsRunning = false;
-            DiagnosticAccessStatus diagnosticAccessStatus = await AppDiagnosticInfo.RequestAccessAsync();
-            if (diagnosticAccessStatus == DiagnosticAccessStatus.Allowed)
-            {
-                var processesDebug = string.Empty;
-                IReadOnlyList<ProcessDiagnosticInfo> processes = ProcessDiagnosticInfo.GetForProcesses();
-                foreach (var process in processes)
-                {
-                    if (process.ExecutableFileName.Contains("XboxGamingBarHelper.exe"))
-                    {
-                        helperIsRunning = true;
-                    }
-                    processesDebug = $"{processesDebug}, {process.ExecutableFileName}";
-                }
-                processesDebug = processesDebug.Remove(0, 2);
-                Logger.Info($"{(helperIsRunning ? "Found" : "No")} previously launched helper in [{processesDebug}].");
-            }
-            else
-            {
-                Logger.Info("Widget is not allowed to detect previously launched helper.");
-            }
+            //while (!System.Diagnostics.Debugger.IsAttached)
+            //{
+            //    await Task.Delay(500);
+            //}
 
-            if (helperIsRunning && App.FullTrustLaunchState == FullTrustLaunchState.NotLaunched)
-            {
-                if (App.Connection == null)
-                {
-                    Logger.Info("No AppServiceConnection yet, trying to connect to an existing full trust process");
-
-                    App.Connection = new AppServiceConnection
-                    {
-                        AppServiceName = "XboxGamingBarService",
-                        PackageFamilyName = Package.Current.Id.FamilyName
-                    };
-                    App.FullTrustLaunchState = FullTrustLaunchState.Reconnecting;
-                    var status = await App.Connection.OpenAsync();
-                    if (status != AppServiceConnectionStatus.Success)
-                    {
-                        Logger.Info($"Can't connect to any existing full trust process ({status}). Try to run it now.");
-                        App.Connection = null;
-                    }
-                    else
-                    {
-                        App.FullTrustLaunchState = FullTrustLaunchState.Launched;
-                        Logger.Info("Connected to an existing full trust process.");
-                    }
-                }
-                else
-                {
-                    Logger.Info("Already have connection to the full trust process, no need to launch.");
-                }
-            }
-            else
-            {
-                Logger.Info("No previously launched full trust process.");
-            }
-
-            if (App.Connection == null && ApiInformation.IsApiContractPresent("Windows.ApplicationModel.FullTrustAppContract", 1, 0) && App.FullTrustLaunchState != FullTrustLaunchState.Launching && App.FullTrustLaunchState != FullTrustLaunchState.Reconnecting)
+            if (App.Connection == null && ApiInformation.IsApiContractPresent("Windows.ApplicationModel.FullTrustAppContract", 1, 0))
             {
                 Logger.Info("Launching a new full trust process.");
                 App.AppServiceConnected += GamingWidget_AppServiceConnected;
                 App.AppServiceDisconnected += GamingWidget_AppServiceDisconnected;
-                App.FullTrustLaunchState = FullTrustLaunchState.Launching;
                 await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
             }
         }
@@ -142,7 +66,7 @@ namespace XboxGamingBar
             if (App.Connection != null)
             {
                 Logger.Info("GamingWidget LeavingBackground, sync UI now.");
-                await SyncUI();
+                await SyncProperties();
             }
             else
             {
@@ -160,10 +84,8 @@ namespace XboxGamingBar
         /// </summary>
         private async void GamingWidget_AppServiceConnected(object sender, AppServiceTriggerDetails e)
         {
-            App.FullTrustLaunchState = FullTrustLaunchState.Launched;
             App.Connection.RequestReceived += AppServiceConnection_RequestReceived;
-
-            await SyncUI();
+            await SyncProperties();
 
             //await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             //{
@@ -173,32 +95,7 @@ namespace XboxGamingBar
             //});
         }
 
-        private async Task<T> GetProperty<T>(Function function)
-        {
-            ValueSet request;
-            AppServiceResponse response;
-
-            request = new ValueSet
-            {
-                { nameof(Command), (int)Command.Get },
-                { nameof(Function), (int)function },
-            };
-            response = await App.Connection.SendMessageAsync(request);
-            if (response != null && response.Message.TryGetValue(nameof(Content), out object value))
-            {
-                var propertyValue = (T)value;
-                Logger.Info($"Get property {function} {propertyValue} from desktop process");
-
-                return propertyValue;
-            }
-            else
-            {
-                Logger.Info("No response from desktop process after connected???");
-                return default;
-            }
-        }
-
-        private async Task SyncUI()
+        private async Task SyncProperties()
         {
             foreach (var property in properties)
             {
@@ -229,7 +126,6 @@ namespace XboxGamingBar
         /// </summary>
         private async void GamingWidget_AppServiceDisconnected(object sender, EventArgs e)
         {
-            App.FullTrustLaunchState = FullTrustLaunchState.NotLaunched;
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 Logger.Info("AppService Disconnected");
@@ -288,7 +184,7 @@ namespace XboxGamingBar
                     {
                         case Function.TDP:
                             result = "success";
-                            TDP = (int)valueObject;
+                            //TDP = (int)valueObject;
                             break;
                         case Function.CurrentGame:
                             result = "success";
@@ -333,35 +229,6 @@ namespace XboxGamingBar
             }
         }
 
-        private async void TDPSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
-        {
-            TDPValueText.Text = $"{((int)e.NewValue).ToString()}W";
-            
-            if (App.Connection != null)
-            {
-                var tdp = (int)e.NewValue;
-                ValueSet request = new ValueSet
-                {
-                    { nameof(Command), (int)Command.Set },
-                    { nameof(Function), (int)Function.TDP },
-                    { nameof(Content), tdp }
-                };
-                AppServiceResponse response = await App.Connection.SendMessageAsync(request);
-                if (response != null)
-                {
-                    Logger.Info($"Set TDP limit {tdp}W to desktop process");
-                }
-                else
-                {
-                    Logger.Info($"No response from desktop process when trying to limit TDP {tdp}W");
-                }
-            }
-            else
-            {
-                Logger.Warn("No connection for TDP!");
-            }
-        }
-
         private async void GameProfileToggle_Toggled(object sender, RoutedEventArgs e)
         {
             //if (!RunningGame.IsValid())
@@ -391,11 +258,6 @@ namespace XboxGamingBar
             {
                 Logger.Info($"Can't save per-game profile.");
             }
-        }
-
-        public string FormatWattageValue(int value)
-        {
-            return $"{value}W"; // Example: format as a number with 2 decimal places
         }
     }
 }

@@ -1,22 +1,24 @@
-﻿using Shared.Enums;
+﻿using System;
+using Shared.Enums;
 using System.Runtime.CompilerServices;
+using Windows.UI.Core;
 using Windows.UI.Xaml.Controls;
 
 namespace XboxGamingBar.Data
 {
     internal class OSDProperty : WidgetProperty<int, Slider>
     {
-        public OSDProperty(int inValue, Slider slider) : base(inValue, Function.OSD, slider)
+        public OSDProperty(int inValue, Slider slider, Page owner) : base(inValue, Function.OSD, slider, owner)
         {
         }
 
-        protected override void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
+        protected override async void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
         {
             base.NotifyPropertyChanged(propertyName);
 
-            if (Control != null)
+            if (Control != null && Owner != null)
             {
-                Control.Value = Value;
+                await Owner.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { Control.Value = Value; });
             }
         }
     }
