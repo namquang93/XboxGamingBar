@@ -31,6 +31,7 @@ namespace XboxGamingBarHelper
         private static OSDProperty osd;
         private static TDPProperty tdp;
         private static RunningGameProperty runningGame;
+        private static GameProfileProperty profile;
         private static HelperProperties properties;
 
         static async Task Main(string[] args)
@@ -82,7 +83,8 @@ namespace XboxGamingBarHelper
             runningGame = new RunningGameProperty(systemManager.RunningGame, systemManager);
             osd = new OSDProperty(rtssManager.osdLevel, runningGame, rtssManager);
             tdp = new TDPProperty(performanceManager.GetTDP(), runningGame, performanceManager);
-            properties = new HelperProperties(runningGame, osd, tdp);
+            profile = new GameProfileProperty(runningGame, profileManager);
+            properties = new HelperProperties(runningGame, osd, tdp, profile);
 
             //while (!System.Diagnostics.Debugger.IsAttached)
             //{

@@ -27,6 +27,7 @@ namespace XboxGamingBar
         private readonly OSDProperty osd;
         private readonly TDPProperty tdp;
         private readonly RunningGameProperty runningGame;
+        private readonly GameProfileProperty gameProfile;
         private readonly WidgetProperties properties;
 
         public GamingWidget()
@@ -34,8 +35,9 @@ namespace XboxGamingBar
             InitializeComponent();
             tdp = new TDPProperty(4, TDPSlider, this);
             osd = new OSDProperty(0, PerformanceOverlaySlider, this);
-            runningGame = new RunningGameProperty(CurrentGameText, this);
-            properties = new WidgetProperties(osd, tdp, runningGame);
+            runningGame = new RunningGameProperty(CurrentGameText, GameProfileToggle, this);
+            gameProfile = new GameProfileProperty(GameProfileToggle, this);
+            properties = new WidgetProperties(osd, tdp, runningGame, gameProfile);
         }
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)

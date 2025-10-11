@@ -83,6 +83,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Data\GameProfileProperty.cs" />
     <Compile Include="Data\OSDProperty.cs" />
     <Compile Include="Data\RunningGameProperty.cs" />
     <Compile Include="Data\SliderProperty.cs" />
@@ -90,6 +91,7 @@
     <Compile Include="Data\WidgetControlProperty.cs" />
     <Compile Include="Data\WidgetProperties.cs" />
     <Compile Include="Data\WidgetProperty.cs" />
+    <Compile Include="Data\WidgetPropertyWithAdditionalUI.cs" />
     <Compile Include="GamingWidget.xaml.cs">
       <DependentUpon>GamingWidget.xaml</DependentUpon>
     </Compile>

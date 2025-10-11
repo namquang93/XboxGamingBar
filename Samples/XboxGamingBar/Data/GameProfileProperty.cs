@@ -4,22 +4,22 @@ using System;
 using System.Runtime.CompilerServices;
 using Windows.Foundation.Collections;
 using Windows.UI.Core;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace XboxGamingBar.Data
 {
-    internal class RunningGameProperty : WidgetPropertyWithAdditionalUI<RunningGame, TextBlock, ToggleSwitch>
+    internal class GameProfileProperty : WidgetProperty<GameProfile, ToggleSwitch>
     {
-        public RunningGameProperty(TextBlock inUI, ToggleSwitch inAdditionalUI, Page inOwner) : base(new RunningGame(), Function.CurrentGame, inUI, inAdditionalUI, inOwner)
+        public GameProfileProperty(ToggleSwitch inUI, Page inOwner) : base(new GameProfile(), Function.GameProfile, inUI, inOwner)
         {
+
         }
 
         public override bool SetValue(object value)
         {
             if (value is string stringValue)
             {
-                return base.SetValue(RunningGame.FromString(stringValue));
+                return base.SetValue(GameProfile.FromString(stringValue));
             }
             else
             {
@@ -40,9 +40,10 @@ namespace XboxGamingBar.Data
             if (UI != null && Owner != null)
             {
                 Logger.Info($"Update TDP slider value {Value}.");
-                await Owner.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
-                    UI.Text = Value.IsValid() ? Value.GameId.Name : "No Game Detected";
-                    AdditionalUI.Visibility = Value.IsValid() ? Visibility.Visible : Visibility.Collapsed;
+                await Owner.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => 
+                {
+                    UI.OnContent = "Per-game Profile";
+                    UI.OffContent = "Global Profile";
                 });
             }
         }
