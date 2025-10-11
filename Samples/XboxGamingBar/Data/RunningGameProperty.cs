@@ -1,5 +1,6 @@
 ﻿using Shared.Data;
 using Shared.Enums;
+using Shared.Utilities;
 using System;
 using System.Runtime.CompilerServices;
 using Windows.Foundation.Collections;
@@ -19,7 +20,7 @@ namespace XboxGamingBar.Data
         {
             if (value is string stringValue)
             {
-                return base.SetValue(RunningGame.FromString(stringValue));
+                return base.SetValue(XmlHelper.FromXMLString<RunningGame>(stringValue));
             }
             else
             {
@@ -29,7 +30,7 @@ namespace XboxGamingBar.Data
 
         public override ValueSet AddValueSetContent(in ValueSet inValueSet)
         {
-            inValueSet.Add(nameof(Content), Value.ToString());
+            inValueSet.Add(nameof(Content), XmlHelper.ToXMLString(Value, true));
             return inValueSet;
         }
 
@@ -39,7 +40,7 @@ namespace XboxGamingBar.Data
 
             if (UI != null && Owner != null)
             {
-                Logger.Info($"Update TDP slider value {Value}.");
+                Logger.Info($"Update running game value {Value.GameId.Name}.");
                 await Owner.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
                     UI.Text = Value.IsValid() ? Value.GameId.Name : "No Game Detected";
                     AdditionalUI.Visibility = Value.IsValid() ? Visibility.Visible : Visibility.Collapsed;

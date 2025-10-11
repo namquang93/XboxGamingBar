@@ -1,14 +1,11 @@
 ﻿using NLog;
 using Shared.Data;
-using Shared.Enums;
 using System;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.AppService;
-using Windows.Foundation.Collections;
 using Windows.Foundation.Metadata;
 using Windows.UI.Core;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using XboxGamingBar.Data;
@@ -24,10 +21,11 @@ namespace XboxGamingBar
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
+        // Properties
         private readonly OSDProperty osd;
         private readonly TDPProperty tdp;
         private readonly RunningGameProperty runningGame;
-        private readonly GameProfileProperty gameProfile;
+        private readonly PerGameProfileProperty perGameProfile;
         private readonly WidgetProperties properties;
 
         public GamingWidget()
@@ -35,9 +33,9 @@ namespace XboxGamingBar
             InitializeComponent();
             tdp = new TDPProperty(4, TDPSlider, this);
             osd = new OSDProperty(0, PerformanceOverlaySlider, this);
-            runningGame = new RunningGameProperty(CurrentGameText, GameProfileToggle, this);
-            gameProfile = new GameProfileProperty(GameProfileToggle, this);
-            properties = new WidgetProperties(osd, tdp, runningGame, gameProfile);
+            runningGame = new RunningGameProperty(CurrentGameText, PerGameProfileToggle, this);
+            perGameProfile = new PerGameProfileProperty(PerGameProfileToggle, this);
+            properties = new WidgetProperties(osd, tdp, runningGame, perGameProfile);
         }
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
@@ -83,13 +81,6 @@ namespace XboxGamingBar
         {
             App.Connection.RequestReceived += AppServiceConnection_RequestReceived;
             await properties.Sync();
-
-            //await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-            //{
-            //    Logger.Info("AppService Connected");
-            //    // enable UI to access  the connection
-            //    // btnRegKey.IsEnabled = true;
-            //});
         }
 
         /// <summary>
@@ -116,37 +107,6 @@ namespace XboxGamingBar
         {
             Logger.Info($"Widget received message {args.Request.Message.ToDebugString()} from helper.");
             await properties.OnRequestReceived(args.Request);
-        }
-
-        private async void GameProfileToggle_Toggled(object sender, RoutedEventArgs e)
-        {
-            //if (!RunningGame.IsValid())
-            //{
-            //    Logger.Warn("Running game is invaid, can't change profile.");
-            //    return;
-            //}
-
-            if (App.Connection == null)
-            {
-                Logger.Warn("No connection for game profile!");
-                return;
-            }
-
-            ValueSet request = new ValueSet
-            {
-                { nameof(Command), (int)Command.Set },
-                { nameof(Function), (int)Function.GameProfile },
-                { nameof(Content), GameProfileToggle.IsOn }
-            };
-            AppServiceResponse response = await App.Connection.SendMessageAsync(request);
-            if (response != null)
-            {
-                Logger.Info($"Set game profile to desktop process");
-            }
-            else
-            {
-                Logger.Info($"Can't save per-game profile.");
-            }
         }
     }
 }

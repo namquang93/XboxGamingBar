@@ -74,6 +74,12 @@ namespace XboxGamingBarHelper.Performance
         // Discharge Rate
         #endregion
 
+        private TDPProperty tdp;
+        public TDPProperty TDP
+        {
+            get { return tdp; }
+        }
+
         internal PerformanceManager(AppServiceConnection connection) : base(connection)
         {
             // Initialize the computer sensors
@@ -118,6 +124,7 @@ namespace XboxGamingBarHelper.Performance
             }
 
             ryzenAdjHandle = RyzenAdj.init_ryzenadj();
+            var initialTDP = 25;
             if (ryzenAdjHandle == IntPtr.Zero)
             {
                 Logger.Error("Failed to initialize RyzenAdj");
@@ -126,8 +133,11 @@ namespace XboxGamingBarHelper.Performance
             {
                 RyzenAdj.refresh_table(ryzenAdjHandle);
                 // RyzenAdj.set_fast_limit(ryzenAdjHandle, 30000);
-                Logger.Info($"RyzenAdj initialized successfully {RyzenAdj.get_fast_limit(ryzenAdjHandle)} {RyzenAdj.get_slow_limit(ryzenAdjHandle)} {RyzenAdj.get_stapm_limit(ryzenAdjHandle)}");
+                initialTDP = (int)RyzenAdj.get_fast_limit(ryzenAdjHandle);
+                Logger.Info($"RyzenAdj initialized successfully at {initialTDP}W");
             }
+
+            tdp = new TDPProperty(initialTDP, null, this);
         }
 
         public override void Update()

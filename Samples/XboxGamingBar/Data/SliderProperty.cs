@@ -29,7 +29,7 @@ namespace XboxGamingBar.Data
 
             if (UI != null && Owner != null)
             {
-                Logger.Info($"Update TDP slider value {Value}.");
+                Logger.Info($"Update {Function} slider value {Value}.");
                 await Owner.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { UI.Value = Value; });
             }
         }

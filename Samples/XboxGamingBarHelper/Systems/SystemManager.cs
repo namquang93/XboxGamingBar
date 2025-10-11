@@ -12,8 +12,6 @@ using Windows.ApplicationModel.AppService;
 
 namespace XboxGamingBarHelper.Systems
 {
-    internal delegate void RunningGameChangedEventHandler(object sender, RunningGameChangedEventArgs e);
-
     internal class SystemManager : Manager
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
@@ -29,40 +27,16 @@ namespace XboxGamingBarHelper.Systems
             "rider64.exe"
         };
 
-        private RunningGame runningGame;
-        public RunningGame RunningGame
+        private readonly RunningGameProperty runningGame;
+        public RunningGameProperty RunningGame
         {
-            get
-            {
-                return runningGame;
-            }
-            private set
-            {
-                runningGame = value;
-            }
-        }
-
-        private RunningGameChangedEventHandler runningGameChanged;
-        public event RunningGameChangedEventHandler RunningGameChanged
-        {
-            add {
-                if (value == null)
-                {
-                    Logger.Warn("Can't add null listener to running game changed event.");
-                    return;
-                }
-
-                value.Invoke(this, new RunningGameChangedEventArgs(new RunningGame(), RunningGame));
-                runningGameChanged += value;
-            }
-            remove {
-                runningGameChanged -= value;
-            }
+            get { return runningGame; }
         }
 
         public SystemManager(AppServiceConnection connection) : base(connection)
         {
-            RunningGame = GetRunningGame();
+            var initialRunningGame = GetRunningGame();
+            runningGame = new RunningGameProperty(initialRunningGame, this);
         }
 
         private static int GetForegroundProcessId()
@@ -73,8 +47,7 @@ namespace XboxGamingBarHelper.Systems
                 Logger.Error("Can't get foreground window.");
                 return -1;
             }
-            IntPtr activeAppProcessId;
-            Win32.GetWindowThreadProcessId(foregroundWindowHandle, out activeAppProcessId);
+            Win32.GetWindowThreadProcessId(foregroundWindowHandle, out IntPtr activeAppProcessId);
             if (activeAppProcessId == IntPtr.Zero)
             {
                 Logger.Error("Can't get active process id.");
@@ -184,13 +157,18 @@ namespace XboxGamingBarHelper.Systems
         {
             base.Update();
 
-            var newRunningGame = GetRunningGame();
-            if (RunningGame != newRunningGame)
+            var currentRunningGame = GetRunningGame();
+            if (RunningGame != currentRunningGame)
             {
-                Logger.Info($"Detect new running game {newRunningGame.GameId.Name}");
-                var oldRunningGame = RunningGame;
-                RunningGame = newRunningGame;
-                runningGameChanged?.Invoke(null, new RunningGameChangedEventArgs(oldRunningGame, newRunningGame));
+                if (currentRunningGame.GameId.IsValid())
+                {
+                    Logger.Info($"Detect new running game {currentRunningGame.GameId.Name}.");
+                }
+                else
+                {
+                    Logger.Info($"Running game {RunningGame.Value.GameId.Name} stopped.");
+                }
+                RunningGame.Value = currentRunningGame;
             }
         }
     }

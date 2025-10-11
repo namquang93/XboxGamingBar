@@ -1,6 +1,6 @@
 ﻿namespace Shared.Data
 {
-    using System.IO;
+    using Shared.Utilities;
     using System.Xml.Serialization;
 
     /// <summary>
@@ -67,21 +67,7 @@
         // Export to xml string.
         public override string ToString()
         {
-            var serializer = new XmlSerializer(typeof(RunningGame));
-            var writer = new StringWriter();
-            serializer.Serialize(writer, this);
-            var runningGameString = writer.ToString();
-            return runningGameString;
-        }
-
-        // Import from xml string.
-        public static RunningGame FromString(string xmlString)
-        {
-            var serializer = new XmlSerializer(typeof(RunningGame));
-            var reader = new StringReader(xmlString);
-            var runningGame = (RunningGame)serializer.Deserialize(reader);
-            reader.Dispose();
-            return runningGame;
+            return XmlHelper.ToXMLString(this, true);
         }
     }
 }

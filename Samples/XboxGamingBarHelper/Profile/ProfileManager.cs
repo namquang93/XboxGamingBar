@@ -1,10 +1,9 @@
 ﻿using NLog;
 using Shared.Data;
+using Shared.Utilities;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Xml;
-using System.Xml.Linq;
 using System.Xml.Serialization;
 using Windows.ApplicationModel.AppService;
 using XboxGamingBarHelper.Core;
@@ -57,10 +56,16 @@ namespace XboxGamingBarHelper.Profile
             }
         }
 
-        private Dictionary<GameId, GameProfile> gameProfiles;
+        private readonly Dictionary<GameId, GameProfile> gameProfiles;
         public IReadOnlyDictionary<GameId, GameProfile> GameProfiles
         {
             get { return gameProfiles; }
+        }
+
+        private readonly PerGameProfileProperty perGameProfile;
+        public PerGameProfileProperty PerGameProfile
+        {
+            get { return  perGameProfile; }
         }
 
         public ProfileManager(AppServiceConnection connection) : base(connection)
@@ -71,11 +76,11 @@ namespace XboxGamingBarHelper.Profile
             {
                 // Create global profile path when it's not previously exist.
                 GlobalProfile = new GameProfile(GLOBAL_PROFILE_NAME, GLOBAL_PROFILE_NAME, true, 25);
-                GlobalProfile.ToFile(globalProfilePath);
+                XmlHelper.ToXMLFile(GlobalProfile, globalProfilePath);
             }
             else
             {
-                GlobalProfile = GameProfile.FromFile(globalProfilePath);
+                GlobalProfile = XmlHelper.FromXMLFile<GameProfile>(globalProfilePath);
             }
             CurrentProfile = GlobalProfile;
 
@@ -108,6 +113,8 @@ namespace XboxGamingBarHelper.Profile
                     Console.WriteLine($"Error reading or deserializing XML file '{filePath}': {ex.Message}");
                 }
             }
+
+            perGameProfile = new PerGameProfileProperty(null, this);
         }
 
         public static string GetGameProfilesFolder()
@@ -118,38 +125,6 @@ namespace XboxGamingBarHelper.Profile
         public static string GetGlobalProfilePath()
         {
             return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, GLOBAL_PROFILE_FILE_NAME);
-        }
-
-        public static string GetGameProfilePath(GameId gameId)
-        {
-            return Path.Combine(GetGameProfilesFolder(), $"{Path.GetFileNameWithoutExtension(gameId.Path)}.xml");
-        }
-
-        public bool HasGameProfile(GameId gameId)
-        {
-            return gameProfiles.ContainsKey(gameId);
-        }
-
-        public static bool TryLoadGameProfile(GameId gameid, out GameProfile gameProfile)
-        {
-            if (!gameid.IsValid())
-            {
-                gameProfile = new GameProfile();
-                return false;
-            }
-            gameProfile = GameProfile.FromFile(GetGameProfilePath(gameid));
-            return gameProfile.IsValid();
-        }
-
-        public static void SaveGameProfile(GameProfile gameProfile)
-        {
-            if (!gameProfile.IsValid())
-            {
-                Logger.Info("Can't save invalid game profile.");
-                return;
-            }
-
-            gameProfile.ToFile(GetGameProfilePath(gameProfile.GameId));
         }
     }
 }

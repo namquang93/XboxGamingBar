@@ -13,12 +13,18 @@ namespace XboxGamingBarHelper.RTSS
         private const string OSDBackground = "<P=0,0><L0><C=80000000><B=0,0>\b<C>";
         private const string OSDAppName = "Xbox Gaming Bar OSD";
 
-        internal int osdLevel;
-        internal OSD osd;
-        internal OSDItem[] osdItems;
+        private OSD rtssOSD;
+        private readonly OSDItem[] osdItems;
+
+        private readonly OSDProperty osd;
+        public OSDProperty OSD
+        {
+            get { return osd; }
+        }
 
         public RTSSManager(PerformanceManager performanceManager, AppServiceConnection connection) : base(connection)
         {
+            osd = new OSDProperty(0, null, this);
             osdItems = new OSDItem[]
             {
                 new OSDItemFPS(),
@@ -39,16 +45,16 @@ namespace XboxGamingBarHelper.RTSS
             base.Update();
             // Console.WriteLine($"OSD level {OSDLevel}");
             
-            if (osdLevel == 0)
+            if (osd == 0)
             {
-                if (osd != null)
+                if (rtssOSD != null)
                 {
-                    osd.Update(string.Empty);
-                    osd.Dispose();
-                    osd = null;
+                    rtssOSD.Update(string.Empty);
+                    rtssOSD.Dispose();
+                    rtssOSD = null;
                 }
 
-                var osdEntries = OSD.GetOSDEntries();
+                var osdEntries = RTSSSharedMemoryNET.OSD.GetOSDEntries();
                 for (int i = 0; i < osdEntries.Length; i++)
                 {
                     OSDEntry osdEntry = osdEntries[i];
@@ -61,15 +67,15 @@ namespace XboxGamingBarHelper.RTSS
                 return;
             }
 
-            if (osd == null)
+            if (rtssOSD == null)
             {
-                osd = new OSD(OSDAppName);
+                rtssOSD = new OSD(OSDAppName);
             }
 
             string osdString = OSDBackground;
             for (int i = 0; i < osdItems.Length; i++)
             {
-                var osdItemString = osdItems[i].GetOSDString(osdLevel);
+                var osdItemString = osdItems[i].GetOSDString(osd);
                 if (string.IsNullOrEmpty(osdItemString))
                     continue;
 
@@ -83,7 +89,7 @@ namespace XboxGamingBarHelper.RTSS
                 }
             }
 
-            osd.Update(osdString);
+            rtssOSD.Update(osdString);
         }
     }
 }

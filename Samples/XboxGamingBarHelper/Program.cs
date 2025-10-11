@@ -1,12 +1,10 @@
 ﻿using NLog;
 using Shared.Data;
-using Shared.Enums;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.AppService;
-using Windows.Foundation.Collections;
 using XboxGamingBarHelper.Core;
 using XboxGamingBarHelper.Performance;
 using XboxGamingBarHelper.Profile;
@@ -28,36 +26,11 @@ namespace XboxGamingBarHelper
         private static List<IManager> Managers;
 
         // Properties
-        private static OSDProperty osd;
-        private static TDPProperty tdp;
-        private static RunningGameProperty runningGame;
-        private static GameProfileProperty profile;
         private static HelperProperties properties;
 
         static async Task Main(string[] args)
         {
             await Initialize();
-        }
-
-        private static void OnProfileChanged(object sender, ProfileChangedEventArgs e)
-        {
-            if (e.NewProfile.Use)
-            {
-                Logger.Info($"Use profile {e.NewProfile.GameId.Name}'s TDP limit {e.NewProfile.TDP}");
-                tdp.Value = e.NewProfile.TDP;
-            }
-            else
-            {
-                Logger.Info($"Not using profile {e.NewProfile.GameId.Name}'s TDP limit {e.NewProfile.TDP}");
-            }
-        }
-
-        private static void OnRunningGameChanged(object sender, RunningGameChangedEventArgs e)
-        {
-            runningGame.Value = e.NewRunningGame;
-            ProfileManager.TryLoadGameProfile(e.NewRunningGame.GameId, out GameProfile gameProfile);
-            Logger.Info($"Trying to apply profile {gameProfile.GameId.Name} for running game {runningGame.Value.GameId.Name}");
-            profileManager.CurrentProfile = gameProfile;
         }
 
         /// <summary>
@@ -80,11 +53,7 @@ namespace XboxGamingBarHelper
             Managers = new List<IManager> { performanceManager, rtssManager, profileManager, systemManager };
 
             // Initialize properties.
-            runningGame = new RunningGameProperty(systemManager.RunningGame, systemManager);
-            osd = new OSDProperty(rtssManager.osdLevel, runningGame, rtssManager);
-            tdp = new TDPProperty(performanceManager.GetTDP(), runningGame, performanceManager);
-            profile = new GameProfileProperty(runningGame, profileManager);
-            properties = new HelperProperties(runningGame, osd, tdp, profile);
+            properties = new HelperProperties(systemManager.RunningGame, rtssManager.OSD, performanceManager.TDP, profileManager.PerGameProfile);
 
             //while (!System.Diagnostics.Debugger.IsAttached)
             //{
@@ -96,9 +65,6 @@ namespace XboxGamingBarHelper
             {
                 return;
             }
-
-            profileManager.ProfileChanged += OnProfileChanged;
-            systemManager.RunningGameChanged += OnRunningGameChanged;
 
             while (true)
             {

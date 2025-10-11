@@ -1,6 +1,7 @@
 ﻿using Shared.Enums;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using Windows.Foundation.Collections;
 
 namespace Shared.Data
@@ -29,9 +30,92 @@ namespace Shared.Data
             }
         }
 
-        public static explicit operator ValueType(GenericProperty<ValueType> property)
+        //public static explicit operator ValueType(GenericProperty<ValueType> property)
+        //{
+        //    return property.Value;
+        //}
+
+        public static implicit operator ValueType(GenericProperty<ValueType> property)
         {
             return property.Value;
+        }
+
+        public static bool operator ==(GenericProperty<ValueType> left, ValueType right)
+        {
+            // Handle null cases
+            if (ReferenceEquals(left, null))
+            {
+                return ReferenceEquals(right, null);
+            }
+
+            // If left is not null, then call its Equals method
+            return left.Equals(right);
+        }
+
+        public static bool operator ==(ValueType left, GenericProperty<ValueType> right)
+        {
+            // Handle null cases
+            if (ReferenceEquals(left, null))
+            {
+                return ReferenceEquals(right, null);
+            }
+
+            // If left is not null, then call its Equals method
+            return right.Equals(left);
+        }
+
+        public static bool operator ==(GenericProperty<ValueType> left, GenericProperty<ValueType> right)
+        {
+            // Handle null cases
+            if (ReferenceEquals(left, null))
+            {
+                return ReferenceEquals(right, null);
+            }
+
+            // If left is not null, then call its Equals method
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(GenericProperty<ValueType> left, ValueType right)
+        {
+            return !(left == right);
+        }
+
+        public static bool operator !=(ValueType left, GenericProperty<ValueType> right)
+        {
+            return !(right == left);
+        }
+
+        public static bool operator !=(GenericProperty<ValueType> left, GenericProperty<ValueType> right)
+        {
+            return !(left == right);
+        }
+
+        // Override the Equals method
+        public override bool Equals(object obj)
+        {
+            if (obj is GenericProperty<ValueType> other)
+            {
+                return EqualityComparer<ValueType>.Default.Equals(value, other.value);
+            }
+
+            if (obj is ValueType otherValue)
+            {
+                return EqualityComparer<ValueType>.Default.Equals(value, otherValue);
+            }
+
+            return false;
+        }
+
+        // Override GetHashCode (required when overriding Equals)
+        public override int GetHashCode()
+        {
+            return value.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return value.ToString();
         }
 
         public GenericProperty(ValueType inValue) : base()
@@ -47,11 +131,6 @@ namespace Shared.Data
         public GenericProperty(ValueType inValue, IProperty inParentProperty, Function inFunction) : base(inParentProperty, inFunction)
         {
             value = inValue;
-        }
-
-        public override string ToString()
-        {
-            return value.ToString();
         }
 
         public override ValueSet AddValueSetContent(in ValueSet inValueSet)

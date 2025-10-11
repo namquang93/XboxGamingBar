@@ -5,6 +5,6 @@
         OSD,
         TDP,
         CurrentGame,
-        GameProfile
+        PerGameProfile
     }
 }

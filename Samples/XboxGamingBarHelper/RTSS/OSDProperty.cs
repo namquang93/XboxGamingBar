@@ -11,11 +11,6 @@ namespace XboxGamingBarHelper.RTSS
         {
         }
 
-        protected override void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
-        {
-            base.NotifyPropertyChanged(propertyName);
 
-            Manager.osdLevel = Value;
-        }
     }
 }
