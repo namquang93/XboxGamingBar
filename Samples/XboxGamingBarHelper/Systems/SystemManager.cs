@@ -187,6 +187,7 @@ namespace XboxGamingBarHelper.Systems
             var newRunningGame = GetRunningGame();
             if (RunningGame != newRunningGame)
             {
+                Logger.Info($"Detect new running game {newRunningGame.GameId.Name}");
                 var oldRunningGame = RunningGame;
                 RunningGame = newRunningGame;
                 runningGameChanged?.Invoke(null, new RunningGameChangedEventArgs(oldRunningGame, newRunningGame));

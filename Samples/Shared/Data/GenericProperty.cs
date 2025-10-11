@@ -54,20 +54,39 @@ namespace Shared.Data
             return value.ToString();
         }
 
-        protected override ValueSet AddContent(ValueSet inValueSet)
+        public override ValueSet AddValueSetContent(in ValueSet inValueSet)
         {
             inValueSet.Add(nameof(Content), Value);
             return inValueSet;
         }
 
-        public override bool TryGetValue<GetValueType>(out GetValueType value)
+        public override bool TrySetValue<InValueType>(InValueType value)
         {
-            if (typeof(GetValueType).IsAssignableFrom(typeof(ValueType)))
+            if (typeof(ValueType).IsAssignableFrom(typeof(InValueType)))
             {
-                value = (GetValueType)(object)Value;
+                Value = (ValueType)(object)value;
                 return true;
             }
 
+            Logger.Error($"Can't try set value {value} of type {typeof(InValueType)} to property {Function}");
+            return false;
+        }
+
+        public override bool TryGetValue<OutValueType>(out OutValueType value)
+        {
+            if (typeof(OutValueType) == typeof(string))
+            {
+                value = (OutValueType)(object)Value.ToString();
+                return true;
+            }
+
+            if (typeof(OutValueType).IsAssignableFrom(typeof(ValueType)))
+            {
+                value = (OutValueType)(object)Value;
+                return true;
+            }
+
+            Logger.Error($"Can't try get value of type {typeof(OutValueType)} from property {Function}");
             value = default;
             return false;
         }

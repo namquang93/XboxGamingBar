@@ -7,13 +7,13 @@ using Windows.UI.Xaml.Controls.Primitives;
 
 namespace XboxGamingBar.Data
 {
-    internal class SliderProperty : WidgetProperty<int, Slider>
+    internal class SliderProperty : WidgetControlProperty<int, Slider>
     {
         public SliderProperty(int inValue, Function inFunction, Slider inControl, Page inOwner) : base(inValue, inFunction, inControl, inOwner)
         {
-            if (Control != null)
+            if (UI != null)
             {
-                Control.ValueChanged += Slider_ValueChanged;
+                UI.ValueChanged += Slider_ValueChanged;
             }
         }
 
@@ -27,10 +27,10 @@ namespace XboxGamingBar.Data
         {
             base.NotifyPropertyChanged(propertyName);
 
-            if (Control != null && Owner != null)
+            if (UI != null && Owner != null)
             {
                 Logger.Info($"Update TDP slider value {Value}.");
-                await Owner.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { Control.Value = Value; });
+                await Owner.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { UI.Value = Value; });
             }
         }
     }

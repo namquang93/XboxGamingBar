@@ -47,11 +47,14 @@ namespace Shared.Data
             }
         }
 
-        public abstract bool TryGetValue<GetValueType>(out GetValueType value);
+        public abstract bool TryGetValue<OutValueType>(out OutValueType value);
 
         public abstract bool SetValue(object value);
 
         public abstract object GetValue();
+
         public abstract Task Sync();
+
+        public abstract bool TrySetValue<InValueType>(InValueType newValue);
     }
 }

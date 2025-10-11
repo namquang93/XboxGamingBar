@@ -10,6 +10,8 @@ namespace Shared.Data
 
         List<IProperty> ChildProperties { get; }
 
+        bool TrySetValue<InValueType>(InValueType newValue);
+
         bool TryGetValue<ValueType>(out ValueType value);
 
         bool SetValue(object value);

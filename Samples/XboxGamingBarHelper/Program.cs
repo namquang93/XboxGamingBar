@@ -55,6 +55,7 @@ namespace XboxGamingBarHelper
         {
             runningGame.Value = e.NewRunningGame;
             ProfileManager.TryLoadGameProfile(e.NewRunningGame.GameId, out GameProfile gameProfile);
+            Logger.Info($"Trying to apply profile {gameProfile.GameId.Name} for running game {runningGame.Value.GameId.Name}");
             profileManager.CurrentProfile = gameProfile;
         }
 
@@ -82,6 +83,11 @@ namespace XboxGamingBarHelper
             osd = new OSDProperty(rtssManager.osdLevel, runningGame, rtssManager);
             tdp = new TDPProperty(performanceManager.GetTDP(), runningGame, performanceManager);
             properties = new HelperProperties(runningGame, osd, tdp);
+
+            //while (!System.Diagnostics.Debugger.IsAttached)
+            //{
+            //    await Task.Delay(500);
+            //}
 
             AppServiceConnectionStatus status = await connection.OpenAsync();
             if (status != AppServiceConnectionStatus.Success)

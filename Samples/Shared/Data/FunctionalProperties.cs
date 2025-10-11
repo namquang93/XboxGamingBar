@@ -1,5 +1,6 @@
 ﻿using NLog;
 using Shared.Enums;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.AppService;
@@ -42,10 +43,8 @@ namespace Shared.Data
             switch (command)
             {
                 case Command.Get:
-                    ValueSet response = new ValueSet
-                    {
-                        { nameof(Content), property.GetValue() }
-                    };
+                    ValueSet response = new ValueSet();
+                    response = property.AddValueSetContent(response);
                     var sendResponseResult = await SendResponse(request, response);
                     Logger.Info($"Sent response {function} {sendResponseResult}");
                     

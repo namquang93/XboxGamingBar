@@ -1,14 +1,16 @@
 ﻿using Shared.Data;
 using Shared.Enums;
+using System;
 using System.Runtime.CompilerServices;
 using Windows.Foundation.Collections;
-using XboxGamingBarHelper.Core;
+using Windows.UI.Core;
+using Windows.UI.Xaml.Controls;
 
-namespace XboxGamingBarHelper.Systems
+namespace XboxGamingBar.Data
 {
-    internal class RunningGameProperty : HelperProperty<RunningGame, SystemManager>
+    internal class RunningGameProperty : WidgetProperty<RunningGame, TextBlock>
     {
-        public RunningGameProperty(RunningGame inValue, SystemManager inManager) : base(inValue, null, Function.CurrentGame, inManager)
+        public RunningGameProperty(TextBlock inControl, Page inOwner) : base(new RunningGame(), Function.CurrentGame, inControl, inOwner)
         {
         }
 
@@ -30,11 +32,15 @@ namespace XboxGamingBarHelper.Systems
             return inValueSet;
         }
 
-        protected override void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
+        protected override async void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
         {
             base.NotifyPropertyChanged(propertyName);
 
-            // Manager.RunningGame = Value;
+            if (UI != null && Owner != null)
+            {
+                Logger.Info($"Update TDP slider value {Value}.");
+                await Owner.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { UI.Text = Value.IsValid() ? Value.GameId.Name : "No Game Detected"; });
+            }
         }
     }
 }

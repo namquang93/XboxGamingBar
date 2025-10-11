@@ -44,7 +44,7 @@ namespace Shared.Data
                 { nameof(Command), (int)Command.Set },
                 { nameof(Function),(int)function },
             };
-            request = AddContent(request);
+            request = AddValueSetContent(request);
 
             var sentMessage = SendMessageAsync(request);
             if (sentMessage == null)
@@ -113,6 +113,6 @@ namespace Shared.Data
 
         protected abstract Task<AppServiceResponse> SendMessageAsync(ValueSet request);
 
-        protected abstract ValueSet AddContent(ValueSet inValueSet);
+        public abstract ValueSet AddValueSetContent(in ValueSet inValueSet);
     }
 }

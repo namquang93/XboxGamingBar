@@ -5,24 +5,25 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel.AppService;
 using Windows.Foundation.Collections;
 using Windows.UI.Core;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace XboxGamingBar.Data
 {
-    internal class WidgetProperty<ValueType, ControlType> : GenericProperty<ValueType> where ControlType : Control
+    internal class WidgetProperty<ValueType, UIType> : GenericProperty<ValueType> where UIType : UIElement
     {
-        private ControlType control;
-        public ControlType Control
+        private UIType ui;
+        public UIType UI
         {
-            get { return control; }
+            get { return ui; }
         }
 
         private readonly Page owner;
         public Page Owner { get { return owner; } }
 
-        public WidgetProperty(ValueType inValue, Function inFunction, ControlType inControl, Page inOwner) : base(inValue, null, inFunction)
+        public WidgetProperty(ValueType inValue, Function inFunction, UIType inUI, Page inOwner) : base(inValue, null, inFunction)
         {
-            control = inControl;
+            ui = inUI;
             owner = inOwner;
         }
 
@@ -35,21 +36,6 @@ namespace XboxGamingBar.Data
             }
 
             return App.Connection.SendMessageAsync(request).AsTask();
-        }
-
-        public override async Task Sync()
-        {
-            if (Control != null && Owner != null)
-            {
-                await Owner.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { Control.IsEnabled = false; });
-            }
-
-            await base.Sync();
-
-            if (Control != null && Owner != null)
-            {
-                await Owner.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { Control.IsEnabled = true; });
-            }
         }
     }
 }

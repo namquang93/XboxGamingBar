@@ -5,7 +5,6 @@ using System;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.AppService;
-using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Foundation.Metadata;
 using Windows.UI.Core;
@@ -25,16 +24,18 @@ namespace XboxGamingBar
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-        private readonly OSDProperty osdProperty;
-        private readonly TDPProperty tdpProperty;
+        private readonly OSDProperty osd;
+        private readonly TDPProperty tdp;
+        private readonly RunningGameProperty runningGame;
         private readonly WidgetProperties properties;
 
         public GamingWidget()
         {
             InitializeComponent();
-            tdpProperty = new TDPProperty(4, TDPSlider, this);
-            osdProperty = new OSDProperty(0, PerformanceOverlaySlider, this);
-            properties = new WidgetProperties(osdProperty, tdpProperty);
+            tdp = new TDPProperty(4, TDPSlider, this);
+            osd = new OSDProperty(0, PerformanceOverlaySlider, this);
+            runningGame = new RunningGameProperty(CurrentGameText, this);
+            properties = new WidgetProperties(osd, tdp, runningGame);
         }
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
