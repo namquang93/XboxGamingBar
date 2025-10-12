@@ -85,7 +85,7 @@ namespace XboxGamingBarHelper
 
         private static void CurrentProfile_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (profileManager.CurrentProfile.Use)
+            if (profileManager.CurrentProfile.Use || profileManager.CurrentProfile.IsGlobalProfile)
             {
                 Logger.Info($"Profile changed to {profileManager.CurrentProfile.GameId.Name}, apply it.");
                 performanceManager.TDP.Value = profileManager.CurrentProfile.TDP;

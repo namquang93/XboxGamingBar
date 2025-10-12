@@ -7,6 +7,8 @@ namespace Shared.Data
     [XmlRoot("GameProfile")]
     public struct GameProfile
     {
+        public const string GLOBAL_PROFILE_NAME = "global";
+
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         [XmlElement("GameId")]
@@ -16,9 +18,24 @@ namespace Shared.Data
         private bool use;
         public bool Use
         {
-            get { return use; }
+            get
+            {
+                if (IsGlobalProfile)
+                {
+                    // Logger.Warn("Per-game profile is preferred over global profile.");
+                    return false;
+                }
+
+                return use;
+            }
             set
             {
+                if (IsGlobalProfile)
+                {
+                    Logger.Warn("Can't change \"Use\" property of global profile.");
+                    return;
+                }
+
                 if (use != value)
                 {
                     use = value;
@@ -44,6 +61,8 @@ namespace Shared.Data
 
         [XmlIgnore]
         public string Path;
+
+        public bool IsGlobalProfile { get { return string.Compare(GameId.Name, GLOBAL_PROFILE_NAME) == 0; } }
 
         public GameProfile(string gameName, string gamePath, bool inUse, int inTDP, string inPath)
         {
@@ -98,7 +117,7 @@ namespace Shared.Data
         {
             if (string.IsNullOrEmpty(Path))
             {
-                Logger.Warn($"Can't save profile {GameId.Name} due to empty path.");
+                // Logger.Warn($"Can't save profile {GameId.Name} due to empty path.");
                 return;
             }
 

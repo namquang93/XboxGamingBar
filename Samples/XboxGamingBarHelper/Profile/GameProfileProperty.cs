@@ -27,5 +27,10 @@ namespace XboxGamingBarHelper.Profile
             get { return this.value.Use; }
             set { this.value.Use = value; }
         }
+
+        public bool IsGlobalProfile
+        {
+            get { return this.value.IsGlobalProfile; }
+        }
     }
 }

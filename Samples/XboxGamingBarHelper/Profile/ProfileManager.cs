@@ -4,7 +4,6 @@ using Shared.Utilities;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Xml.Serialization;
 using Windows.ApplicationModel.AppService;
 using XboxGamingBarHelper.Core;
 
@@ -15,8 +14,7 @@ namespace XboxGamingBarHelper.Profile
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         private const string PROFILE_FOLDER_NAME = "profiles";
-        private const string GLOBAL_PROFILE_NAME = "global";
-        private const string GLOBAL_PROFILE_FILE_NAME = "global.xml";
+        private const string XML_EXTENSION = ".xml";
 
         public readonly GameProfile GlobalProfile;
 
@@ -45,7 +43,7 @@ namespace XboxGamingBarHelper.Profile
             if (!File.Exists(globalProfilePath))
             {
                 // Create global profile path when it's not previously exist.
-                GlobalProfile = new GameProfile(GLOBAL_PROFILE_NAME, GLOBAL_PROFILE_NAME, true, 25, globalProfilePath);
+                GlobalProfile = new GameProfile(GameProfile.GLOBAL_PROFILE_NAME, GameProfile.GLOBAL_PROFILE_NAME, true, 25, globalProfilePath);
                 GlobalProfile.Save();
             }
             else
@@ -62,22 +60,16 @@ namespace XboxGamingBarHelper.Profile
             }
 
             // Read all existing game profiles.
-            var xmlFiles = Directory.GetFiles(gameProfilesFolder, "*.xml");
-            var serializer = new XmlSerializer(typeof(GameProfile));
+            var xmlFiles = Directory.GetFiles(gameProfilesFolder, $"*{XML_EXTENSION}");
             gameProfiles = new Dictionary<GameId, GameProfile>();
 
             foreach (string filePath in xmlFiles)
             {
-                Logger.Info($"Reading file profile: {Path.GetFileName(filePath)}.");
-
                 try
                 {
-                    using (FileStream fileStream = new FileStream(filePath, FileMode.Open))
-                    {
-                        var gameProfile = (GameProfile)serializer.Deserialize(fileStream);
-                        gameProfile.Path = filePath;
-                        gameProfiles.Add(gameProfile.GameId, gameProfile);
-                    }
+                    var gameProfile = XmlHelper.FromXMLFile<GameProfile>(filePath);
+                    gameProfile.Path = filePath;
+                    gameProfiles.Add(gameProfile.GameId, gameProfile);
                 }
                 catch (Exception ex)
                 {
@@ -96,7 +88,7 @@ namespace XboxGamingBarHelper.Profile
 
         public static string GetGlobalProfilePath()
         {
-            return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, GLOBAL_PROFILE_FILE_NAME);
+            return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"{GameProfile.GLOBAL_PROFILE_NAME}{XML_EXTENSION}");
         }
 
         public bool TryGetProfile(GameId gameId, out GameProfile gameProfile)
@@ -112,7 +104,7 @@ namespace XboxGamingBarHelper.Profile
                 return gameProfile;
             }
 
-            var newGameProfilePath = Path.Combine(GetGameProfilesFolder(), $"{Path.GetFileNameWithoutExtension(gameId.Path)}.xml");
+            var newGameProfilePath = Path.Combine(GetGameProfilesFolder(), $"{Path.GetFileNameWithoutExtension(gameId.Path)}{XML_EXTENSION}");
             var newGameProfile = new GameProfile(gameId.Name, gameId.Path, true, CurrentProfile.TDP, newGameProfilePath);
             newGameProfile.Save();
             gameProfiles.Add(gameId, newGameProfile);

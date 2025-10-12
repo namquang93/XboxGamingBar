@@ -60,7 +60,7 @@ namespace Shared.Data
                     break;
             }
             var sendResponseResult = await SendResponse(request, response);
-            Logger.Info($"Sent response {function} {sendResponseResult}.");
+            Logger.Debug($"Sent response {function} {sendResponseResult}.");
         }
 
         protected abstract Task<AppServiceResponseStatus> SendResponse(AppServiceRequest request, ValueSet response);

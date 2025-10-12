@@ -58,11 +58,14 @@ namespace Shared.Data
             {
                 if (response.Message.TryGetValue(nameof(Content), out object responseValue))
                 {
-                    Logger.Info($"Notify property {function} changed {responseValue}.");
+                    Logger.Debug($"Notify property {function} changed {responseValue}.");
                 }
                 else
                 {
-                    Logger.Warn($"Got empty response when notifying property {function}.");
+                    if (function != Function.None)
+                    {
+                        Logger.Warn($"Got empty response when notifying property {function}.");
+                    }
                 }
             }
             else

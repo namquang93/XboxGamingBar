@@ -49,6 +49,11 @@ namespace Shared.Data
 
         public override int GetHashCode()
         {
+            if (string.IsNullOrEmpty(Name) ||string.IsNullOrEmpty(Path))
+            {
+                return -1;
+            }
+
             return Name.GetHashCode() ^ Path.GetHashCode();
         }
 
