@@ -21,5 +21,11 @@ namespace XboxGamingBarHelper.Profile
             get { return this.value.GameId; }
             set { this.value.GameId = value; }
         }
+
+        public bool Use
+        {
+            get { return this.value.Use; }
+            set { this.value.Use = value; }
+        }
     }
 }

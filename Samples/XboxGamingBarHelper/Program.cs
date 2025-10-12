@@ -64,6 +64,7 @@ namespace XboxGamingBarHelper
             systemManager.RunningGame.PropertyChanged += RunningGame_PropertyChanged;
             profileManager.PerGameProfile.PropertyChanged += PerGameProfile_PropertyChanged;
             performanceManager.TDP.PropertyChanged += TDP_PropertyChanged;
+            profileManager.CurrentProfile.PropertyChanged += CurrentProfile_PropertyChanged;
 
             AppServiceConnectionStatus status = await connection.OpenAsync();
             if (status != AppServiceConnectionStatus.Success)
@@ -79,6 +80,20 @@ namespace XboxGamingBarHelper
                 {
                     manager.Update();
                 }
+            }
+        }
+
+        private static void CurrentProfile_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (profileManager.CurrentProfile.Use)
+            {
+                Logger.Info($"Profile changed to {profileManager.CurrentProfile.GameId.Name}, apply it.");
+                performanceManager.TDP.Value = profileManager.CurrentProfile.TDP;
+                profileManager.PerGameProfile.Value = profileManager.CurrentProfile.Use;
+            }
+            else
+            {
+                Logger.Info($"Profile changed to {profileManager.CurrentProfile.GameId.Name} is not used.");
             }
         }
 
@@ -107,20 +122,19 @@ namespace XboxGamingBarHelper
 
         private static void TDP_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            Logger.Info($"Set current profile {profileManager.CurrentProfile.GameId.Name}'s TDP from {profileManager.CurrentProfile.TDP} to {performanceManager.TDP}");
+            Logger.Info($"Set current profile {profileManager.CurrentProfile.GameId.Name}'s TDP from {profileManager.CurrentProfile.TDP} to {performanceManager.TDP}.");
             profileManager.CurrentProfile.TDP = performanceManager.TDP;
         }
 
         private static void RunningGame_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            Logger.Info($"Running game changed to {systemManager.RunningGame.GameId}");
             if (systemManager.RunningGame.Value.IsValid())
             {
                 if (profileManager.TryGetProfile(systemManager.RunningGame.Value.GameId, out var runningGameProfile))
                 {
                     if (runningGameProfile.Use)
                     {
-                        Logger.Info($"Game {systemManager.RunningGame.GameId} has per-game profile in use, apply it.");
+                        Logger.Info($"Game {systemManager.RunningGame.GameId} has per-game profile in use.");
                         profileManager.CurrentProfile.Value = runningGameProfile;
                     }
                     else

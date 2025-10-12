@@ -15,7 +15,7 @@ namespace XboxGamingBarHelper.Profile
         {
             base.NotifyPropertyChanged(propertyName);
 
-            Logger.Info($"Use {(Value ? "per-game" : "global")} profile.");
+            //Logger.Info($"Use {(Value ? "per-game" : "global")} profile.");
         }
     }
 }
