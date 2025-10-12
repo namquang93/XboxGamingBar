@@ -13,23 +13,44 @@ namespace Shared.Data
         public GameId GameId;
 
         [XmlElement("Use")]
-        public bool Use;
-
-        [XmlElement("TDP")]
-        public int TDP;
-
-        public GameProfile(GameId gameId, bool use, int tdp)
+        private bool use;
+        public bool Use
         {
-            GameId = gameId;
-            Use = use;
-            TDP = tdp;
+            get { return use; }
+            set
+            {
+                if (use != value)
+                {
+                    use = value;
+                    Save();
+                }
+            }
         }
 
-        public GameProfile(string name, string path, bool use, int tdp)
+        [XmlElement("TDP")]
+        private int tdp;
+        public int TDP
         {
-            GameId = new GameId(name, path);
-            Use = use;
-            TDP = tdp;
+            get { return tdp; }
+            set
+            {
+                if (tdp != value)
+                {
+                    tdp = value;
+                    Save();
+                }
+            }
+        }
+
+        [XmlIgnore]
+        public string Path;
+
+        public GameProfile(string gameName, string gamePath, bool inUse, int inTDP, string inPath)
+        {
+            GameId = new GameId(gameName, gamePath);
+            use = inUse;
+            tdp = inTDP;
+            Path = inPath;
         }
 
         public bool IsValid()
@@ -71,6 +92,17 @@ namespace Shared.Data
         public override string ToString()
         {
             return XmlHelper.ToXMLString(this, true);
+        }
+
+        public void Save()
+        {
+            if (string.IsNullOrEmpty(Path))
+            {
+                Logger.Warn($"Can't save profile {GameId.Name} due to empty path.");
+                return;
+            }
+
+            XmlHelper.ToXMLFile(this, Path);
         }
     }
 }

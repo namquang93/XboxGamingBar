@@ -2,6 +2,7 @@
 using Shared.Data;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.AppService;
@@ -45,6 +46,11 @@ namespace XboxGamingBarHelper
             connection.RequestReceived += Connection_RequestReceived;
             connection.ServiceClosed += Connection_ServiceClosed;
 
+            //while (!System.Diagnostics.Debugger.IsAttached)
+            //{
+            //    await Task.Delay(500);
+            //}
+
             // Initialize managers.
             performanceManager = new PerformanceManager(connection);
             rtssManager = new RTSSManager(performanceManager, connection);
@@ -55,10 +61,9 @@ namespace XboxGamingBarHelper
             // Initialize properties.
             properties = new HelperProperties(systemManager.RunningGame, rtssManager.OSD, performanceManager.TDP, profileManager.PerGameProfile);
 
-            //while (!System.Diagnostics.Debugger.IsAttached)
-            //{
-            //    await Task.Delay(500);
-            //}
+            systemManager.RunningGame.PropertyChanged += RunningGame_PropertyChanged;
+            profileManager.PerGameProfile.PropertyChanged += PerGameProfile_PropertyChanged;
+            performanceManager.TDP.PropertyChanged += TDP_PropertyChanged;
 
             AppServiceConnectionStatus status = await connection.OpenAsync();
             if (status != AppServiceConnectionStatus.Success)
@@ -75,6 +80,22 @@ namespace XboxGamingBarHelper
                     manager.Update();
                 }
             }
+        }
+
+        private static void PerGameProfile_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            //profileManager.CurrentProfile.Use = profileManager.PerGameProfile;
+        }
+
+        private static void TDP_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            Logger.Info($"Set current profile {profileManager.CurrentProfile.GameId.Name}'s TDP from {profileManager.CurrentProfile.TDP} to {performanceManager.TDP}");
+            profileManager.CurrentProfile.TDP = performanceManager.TDP;
+        }
+
+        private static void RunningGame_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            
         }
 
         /// <summary>

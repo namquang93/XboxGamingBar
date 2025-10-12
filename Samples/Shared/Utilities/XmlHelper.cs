@@ -40,7 +40,7 @@ namespace Shared.Utilities
             }
             catch (Exception e)
             {
-                Logger.Error($"Exception {e} while deserializing \"{xmlString}\" into {typeof(T)}");
+                Logger.Error($"Exception {e} while deserializing \"{xmlString}\" into {typeof(T).Name}");
                 return default;
             }
         }
@@ -52,7 +52,7 @@ namespace Shared.Utilities
             {
                 serializer.Serialize(writer, obj);
             }
-            Logger.Info($"Saved {typeof(T)} to {path}.");
+            Logger.Info($"Saved {typeof(T).Name} to {path}.");
 
             return true;
         }
@@ -61,7 +61,7 @@ namespace Shared.Utilities
         {
             if (!File.Exists(path))
             {
-                Logger.Warn($"{typeof(T)} not found at that {path}");
+                Logger.Warn($"{typeof(T).Name} not found at that {path}");
                 return default;
             }
 
@@ -70,7 +70,7 @@ namespace Shared.Utilities
             var obj = (T)serializer.Deserialize(reader);
             reader.Close();
             reader.Dispose();
-            Logger.Info($"Loaded {typeof(T)} from {path}.");
+            Logger.Info($"Loaded {typeof(T).Name} from {path}.");
 
             return obj;
         }

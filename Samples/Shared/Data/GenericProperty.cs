@@ -147,7 +147,7 @@ namespace Shared.Data
                 return true;
             }
 
-            Logger.Error($"Can't try set value {value} of type {typeof(InValueType)} to property {Function}");
+            Logger.Error($"Can't try set value {value} of type {typeof(InValueType).Name} to property {Function}");
             return false;
         }
 
@@ -165,7 +165,7 @@ namespace Shared.Data
                 return true;
             }
 
-            Logger.Error($"Can't try get value of type {typeof(OutValueType)} from property {Function}");
+            Logger.Error($"Can't try get value of type {typeof(OutValueType).Name} from property {Function}");
             value = default;
             return false;
         }

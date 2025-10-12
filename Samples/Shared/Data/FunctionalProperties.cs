@@ -40,22 +40,22 @@ namespace Shared.Data
             }
 
             var command = (Command)request.Message[nameof(Command)];
+            var response = new ValueSet();
             switch (command)
             {
                 case Command.Get:
-                    ValueSet response = new ValueSet();
                     response = property.AddValueSetContent(response);
-                    var sendResponseResult = await SendResponse(request, response);
-                    Logger.Info($"Sent response {function} {sendResponseResult}");
-                    
                     break;
                 case Command.Set:
                     property.SetValue(request.Message[nameof(Content)]);
+                    response.Add(nameof(Content), "Success");
                     break;
                 default:
                     Logger.Error($"Can't process command {command}");
                     break;
             }
+            var sendResponseResult = await SendResponse(request, response);
+            Logger.Info($"Sent response {function} {sendResponseResult}");
         }
 
         protected abstract Task<AppServiceResponseStatus> SendResponse(AppServiceRequest request, ValueSet response);

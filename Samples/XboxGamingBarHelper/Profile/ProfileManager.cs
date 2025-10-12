@@ -38,23 +38,23 @@ namespace XboxGamingBarHelper.Profile
             }
         }
 
-        public GameProfile GlobalProfile { get; private set; }
+        public readonly GameProfile GlobalProfile;
 
-        private GameProfile currentProfile;
-        public GameProfile CurrentProfile
-        {
-            get { return currentProfile; }
-            set
-            {
-                if (currentProfile != value)
-                {
-                    var oldProfile = currentProfile;
-                    currentProfile = value;
-                    Logger.Info($"Profile changed from {oldProfile.GameId.Name} to {currentProfile.GameId.Name}");
-                    profileChanged?.Invoke(this, new ProfileChangedEventArgs(oldProfile, currentProfile));
-                }
-            }
-        }
+        public GameProfile CurrentProfile;
+        //public GameProfile CurrentProfile { get; private set; }
+        //{
+        //    get { return currentProfile; }
+        //    set
+        //    {
+        //        if (currentProfile != value)
+        //        {
+        //            var oldProfile = currentProfile;
+        //            currentProfile = value;
+        //            Logger.Info($"Profile changed from {oldProfile.GameId.Name} to {currentProfile.GameId.Name}");
+        //            profileChanged?.Invoke(this, new ProfileChangedEventArgs(oldProfile, currentProfile));
+        //        }
+        //    }
+        //}
 
         private readonly Dictionary<GameId, GameProfile> gameProfiles;
         public IReadOnlyDictionary<GameId, GameProfile> GameProfiles
@@ -75,12 +75,13 @@ namespace XboxGamingBarHelper.Profile
             if (!File.Exists(globalProfilePath))
             {
                 // Create global profile path when it's not previously exist.
-                GlobalProfile = new GameProfile(GLOBAL_PROFILE_NAME, GLOBAL_PROFILE_NAME, true, 25);
-                XmlHelper.ToXMLFile(GlobalProfile, globalProfilePath);
+                GlobalProfile = new GameProfile(GLOBAL_PROFILE_NAME, GLOBAL_PROFILE_NAME, true, 25, globalProfilePath);
+                GlobalProfile.Save();
             }
             else
             {
                 GlobalProfile = XmlHelper.FromXMLFile<GameProfile>(globalProfilePath);
+                GlobalProfile.Path = globalProfilePath;
             }
             CurrentProfile = GlobalProfile;
 
