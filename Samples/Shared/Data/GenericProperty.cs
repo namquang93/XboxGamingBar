@@ -1,4 +1,5 @@
 ﻿using Shared.Enums;
+using Shared.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -12,7 +13,7 @@ namespace Shared.Data
     /// <typeparam name="ValueType">Type of that value. Int or bool or what so ever.</typeparam>
     public abstract class GenericProperty<ValueType> : FunctionalProperty
     {
-        private ValueType value;
+        protected ValueType value;
         public ValueType Value
         {
             get { return  value; }
@@ -135,7 +136,14 @@ namespace Shared.Data
 
         public override ValueSet AddValueSetContent(in ValueSet inValueSet)
         {
-            inValueSet.Add(nameof(Content), Value);
+            if (TypeHelper.IsStruct<ValueType>())
+            {
+                inValueSet.Add(nameof(Content), XmlHelper.ToXMLString(Value, true));
+            }
+            else
+            {
+                inValueSet.Add(nameof(Content), Value);
+            }
             return inValueSet;
         }
 
@@ -172,6 +180,12 @@ namespace Shared.Data
 
         public override bool SetValue(object value)
         {
+            if (TypeHelper.IsStruct<ValueType>() && value is string stringValue)
+            {
+                Value = XmlHelper.FromXMLString<ValueType>(stringValue);
+                return true;
+            }
+
             try
             {
                 Value = (ValueType)value;

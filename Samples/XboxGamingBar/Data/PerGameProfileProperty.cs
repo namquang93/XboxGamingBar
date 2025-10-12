@@ -1,5 +1,4 @@
-﻿using Shared.Data;
-using Shared.Enums;
+﻿using Shared.Enums;
 using System;
 using System.Runtime.CompilerServices;
 using Windows.UI.Core;

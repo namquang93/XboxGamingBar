@@ -51,5 +51,12 @@ namespace Shared.Data
         {
             return Name.GetHashCode() ^ Path.GetHashCode();
         }
+
+        public override string ToString()
+        {
+            if (string.IsNullOrEmpty(Name))
+                return "Nothing";
+            return $"{Name} at {Path}";
+        }
     }
 }

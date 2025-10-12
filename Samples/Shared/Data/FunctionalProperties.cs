@@ -33,6 +33,11 @@ namespace Shared.Data
         public async Task OnRequestReceived(AppServiceRequest request)
         {
             var function = (Function)request.Message[nameof(Function)];
+            if (function == Function.None)
+            {
+                return;
+            }
+
             if (!properties.TryGetValue(function, out var property))
             {
                 Logger.Error($"Property {function} not found.");
@@ -55,7 +60,7 @@ namespace Shared.Data
                     break;
             }
             var sendResponseResult = await SendResponse(request, response);
-            Logger.Info($"Sent response {function} {sendResponseResult}");
+            Logger.Info($"Sent response {function} {sendResponseResult}.");
         }
 
         protected abstract Task<AppServiceResponseStatus> SendResponse(AppServiceRequest request, ValueSet response);

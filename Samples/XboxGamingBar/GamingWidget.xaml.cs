@@ -65,13 +65,13 @@ namespace XboxGamingBar
             }
             else
             {
-                Logger.Info("GamingWidget LeavingBackground but not connected to the full trust process");
+                Logger.Info("GamingWidget LeavingBackground but not connected to the full trust process.");
             }
         }
 
         public void GamingWidget_EnteredBackground(object sender, EnteredBackgroundEventArgs e)
         {
-            Logger.Info("GamingWidget EnterBackground");
+            Logger.Info("GamingWidget EnterBackground.");
         }
 
         /// <summary>

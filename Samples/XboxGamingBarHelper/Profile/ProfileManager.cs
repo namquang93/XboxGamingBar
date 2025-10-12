@@ -10,8 +10,6 @@ using XboxGamingBarHelper.Core;
 
 namespace XboxGamingBarHelper.Profile
 {
-    internal delegate void OnProfileChanged(object sender, ProfileChangedEventArgs e);
-
     internal class ProfileManager : Manager
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
@@ -20,41 +18,7 @@ namespace XboxGamingBarHelper.Profile
         private const string GLOBAL_PROFILE_NAME = "global";
         private const string GLOBAL_PROFILE_FILE_NAME = "global.xml";
 
-        private OnProfileChanged profileChanged;
-        public event OnProfileChanged ProfileChanged
-        {
-            add {
-                if (value == null)
-                {
-                    Logger.Warn("Adding a null listener???");
-                    return;
-                }
-
-                value?.Invoke(this, new ProfileChangedEventArgs(new GameProfile(), CurrentProfile));
-                profileChanged += value;
-            }
-            remove {
-                profileChanged -= value;
-            }
-        }
-
         public readonly GameProfile GlobalProfile;
-
-        public GameProfile CurrentProfile;
-        //public GameProfile CurrentProfile { get; private set; }
-        //{
-        //    get { return currentProfile; }
-        //    set
-        //    {
-        //        if (currentProfile != value)
-        //        {
-        //            var oldProfile = currentProfile;
-        //            currentProfile = value;
-        //            Logger.Info($"Profile changed from {oldProfile.GameId.Name} to {currentProfile.GameId.Name}");
-        //            profileChanged?.Invoke(this, new ProfileChangedEventArgs(oldProfile, currentProfile));
-        //        }
-        //    }
-        //}
 
         private readonly Dictionary<GameId, GameProfile> gameProfiles;
         public IReadOnlyDictionary<GameId, GameProfile> GameProfiles
@@ -66,6 +30,12 @@ namespace XboxGamingBarHelper.Profile
         public PerGameProfileProperty PerGameProfile
         {
             get { return  perGameProfile; }
+        }
+        
+        private readonly GameProfileProperty currentProfile;
+        public GameProfileProperty CurrentProfile
+        {
+            get { return currentProfile; }
         }
 
         public ProfileManager(AppServiceConnection connection) : base(connection)
@@ -83,7 +53,6 @@ namespace XboxGamingBarHelper.Profile
                 GlobalProfile = XmlHelper.FromXMLFile<GameProfile>(globalProfilePath);
                 GlobalProfile.Path = globalProfilePath;
             }
-            CurrentProfile = GlobalProfile;
 
             // Make sure game profiles folder is created.
             var gameProfilesFolder = GetGameProfilesFolder();
@@ -99,23 +68,25 @@ namespace XboxGamingBarHelper.Profile
 
             foreach (string filePath in xmlFiles)
             {
-                Logger.Info($"Reading file: {Path.GetFileName(filePath)}");
+                Logger.Info($"Reading file profile: {Path.GetFileName(filePath)}.");
 
                 try
                 {
                     using (FileStream fileStream = new FileStream(filePath, FileMode.Open))
                     {
-                        var data = (GameProfile)serializer.Deserialize(fileStream);
-                        gameProfiles.Add(data.GameId, data);
+                        var gameProfile = (GameProfile)serializer.Deserialize(fileStream);
+                        gameProfile.Path = filePath;
+                        gameProfiles.Add(gameProfile.GameId, gameProfile);
                     }
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error reading or deserializing XML file '{filePath}': {ex.Message}");
+                    Console.WriteLine($"Error reading or deserializing XML file '{filePath}': {ex.Message}.");
                 }
             }
 
             perGameProfile = new PerGameProfileProperty(null, this);
+            currentProfile = new GameProfileProperty(GlobalProfile, this);
         }
 
         public static string GetGameProfilesFolder()
@@ -126,6 +97,27 @@ namespace XboxGamingBarHelper.Profile
         public static string GetGlobalProfilePath()
         {
             return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, GLOBAL_PROFILE_FILE_NAME);
+        }
+
+        public bool TryGetProfile(GameId gameId, out GameProfile gameProfile)
+        {
+            return gameProfiles.TryGetValue(gameId, out gameProfile);
+        }
+
+        public GameProfile AddNewProfile(GameId gameId)
+        {
+            if (TryGetProfile(gameId, out var gameProfile))
+            {
+                Logger.Warn($"Already have profile for {gameId.Name}.");
+                return gameProfile;
+            }
+
+            var newGameProfilePath = Path.Combine(GetGameProfilesFolder(), $"{Path.GetFileNameWithoutExtension(gameId.Path)}.xml");
+            var newGameProfile = new GameProfile(gameId.Name, gameId.Path, true, CurrentProfile.TDP, newGameProfilePath);
+            newGameProfile.Save();
+            gameProfiles.Add(gameId, newGameProfile);
+            Logger.Warn($"Add new profile for {gameId.Name} at {newGameProfilePath}.");
+            return newGameProfile;
         }
     }
 }

@@ -1,8 +1,6 @@
 ﻿using Shared.Data;
 using Shared.Enums;
-using Shared.Utilities;
 using System.Runtime.CompilerServices;
-using Windows.Foundation.Collections;
 using XboxGamingBarHelper.Core;
 
 namespace XboxGamingBarHelper.Systems
@@ -13,22 +11,9 @@ namespace XboxGamingBarHelper.Systems
         {
         }
 
-        public override bool SetValue(object value)
+        public GameId GameId
         {
-            if (value is string stringValue)
-            {
-                return base.SetValue(XmlHelper.FromXMLString<RunningGame>(stringValue));
-            }
-            else
-            {
-                return base.SetValue(value);
-            }
-        }
-
-        public override ValueSet AddValueSetContent(in ValueSet inValueSet)
-        {
-            inValueSet.Add(nameof(Content), XmlHelper.ToXMLString(Value, true));
-            return inValueSet;
+            get { return Value.GameId; }
         }
 
         protected override void NotifyPropertyChanged([CallerMemberName] string propertyName = "")

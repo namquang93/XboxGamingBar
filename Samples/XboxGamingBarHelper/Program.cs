@@ -84,7 +84,25 @@ namespace XboxGamingBarHelper
 
         private static void PerGameProfile_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            //profileManager.CurrentProfile.Use = profileManager.PerGameProfile;
+            GameProfile gameProfile;
+            if (profileManager.PerGameProfile)
+            {
+                if (!profileManager.TryGetProfile(systemManager.RunningGame.Value.GameId, out gameProfile))
+                {
+                    gameProfile = profileManager.AddNewProfile(systemManager.RunningGame.Value.GameId);
+                }
+                Logger.Info($"Enable per-game profile for {systemManager.RunningGame.Value.GameId}");
+                gameProfile.Use = true;
+            }
+            else
+            {
+                if (profileManager.TryGetProfile(systemManager.RunningGame.Value.GameId, out gameProfile))
+                {
+                    gameProfile.Use = false;
+                }
+                gameProfile = profileManager.GlobalProfile;
+            }
+            profileManager.CurrentProfile.Value = gameProfile;
         }
 
         private static void TDP_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -95,7 +113,31 @@ namespace XboxGamingBarHelper
 
         private static void RunningGame_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            
+            Logger.Info($"Running game changed to {systemManager.RunningGame.GameId}");
+            if (systemManager.RunningGame.Value.IsValid())
+            {
+                if (profileManager.TryGetProfile(systemManager.RunningGame.Value.GameId, out var runningGameProfile))
+                {
+                    if (runningGameProfile.Use)
+                    {
+                        Logger.Info($"Game {systemManager.RunningGame.GameId} has per-game profile in use, apply it.");
+                        profileManager.CurrentProfile.Value = runningGameProfile;
+                    }
+                    else
+                    {
+                        Logger.Info($"Game {systemManager.RunningGame.GameId} has per-game profile but not in use.");
+                    }
+                }
+                else
+                {
+                    Logger.Info($"Game {systemManager.RunningGame.GameId} doesn't have per-game profile.");
+                }
+            }
+            else
+            {
+                Logger.Info($"Stopped playing game, use global profile instead.");
+                profileManager.CurrentProfile.Value = profileManager.GlobalProfile;
+            }
         }
 
         /// <summary>
