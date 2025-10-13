@@ -9,7 +9,7 @@
   IgnorableNamespaces="uap uap3 rescap">
 
   <Identity
-    Name="454e0d5a-f422-40de-bd45-c63eb806f957"
+    Name="PlayNBuild.XboxGamingBar"
     Publisher="CN=Play n&apos; Build"
     Version="0.1.0.0" />
 
