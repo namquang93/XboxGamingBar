@@ -38,12 +38,14 @@ namespace XboxGamingBarHelper.Profile
 
         public ProfileManager(AppServiceConnection connection) : base(connection)
         {
+            gameProfiles = new Dictionary<GameId, GameProfile>();
+
             // Load global profile.
             var globalProfilePath = GetGlobalProfilePath();
             if (!File.Exists(globalProfilePath))
             {
                 // Create global profile path when it's not previously exist.
-                GlobalProfile = new GameProfile(GameProfile.GLOBAL_PROFILE_NAME, GameProfile.GLOBAL_PROFILE_NAME, true, 25, globalProfilePath);
+                GlobalProfile = new GameProfile(GameProfile.GLOBAL_PROFILE_NAME, GameProfile.GLOBAL_PROFILE_NAME, true, 25, globalProfilePath, gameProfiles);
                 GlobalProfile.Save();
             }
             else
@@ -61,14 +63,13 @@ namespace XboxGamingBarHelper.Profile
 
             // Read all existing game profiles.
             var xmlFiles = Directory.GetFiles(gameProfilesFolder, $"*{XML_EXTENSION}");
-            gameProfiles = new Dictionary<GameId, GameProfile>();
-
             foreach (string filePath in xmlFiles)
             {
                 try
                 {
                     var gameProfile = XmlHelper.FromXMLFile<GameProfile>(filePath);
                     gameProfile.Path = filePath;
+                    gameProfile.Cache = gameProfiles;
                     gameProfiles.Add(gameProfile.GameId, gameProfile);
                 }
                 catch (Exception ex)
@@ -105,7 +106,7 @@ namespace XboxGamingBarHelper.Profile
             }
 
             var newGameProfilePath = Path.Combine(GetGameProfilesFolder(), $"{Path.GetFileNameWithoutExtension(gameId.Path)}{XML_EXTENSION}");
-            var newGameProfile = new GameProfile(gameId.Name, gameId.Path, true, CurrentProfile.TDP, newGameProfilePath);
+            var newGameProfile = new GameProfile(gameId.Name, gameId.Path, true, CurrentProfile.TDP, newGameProfilePath, gameProfiles);
             newGameProfile.Save();
             gameProfiles.Add(gameId, newGameProfile);
             Logger.Warn($"Add new profile for {gameId.Name} at {newGameProfilePath}.");

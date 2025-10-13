@@ -1,5 +1,6 @@
 ﻿using NLog;
 using Shared.Utilities;
+using System.Collections.Generic;
 using System.Xml.Serialization;
 
 namespace Shared.Data
@@ -64,12 +65,22 @@ namespace Shared.Data
 
         public bool IsGlobalProfile { get { return string.Compare(GameId.Name, GLOBAL_PROFILE_NAME) == 0; } }
 
-        public GameProfile(string gameName, string gamePath, bool inUse, int inTDP, string inPath)
+        [XmlIgnore]
+        private IDictionary<GameId, GameProfile> cache;
+        [XmlIgnore]
+        public IDictionary<GameId, GameProfile> Cache
+        {
+            get { return cache; }
+            set { cache = value; }
+        }
+
+        public GameProfile(string gameName, string gamePath, bool inUse, int inTDP, string inPath, IDictionary<GameId, GameProfile> inCache)
         {
             GameId = new GameId(gameName, gamePath);
             use = inUse;
             tdp = inTDP;
             Path = inPath;
+            cache = inCache;
         }
 
         public bool IsValid()
@@ -115,6 +126,11 @@ namespace Shared.Data
 
         public void Save()
         {
+            if (cache != null)
+            {
+                cache[GameId] = this;
+            }
+
             if (string.IsNullOrEmpty(Path))
             {
                 // Logger.Warn($"Can't save profile {GameId.Name} due to empty path.");

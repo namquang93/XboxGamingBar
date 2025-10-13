@@ -12,25 +12,36 @@ namespace XboxGamingBarHelper.Profile
 
         public int TDP
         {
-            get { return this.value.TDP; }
-            set { this.value.TDP = value; }
+            get { return value.TDP; }
+            set
+            {
+                if (this.value.TDP != value)
+                {
+                    this.value.TDP = value;
+                }
+            }
         }
 
         public GameId GameId
         {
-            get { return this.value.GameId; }
-            set { this.value.GameId = value; }
+            get { return value.GameId; }
         }
 
         public bool Use
         {
-            get { return this.value.Use; }
-            set { this.value.Use = value; }
+            get { return value.Use; }
+            set
+            {
+                if (this.value.Use != value)
+                {
+                    this.value.Use = value;
+                }
+            }
         }
 
         public bool IsGlobalProfile
         {
-            get { return this.value.IsGlobalProfile; }
+            get { return value.IsGlobalProfile; }
         }
     }
 }
