@@ -134,7 +134,7 @@ namespace XboxGamingBar
 
                     // Create Game Bar widget object which bootstraps the connection with Game Bar
                     xboxGameBarWidget = new XboxGameBarWidget(widgetArgs, Window.Current.CoreWindow, rootFrame);
-                    rootFrame.Navigate(typeof(GamingWidget));
+                    rootFrame.Navigate(typeof(GamingWidget), xboxGameBarWidget);
                     gamingWidget = rootFrame.Content as GamingWidget;
 
                     Window.Current.Closed += GamingWidgetWindow_Closed;
