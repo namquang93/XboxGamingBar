@@ -7,5 +7,6 @@
         TDP,
         CurrentGame,
         PerGameProfile,
+        CPUBoost,
     }
 }

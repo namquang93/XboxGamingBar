@@ -15,8 +15,6 @@ namespace XboxGamingBarHelper.Systems
 {
     internal class SystemManager : Manager
     {
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-
         private static readonly string[] IgnoredProcesses =
         {
             "rustdesk.exe",

@@ -8,6 +8,7 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.AppService;
 using XboxGamingBarHelper.Core;
 using XboxGamingBarHelper.Performance;
+using XboxGamingBarHelper.Power;
 using XboxGamingBarHelper.Profile;
 using XboxGamingBarHelper.RTSS;
 using XboxGamingBarHelper.Systems;
@@ -24,6 +25,7 @@ namespace XboxGamingBarHelper
         private static RTSSManager rtssManager;
         private static ProfileManager profileManager;
         private static SystemManager systemManager;
+        private static PowerManager powerManager;
         private static List<IManager> Managers;
         private static AppServiceConnectionStatus appServiceConnectionStatus;
 
@@ -57,10 +59,23 @@ namespace XboxGamingBarHelper
             rtssManager = new RTSSManager(performanceManager, connection);
             profileManager = new ProfileManager(connection);
             systemManager = new SystemManager(connection, profileManager.GameProfiles);
-            Managers = new List<IManager> { performanceManager, rtssManager, profileManager, systemManager };
+            powerManager = new PowerManager(connection);
+            Managers = new List<IManager>
+            {
+                performanceManager,
+                rtssManager,
+                profileManager,
+                systemManager,
+                powerManager
+            };
 
             // Initialize properties.
-            properties = new HelperProperties(systemManager.RunningGame, rtssManager.OSD, performanceManager.TDP, profileManager.PerGameProfile);
+            properties = new HelperProperties(
+                systemManager.RunningGame,
+                rtssManager.OSD,
+                performanceManager.TDP,
+                profileManager.PerGameProfile,
+                powerManager.CPUBoost);
 
             systemManager.RunningGame.PropertyChanged += RunningGame_PropertyChanged;
             profileManager.PerGameProfile.PropertyChanged += PerGameProfile_PropertyChanged;

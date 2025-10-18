@@ -155,6 +155,7 @@
     <Compile Include="Performance\Sensors\CPUUsageSensor.cs" />
     <Compile Include="Performance\TDPProperty.cs" />
     <Compile Include="Performance\UpdateVisitor.cs" />
+    <Compile Include="Power\PowerManager.cs" />
     <Compile Include="Profile\GameProfileProperty.cs" />
     <Compile Include="Profile\PerGameProfileProperty.cs" />
     <Compile Include="Profile\ProfileManager.cs" />
@@ -170,6 +171,8 @@
     <Compile Include="RTSS\OSDProperty.cs" />
     <Compile Include="RTSS\RTSSManager.cs" />
     <Compile Include="Systems\RunningGameProperty.cs" />
+    <Compile Include="Windows\PowerGuids.cs" />
+    <Compile Include="Windows\PowerProf.cs" />
     <Compile Include="Windows\ProcessWindow.cs" />
     <Compile Include="Windows\User32.cs" />
     <Compile Include="Systems\SystemManager.cs" />

@@ -12,8 +12,6 @@ namespace XboxGamingBarHelper.Profile
 {
     internal class ProfileManager : Manager
     {
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-
         private const string PROFILE_FOLDER_NAME = "profiles";
         private const string XML_EXTENSION = ".xml";
 
