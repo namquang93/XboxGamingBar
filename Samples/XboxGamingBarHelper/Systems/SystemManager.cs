@@ -50,7 +50,7 @@ namespace XboxGamingBarHelper.Systems
 
         private RunningGame GetRunningGame()
         {
-            Win32.GetOpenWindows(ProcessWindows);
+            User32.GetOpenWindows(ProcessWindows);
             if (ProcessWindows.Count == 0)
             {
                 Logger.Debug("There is not any opening window, so no game detected");
