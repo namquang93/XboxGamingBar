@@ -92,22 +92,22 @@ namespace XboxGamingBar
 
         private void AppTargetTracker_TargetChanged(XboxGameBarAppTargetTracker sender, object args)
         {
-            var settingEnabled = appTargetTracker.Setting == XboxGameBarAppTargetSetting.Enabled;
+            //var settingEnabled = appTargetTracker.Setting == XboxGameBarAppTargetSetting.Enabled;
 
-            XboxGameBarAppTarget target = null;
-            if (settingEnabled)
-            {
-                target = appTargetTracker.GetTarget();
-            }
+            //XboxGameBarAppTarget target = null;
+            //if (settingEnabled)
+            //{
+            //    target = appTargetTracker.GetTarget();
+            //}
 
-            if (target == null)
-            {
-                Logger.Info("Found no target.");
-            }
-            else
-            {
-                Logger.Info($"Found target app DisplayName={target.DisplayName} AumId={target.AumId} TitleId={target.TitleId} IsFullscreen={target.IsFullscreen} IsGame={target.IsGame}");
-            }
+            //if (target == null)
+            //{
+            //    Logger.Info("Found no target.");
+            //}
+            //else
+            //{
+            //    Logger.Info($"Found target app DisplayName={target.DisplayName} AumId={target.AumId} TitleId={target.TitleId} IsFullscreen={target.IsFullscreen} IsGame={target.IsGame}");
+            //}
         }
 
         /// <summary>
