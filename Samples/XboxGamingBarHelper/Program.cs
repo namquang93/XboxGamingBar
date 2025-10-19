@@ -81,6 +81,8 @@ namespace XboxGamingBarHelper
             systemManager.RunningGame.PropertyChanged += RunningGame_PropertyChanged;
             profileManager.PerGameProfile.PropertyChanged += PerGameProfile_PropertyChanged;
             performanceManager.TDP.PropertyChanged += TDP_PropertyChanged;
+            powerManager.CPUBoost.PropertyChanged += CPUBoost_PropertyChanged;
+            powerManager.CPUEPP.PropertyChanged += CPUEPP_PropertyChanged;
             profileManager.CurrentProfile.PropertyChanged += CurrentProfile_PropertyChanged;
 
             appServiceConnectionStatus = await connection.OpenAsync();
@@ -101,12 +103,26 @@ namespace XboxGamingBarHelper
             Logger.Info("Helper close...");
         }
 
+        private static void CPUBoost_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            Logger.Info($"Set current profile {profileManager.CurrentProfile.GameId.Name}'s CPU Boost from {profileManager.CurrentProfile.CPUBoost} to {powerManager.CPUBoost}.");
+            profileManager.CurrentProfile.CPUBoost = powerManager.CPUBoost;
+        }
+
+        private static void CPUEPP_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            Logger.Info($"Set current profile {profileManager.CurrentProfile.GameId.Name}'s CPU EPP from {profileManager.CurrentProfile.CPUEPP} to {powerManager.CPUEPP}.");
+            profileManager.CurrentProfile.CPUEPP = powerManager.CPUEPP;
+        }
+
         private static void CurrentProfile_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (profileManager.CurrentProfile.Use || profileManager.CurrentProfile.IsGlobalProfile)
             {
                 Logger.Info($"Profile changed to {profileManager.CurrentProfile.GameId.Name}, apply it.");
                 performanceManager.TDP.Value = profileManager.CurrentProfile.TDP;
+                powerManager.CPUBoost.Value = profileManager.CurrentProfile.CPUBoost;
+                powerManager.CPUEPP.Value = profileManager.CurrentProfile.CPUEPP;
                 profileManager.PerGameProfile.Value = profileManager.CurrentProfile.Use;
             }
             else
