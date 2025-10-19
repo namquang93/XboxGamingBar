@@ -75,7 +75,8 @@ namespace XboxGamingBarHelper
                 rtssManager.OSD,
                 performanceManager.TDP,
                 profileManager.PerGameProfile,
-                powerManager.CPUBoost);
+                powerManager.CPUBoost,
+                powerManager.CPUEPP);
 
             systemManager.RunningGame.PropertyChanged += RunningGame_PropertyChanged;
             profileManager.PerGameProfile.PropertyChanged += PerGameProfile_PropertyChanged;

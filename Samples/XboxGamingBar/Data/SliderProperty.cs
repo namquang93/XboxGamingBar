@@ -19,7 +19,7 @@ namespace XboxGamingBar.Data
 
         private void Slider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
-            Logger.Info($"TDP Slider value changed from {e.OldValue} to {e.NewValue}, update property.");
+            Logger.Info($"{Function} Slider value changed from {e.OldValue} to {e.NewValue}, update property.");
             Value = (int)e.NewValue;
         }
 

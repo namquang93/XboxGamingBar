@@ -85,6 +85,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Data\CPUBoostProperty.cs" />
+    <Compile Include="Data\CPUEPPProperty.cs" />
     <Compile Include="Data\PerGameProfileProperty.cs" />
     <Compile Include="Data\OSDProperty.cs" />
     <Compile Include="Data\RunningGameProperty.cs" />

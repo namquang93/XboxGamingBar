@@ -156,6 +156,7 @@
     <Compile Include="Performance\TDPProperty.cs" />
     <Compile Include="Performance\UpdateVisitor.cs" />
     <Compile Include="Power\CPUBoostProperty.cs" />
+    <Compile Include="Power\CPUEPPProperty.cs" />
     <Compile Include="Power\PowerManager.cs" />
     <Compile Include="Profile\GameProfileProperty.cs" />
     <Compile Include="Profile\PerGameProfileProperty.cs" />

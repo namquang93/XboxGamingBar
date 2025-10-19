@@ -8,5 +8,6 @@
         CurrentGame,
         PerGameProfile,
         CPUBoost,
+        CPUEPP,
     }
 }
