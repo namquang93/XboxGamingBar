@@ -84,6 +84,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Data\CPUBoostProperty.cs" />
     <Compile Include="Data\PerGameProfileProperty.cs" />
     <Compile Include="Data\OSDProperty.cs" />
     <Compile Include="Data\RunningGameProperty.cs" />
@@ -93,6 +94,7 @@
     <Compile Include="Data\WidgetProperties.cs" />
     <Compile Include="Data\WidgetProperty.cs" />
     <Compile Include="Data\WidgetPropertyWithAdditionalUI.cs" />
+    <Compile Include="Data\WidgetToggleProperty.cs" />
     <Compile Include="GamingWidget.xaml.cs">
       <DependentUpon>GamingWidget.xaml</DependentUpon>
     </Compile>

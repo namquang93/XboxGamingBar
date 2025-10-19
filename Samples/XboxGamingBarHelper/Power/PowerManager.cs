@@ -17,7 +17,7 @@ namespace XboxGamingBarHelper.Power
 
         public PowerManager(AppServiceConnection connection) : base(connection)
         {
-            cpuBoost = new CPUBoostProperty(GetCpuBoostMode(false), this);
+            cpuBoost = new CPUBoostProperty(GetCpuBoostMode(/*false*/), this);
         }
 
         public static Guid GetActiveScheme()
@@ -34,8 +34,9 @@ namespace XboxGamingBarHelper.Power
             return active;
         }
 
-        public static bool GetCpuBoostMode(bool isAC)
+        public static bool GetCpuBoostMode(/*bool isAC*/)
         {
+            var isAC = false;
             var scheme = GetActiveScheme();
             var subgroup = PowerGuids.GUID_PROCESSOR_SETTINGS_SUBGROUP;
             var setting = PowerGuids.GUID_PROCESSOR_PERFBOOST_MODE;
@@ -53,16 +54,23 @@ namespace XboxGamingBarHelper.Power
             return result != 0;
         }
 
-        public static void SetCpuBoostMode(bool isAC, bool enabled)
+        public static void SetCpuBoostMode(/*bool isAC, */bool enabled)
         {
             var scheme = GetActiveScheme();
             var subgroup = PowerGuids.GUID_PROCESSOR_SETTINGS_SUBGROUP;
             var setting = PowerGuids.GUID_PROCESSOR_PERFBOOST_MODE;
             uint value = (uint)(enabled ? 2 : 0);
+            Logger.Info($"Set CPU Boost to {(enabled ? "Aggressive" : "Disabled")}.");
 
-            var status = isAC
-                ? PowerProf.PowerWriteACValueIndex(IntPtr.Zero, ref scheme, ref subgroup, ref setting, value)
-                : PowerProf.PowerWriteDCValueIndex(IntPtr.Zero, ref scheme, ref subgroup, ref setting, value);
+            //var status = isAC ? 
+            //    PowerProf.PowerWriteACValueIndex(IntPtr.Zero, ref scheme, ref subgroup, ref setting, value)
+            //    :
+            //    PowerProf.PowerWriteDCValueIndex(IntPtr.Zero, ref scheme, ref subgroup, ref setting, value);
+            var status = PowerProf.PowerWriteACValueIndex(IntPtr.Zero, ref scheme, ref subgroup, ref setting, value);
+            if (status == 0)
+            {
+                status = PowerProf.PowerWriteDCValueIndex(IntPtr.Zero, ref scheme, ref subgroup, ref setting, value);
+            }
 
             if (status != 0)
             {

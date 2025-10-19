@@ -32,6 +32,7 @@ namespace XboxGamingBar
         private readonly TDPProperty tdp;
         private readonly RunningGameProperty runningGame;
         private readonly PerGameProfileProperty perGameProfile;
+        private readonly CPUBoostProperty cpuBoost;
         private readonly WidgetProperties properties;
 
         public GamingWidget()
@@ -41,7 +42,8 @@ namespace XboxGamingBar
             osd = new OSDProperty(0, PerformanceOverlaySlider, this);
             runningGame = new RunningGameProperty(CurrentGameText, PerGameProfileToggle, this);
             perGameProfile = new PerGameProfileProperty(PerGameProfileToggle, this);
-            properties = new WidgetProperties(osd, tdp, runningGame, perGameProfile);
+            cpuBoost = new CPUBoostProperty(CPUBoostToggle, this);
+            properties = new WidgetProperties(osd, tdp, runningGame, perGameProfile, cpuBoost);
         }
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
