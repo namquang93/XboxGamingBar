@@ -174,7 +174,7 @@
     <Compile Include="RTSS\RTSSManager.cs" />
     <Compile Include="Systems\RunningGameProperty.cs" />
     <Compile Include="Windows\PowerGuids.cs" />
-    <Compile Include="Windows\PowerProf.cs" />
+    <Compile Include="Windows\PowrProf.cs" />
     <Compile Include="Windows\ProcessWindow.cs" />
     <Compile Include="Windows\User32.cs" />
     <Compile Include="Systems\SystemManager.cs" />

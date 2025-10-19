@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace XboxGamingBarHelper.Windows
 {
-    internal static class PowerProf
+    internal static class PowrProf
     {
         [DllImport("powrprof.dll", SetLastError = true)]
         public static extern uint PowerGetActiveScheme(IntPtr UserRootPowerKey, out IntPtr ActivePolicyGuid);

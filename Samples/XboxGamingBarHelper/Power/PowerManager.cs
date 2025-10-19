@@ -29,7 +29,7 @@ namespace XboxGamingBarHelper.Power
 
         public static Guid GetActiveScheme()
         {
-            var res = PowerProf.PowerGetActiveScheme(IntPtr.Zero, out IntPtr pGuid);
+            var res = PowrProf.PowerGetActiveScheme(IntPtr.Zero, out IntPtr pGuid);
             if (res != 0)
             {
                 Logger.Error("Can't get active power scheme?");
@@ -49,8 +49,8 @@ namespace XboxGamingBarHelper.Power
             var setting = PowerGuids.GUID_PROCESSOR_PERFBOOST_MODE;
 
             var status = isAC
-                ? PowerProf.PowerReadACValueIndex(IntPtr.Zero, ref scheme, ref subgroup, ref setting, out uint result)
-                : PowerProf.PowerReadDCValueIndex(IntPtr.Zero, ref scheme, ref subgroup, ref setting, out result);
+                ? PowrProf.PowerReadACValueIndex(IntPtr.Zero, ref scheme, ref subgroup, ref setting, out uint result)
+                : PowrProf.PowerReadDCValueIndex(IntPtr.Zero, ref scheme, ref subgroup, ref setting, out result);
 
             if (status != 0)
             {
@@ -73,10 +73,10 @@ namespace XboxGamingBarHelper.Power
             //    PowerProf.PowerWriteACValueIndex(IntPtr.Zero, ref scheme, ref subgroup, ref setting, value)
             //    :
             //    PowerProf.PowerWriteDCValueIndex(IntPtr.Zero, ref scheme, ref subgroup, ref setting, value);
-            var status = PowerProf.PowerWriteACValueIndex(IntPtr.Zero, ref scheme, ref subgroup, ref setting, value);
+            var status = PowrProf.PowerWriteACValueIndex(IntPtr.Zero, ref scheme, ref subgroup, ref setting, value);
             if (status == 0)
             {
-                status = PowerProf.PowerWriteDCValueIndex(IntPtr.Zero, ref scheme, ref subgroup, ref setting, value);
+                status = PowrProf.PowerWriteDCValueIndex(IntPtr.Zero, ref scheme, ref subgroup, ref setting, value);
             }
 
             if (status != 0)
@@ -86,7 +86,7 @@ namespace XboxGamingBarHelper.Power
             }
 
             // Apply the updated plan
-            PowerProf.PowerSetActiveScheme(IntPtr.Zero, ref scheme);
+            PowrProf.PowerSetActiveScheme(IntPtr.Zero, ref scheme);
         }
 
         public static uint GetEppValue(/*bool isAC*/)
@@ -98,8 +98,8 @@ namespace XboxGamingBarHelper.Power
 
             uint result;
             uint status = isAC ? 
-                PowerProf.PowerReadACValueIndex(IntPtr.Zero, ref scheme, ref subgroup, ref setting, out result)
-                : PowerProf.PowerReadDCValueIndex(IntPtr.Zero, ref scheme, ref subgroup, ref setting, out result);
+                PowrProf.PowerReadACValueIndex(IntPtr.Zero, ref scheme, ref subgroup, ref setting, out result)
+                : PowrProf.PowerReadDCValueIndex(IntPtr.Zero, ref scheme, ref subgroup, ref setting, out result);
 
             if (status != 0)
             {
@@ -122,10 +122,10 @@ namespace XboxGamingBarHelper.Power
             //    ? PowerProf.PowerWriteACValueIndex(IntPtr.Zero, ref scheme, ref subgroup, ref setting, value)
             //    : PowerProf.PowerWriteDCValueIndex(IntPtr.Zero, ref scheme, ref subgroup, ref setting, value);
 
-            var status = PowerProf.PowerWriteACValueIndex(IntPtr.Zero, ref scheme, ref subgroup, ref setting, value);
+            var status = PowrProf.PowerWriteACValueIndex(IntPtr.Zero, ref scheme, ref subgroup, ref setting, value);
             if (status == 0)
             {
-                status = PowerProf.PowerWriteDCValueIndex(IntPtr.Zero, ref scheme, ref subgroup, ref setting, value);
+                status = PowrProf.PowerWriteDCValueIndex(IntPtr.Zero, ref scheme, ref subgroup, ref setting, value);
             }
 
             if (status != 0)
@@ -134,7 +134,7 @@ namespace XboxGamingBarHelper.Power
             }
 
             // Apply changes to the currently active power plan
-            PowerProf.PowerSetActiveScheme(IntPtr.Zero, ref scheme);
+            PowrProf.PowerSetActiveScheme(IntPtr.Zero, ref scheme);
         }
     }
 }
