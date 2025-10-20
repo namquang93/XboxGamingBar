@@ -7,13 +7,14 @@ using Windows.UI.Xaml.Controls.Primitives;
 
 namespace XboxGamingBar.Data
 {
-    internal class SliderProperty : WidgetControlProperty<int, Slider>
+    internal class WidgetSliderProperty : WidgetControlProperty<int, Slider>
     {
-        public SliderProperty(int inValue, Function inFunction, Slider inControl, Page inOwner) : base(inValue, inFunction, inControl, inOwner)
+        public WidgetSliderProperty(int inValue, Function inFunction, Slider inControl, Page inOwner) : base(inValue, inFunction, inControl, inOwner)
         {
             if (UI != null)
             {
                 UI.ValueChanged += Slider_ValueChanged;
+                UI.Value = inValue;
             }
         }
 

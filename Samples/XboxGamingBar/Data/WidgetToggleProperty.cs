@@ -18,6 +18,7 @@ namespace XboxGamingBar.Data
             if (UI != null)
             {
                 UI.Toggled += ToggleSwitch_ValueChanged;
+                UI.IsOn = inValue;
             }
         }
 

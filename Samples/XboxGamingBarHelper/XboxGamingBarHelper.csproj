@@ -156,7 +156,7 @@
     <Compile Include="Performance\TDPProperty.cs" />
     <Compile Include="Performance\UpdateVisitor.cs" />
     <Compile Include="Power\CPUBoostProperty.cs" />
-    <Compile Include="Power\CPUClockLimitProperty.cs" />
+    <Compile Include="Power\LimitCPUClockProperty.cs" />
     <Compile Include="Power\CPUClockMaxProperty.cs" />
     <Compile Include="Power\CPUEPPProperty.cs" />
     <Compile Include="Power\PowerManager.cs" />

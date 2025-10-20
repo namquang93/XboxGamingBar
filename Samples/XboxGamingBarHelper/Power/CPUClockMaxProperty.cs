@@ -7,7 +7,7 @@ namespace XboxGamingBarHelper.Power
 {
     internal class CPUClockMaxProperty : HelperProperty<int, PowerManager>
     {
-        public CPUClockMaxProperty(PowerManager inManager) : base(CPUConstants.DEFAULT_CPU_CLOCK, null, Function.CPUClockMax, inManager)
+        public CPUClockMaxProperty(int inValue, PowerManager inManager) : base(inValue, null, Function.CPUClockMax, inManager)
         {
         }
 
@@ -15,10 +15,17 @@ namespace XboxGamingBarHelper.Power
         {
             base.NotifyPropertyChanged(propertyName);
 
-            PowerManager.SetCpuFreqLimit(true, (uint)Value, false);
-            PowerManager.SetCpuFreqLimit(false, (uint)Value, false);
-            PowerManager.SetCpuFreqLimit(true, (uint)Value, true);
-            PowerManager.SetCpuFreqLimit(false, (uint)Value, true);
+            if (Manager.LimitCPUClock)
+            {
+                PowerManager.SetCpuFreqLimit(true, (uint)Value, false);
+                PowerManager.SetCpuFreqLimit(false, (uint)Value, false);
+                PowerManager.SetCpuFreqLimit(true, (uint)Value, true);
+                PowerManager.SetCpuFreqLimit(false, (uint)Value, true);
+            }
+            else
+            {
+                Logger.Info($"CPU clock limit is disabled, skip applying.");
+            }
         }
     }
 }

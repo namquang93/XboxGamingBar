@@ -9,7 +9,7 @@
         PerGameProfile,
         CPUBoost,
         CPUEPP,
-        CPUClockLimit,
+        LimitCPUClock,
         CPUClockMax,
     }
 }

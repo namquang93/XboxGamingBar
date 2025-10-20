@@ -1,4 +1,5 @@
 ﻿using NLog;
+using Shared.Constants;
 using System;
 using System.Runtime.InteropServices;
 using Windows.ApplicationModel.AppService;
@@ -21,10 +22,10 @@ namespace XboxGamingBarHelper.Power
             get { return cpuEPP; }
         }
 
-        private readonly CPUClockLimitProperty cpuClockLimit;
-        public CPUClockLimitProperty CPUClockLimit
+        private readonly LimitCPUClockProperty limitCPUClock;
+        public LimitCPUClockProperty LimitCPUClock
         {
-            get { return cpuClockLimit; }
+            get { return limitCPUClock; }
         }
 
         private readonly CPUClockMaxProperty cpuClockMax;
@@ -37,8 +38,10 @@ namespace XboxGamingBarHelper.Power
         {
             cpuBoost = new CPUBoostProperty(GetCpuBoostMode(false), this);
             cpuEPP = new CPUEPPProperty((int)GetEppValue(false), this);
-            cpuClockLimit = new CPUClockLimitProperty(GetCpuFreqLimit(false) == 0, this);
-            cpuClockMax = new CPUClockMaxProperty(this);
+            var initialCPUClockMax = GetCpuFreqLimit(false);
+            Logger.Info($"Constructing PowerManager, current CPU clock limit is {initialCPUClockMax}Mhz.");
+            limitCPUClock = new LimitCPUClockProperty(initialCPUClockMax != 0, this);
+            cpuClockMax = new CPUClockMaxProperty(initialCPUClockMax != 0 ? (int)initialCPUClockMax : CPUConstants.DEFAULT_CPU_CLOCK, this);
         }
 
         public static Guid GetActiveScheme()

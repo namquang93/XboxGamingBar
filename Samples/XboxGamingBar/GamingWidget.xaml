@@ -4,13 +4,15 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:XboxGamingBar"
+    xmlns:converter="using:XboxGamingBar.Converter"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     d:DesignHeight="670" d:DesignWidth="464">
 
     <Page.Resources>
-        <local:WattStringConverter x:Key="WattStringConverter"/>
-        <local:MegahertzStringConverter x:Key="MegahertzStringConverter"/>
+        <converter:WattStringConverter x:Key="WattStringConverter"/>
+        <converter:MegahertzStringConverter x:Key="MegahertzStringConverter"/>
+        <converter:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </Page.Resources>
 
     <Grid x:Name="MainGrid" Margin="15,15,15,15">
@@ -28,7 +30,7 @@
             <RowDefinition x:Name="Row_10_CPUBoost" Height="36"/>
             <RowDefinition x:Name="Row_11_CPUEPPText" Height="30"/>
             <RowDefinition x:Name="Row_12_CPUEPPSlider" Height="32"/>
-            <RowDefinition x:Name="Row_13_CPUClockLimitToggle" Height="36"/>
+            <RowDefinition x:Name="Row_13_LimitCPUClockToggle" Height="36"/>
             <RowDefinition x:Name="Row_14_CPUClockMaxSlider" Height="32"/>
             <!-- Add more RowDefinitions as needed, each with Height="200" -->
         </Grid.RowDefinitions>
@@ -89,17 +91,21 @@
             IsEnabled="False"/>
         
         <!-- CPU Clock -->
-        <TextBlock x:Name="CPUClockLimitText" Text="CPU Clock Limit" FontWeight="SemiBold" FontSize="18" Grid.Row="13"
+        <TextBlock x:Name="LimitCPUClockText" Text="Limit CPU Clock" FontWeight="SemiBold" FontSize="18" Grid.Row="13"
             TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" Width="250" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-        <ToggleSwitch x:Name="CPUClockLimitToggle" Width="464" IsEnabled="False" OffContent="Disabled" OnContent="Enable"
+        <ToggleSwitch x:Name="LimitCPUClockToggle" Width="464" IsEnabled="False" OffContent="Disabled" OnContent="Enable"
             FlowDirection="RightToLeft" Grid.Row="13" VerticalAlignment="Center" HorizontalAlignment="Right" />
-        <TextBlock x:Name="CPUClockMaxText" Grid.Row="14" Margin="0,0,0,0" Text="{Binding ElementName=CPUMaxClockSlider, Path=Value, Converter={StaticResource MegahertzStringConverter}}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+        <TextBlock x:Name="CPUClockMaxText" Grid.Row="14" Margin="0,0,0,0"
+            Text="{Binding ElementName=CPUClockMaxSlider, Path=Value, Converter={StaticResource MegahertzStringConverter}}"
+            VerticalAlignment="Center" HorizontalAlignment="Right"
+            Visibility="{Binding ElementName=LimitCPUClockToggle, Path=IsOn, Converter={StaticResource BooleanToVisibilityConverter}}"/>
         <Slider x:Name="CPUClockMaxSlider" Grid.Row="14" Margin="10,0,65,0"
             Minimum="300" Maximum="5100"
             TickFrequency="100"
             SnapsTo="Ticks"
             TickPlacement="BottomRight"
-            IsEnabled="False"/>
+            IsEnabled="False"
+            Visibility="{Binding ElementName=LimitCPUClockToggle, Path=IsOn, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
     </Grid>
 </Page>
