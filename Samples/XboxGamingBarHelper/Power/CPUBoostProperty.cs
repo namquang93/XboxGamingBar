@@ -14,7 +14,8 @@ namespace XboxGamingBarHelper.Power
         {
             base.NotifyPropertyChanged(propertyName);
 
-            PowerManager.SetCpuBoostMode(Value);
+            PowerManager.SetCpuBoostMode(false, Value);
+            PowerManager.SetCpuBoostMode(true, Value);
         }
     }
 }

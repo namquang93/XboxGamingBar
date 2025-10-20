@@ -14,7 +14,8 @@ namespace XboxGamingBarHelper.Power
         {
             base.NotifyPropertyChanged(propertyName);
 
-            PowerManager.SetEppValue((uint)Value);
+            PowerManager.SetEppValue(false, (uint)Value);
+            PowerManager.SetEppValue(true, (uint)Value);
         }
     }
 }

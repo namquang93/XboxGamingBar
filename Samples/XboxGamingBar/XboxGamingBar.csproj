@@ -85,6 +85,8 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Data\CPUBoostProperty.cs" />
+    <Compile Include="Data\CPUClockLimitProperty.cs" />
+    <Compile Include="Data\CPUClockMaxProperty.cs" />
     <Compile Include="Data\CPUEPPProperty.cs" />
     <Compile Include="Data\PerGameProfileProperty.cs" />
     <Compile Include="Data\OSDProperty.cs" />
@@ -99,6 +101,7 @@
     <Compile Include="GamingWidget.xaml.cs">
       <DependentUpon>GamingWidget.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MegahertzStringConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WattStringConverter.cs" />
   </ItemGroup>

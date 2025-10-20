@@ -34,6 +34,8 @@ namespace XboxGamingBar
         private readonly PerGameProfileProperty perGameProfile;
         private readonly CPUBoostProperty cpuBoost;
         private readonly CPUEPPProperty cpuEPP;
+        private readonly CPUClockLimitProperty cpuClockLimit;
+        private readonly CPUClockMaxProperty cpuClockMax;
         private readonly WidgetProperties properties;
 
         public GamingWidget()
@@ -45,7 +47,9 @@ namespace XboxGamingBar
             perGameProfile = new PerGameProfileProperty(PerGameProfileToggle, this);
             cpuBoost = new CPUBoostProperty(CPUBoostToggle, this);
             cpuEPP = new CPUEPPProperty(80, CPUEPPSlider, this);
-            properties = new WidgetProperties(osd, tdp, runningGame, perGameProfile, cpuBoost, cpuEPP);
+            cpuClockLimit = new CPUClockLimitProperty(CPUClockLimitToggle, this);
+            cpuClockMax = new CPUClockMaxProperty(CPUClockMaxSlider, this);
+            properties = new WidgetProperties(osd, tdp, runningGame, perGameProfile, cpuBoost, cpuEPP, cpuClockLimit, cpuClockMax);
         }
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)

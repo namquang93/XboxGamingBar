@@ -26,6 +26,22 @@ namespace XboxGamingBar.Data
             Value = UI.IsOn;
         }
 
+        public override async Task Sync()
+        {
+
+            if (UI != null && Owner != null)
+            {
+                await Owner.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { UI.IsEnabled = false; });
+            }
+
+            await base.Sync();
+
+            if (UI != null && Owner != null)
+            {
+                await Owner.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { UI.IsEnabled = true; });
+            }
+        }
+
         protected override async void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
         {
             base.NotifyPropertyChanged(propertyName);

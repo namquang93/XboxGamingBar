@@ -21,10 +21,24 @@ namespace XboxGamingBarHelper.Power
             get { return cpuEPP; }
         }
 
+        private readonly CPUClockLimitProperty cpuClockLimit;
+        public CPUClockLimitProperty CPUClockLimit
+        {
+            get { return cpuClockLimit; }
+        }
+
+        private readonly CPUClockMaxProperty cpuClockMax;
+        public CPUClockMaxProperty CPUClockMax
+        {
+            get { return cpuClockMax; }
+        }
+
         public PowerManager(AppServiceConnection connection) : base(connection)
         {
-            cpuBoost = new CPUBoostProperty(GetCpuBoostMode(/*false*/), this);
-            cpuEPP = new CPUEPPProperty((int)GetEppValue(), this);
+            cpuBoost = new CPUBoostProperty(GetCpuBoostMode(false), this);
+            cpuEPP = new CPUEPPProperty((int)GetEppValue(false), this);
+            cpuClockLimit = new CPUClockLimitProperty(GetCpuFreqLimit(false) == 0, this);
+            cpuClockMax = new CPUClockMaxProperty(this);
         }
 
         public static Guid GetActiveScheme()
@@ -41,9 +55,8 @@ namespace XboxGamingBarHelper.Power
             return active;
         }
 
-        public static bool GetCpuBoostMode(/*bool isAC*/)
+        public static bool GetCpuBoostMode(bool isAC)
         {
-            var isAC = false;
             var scheme = GetActiveScheme();
             var subgroup = PowerGuids.GUID_PROCESSOR_SETTINGS_SUBGROUP;
             var setting = PowerGuids.GUID_PROCESSOR_PERFBOOST_MODE;
@@ -61,7 +74,7 @@ namespace XboxGamingBarHelper.Power
             return result != 0;
         }
 
-        public static void SetCpuBoostMode(/*bool isAC, */bool enabled)
+        public static void SetCpuBoostMode(bool isAC, bool enabled)
         {
             var scheme = GetActiveScheme();
             var subgroup = PowerGuids.GUID_PROCESSOR_SETTINGS_SUBGROUP;
@@ -69,15 +82,8 @@ namespace XboxGamingBarHelper.Power
             uint value = (uint)(enabled ? 2 : 0);
             Logger.Info($"Set CPU Boost to {(enabled ? "Aggressive" : "Disabled")}.");
 
-            //var status = isAC ? 
-            //    PowerProf.PowerWriteACValueIndex(IntPtr.Zero, ref scheme, ref subgroup, ref setting, value)
-            //    :
-            //    PowerProf.PowerWriteDCValueIndex(IntPtr.Zero, ref scheme, ref subgroup, ref setting, value);
-            var status = PowrProf.PowerWriteACValueIndex(IntPtr.Zero, ref scheme, ref subgroup, ref setting, value);
-            if (status == 0)
-            {
-                status = PowrProf.PowerWriteDCValueIndex(IntPtr.Zero, ref scheme, ref subgroup, ref setting, value);
-            }
+            var status = isAC ? PowrProf.PowerWriteACValueIndex(IntPtr.Zero, ref scheme, ref subgroup, ref setting, value)
+                : PowrProf.PowerWriteDCValueIndex(IntPtr.Zero, ref scheme, ref subgroup, ref setting, value);
 
             if (status != 0)
             {
@@ -85,16 +91,16 @@ namespace XboxGamingBarHelper.Power
                 return;
             }
 
+            Logger.Info($"Set CPU Boost {(isAC ? "AC" : "DC")} to {value}.");
             // Apply the updated plan
             PowrProf.PowerSetActiveScheme(IntPtr.Zero, ref scheme);
         }
 
-        public static uint GetEppValue(/*bool isAC*/)
+        public static uint GetEppValue(bool isAC)
         {
             Guid scheme = GetActiveScheme();
             Guid subgroup = PowerGuids.GUID_PROCESSOR_SETTINGS_SUBGROUP;
             Guid setting = PowerGuids.GUID_PROCESSOR_EPP;
-            var isAC = false;
 
             uint result;
             uint status = isAC ? 
@@ -110,7 +116,7 @@ namespace XboxGamingBarHelper.Power
             return result;
         }
 
-        public static void SetEppValue(/*bool isAC, */uint value)
+        public static void SetEppValue(bool isAC, uint value)
         {
             if (value > 100) value = 100; // clamp to valid range
 
@@ -118,22 +124,68 @@ namespace XboxGamingBarHelper.Power
             Guid subgroup = PowerGuids.GUID_PROCESSOR_SETTINGS_SUBGROUP;
             Guid setting = PowerGuids.GUID_PROCESSOR_EPP;
 
-            //uint status = isAC
-            //    ? PowerProf.PowerWriteACValueIndex(IntPtr.Zero, ref scheme, ref subgroup, ref setting, value)
-            //    : PowerProf.PowerWriteDCValueIndex(IntPtr.Zero, ref scheme, ref subgroup, ref setting, value);
-
-            var status = PowrProf.PowerWriteACValueIndex(IntPtr.Zero, ref scheme, ref subgroup, ref setting, value);
-            if (status == 0)
-            {
-                status = PowrProf.PowerWriteDCValueIndex(IntPtr.Zero, ref scheme, ref subgroup, ref setting, value);
-            }
+            uint status = isAC
+                ? PowrProf.PowerWriteACValueIndex(IntPtr.Zero, ref scheme, ref subgroup, ref setting, value)
+                : PowrProf.PowerWriteDCValueIndex(IntPtr.Zero, ref scheme, ref subgroup, ref setting, value);
 
             if (status != 0)
             {
                 Logger.Error("Can't set EPP value.");
+                return;
             }
 
+            Logger.Info($"Set CPU EPP {(isAC ? "AC" : "DC")} to {value}.");
             // Apply changes to the currently active power plan
+            PowrProf.PowerSetActiveScheme(IntPtr.Zero, ref scheme);
+        }
+
+        /// <summary>
+        /// Reads the CPU frequency limit (in MHz) for AC or DC mode.
+        /// </summary>
+        public static uint GetCpuFreqLimit(bool isAC, bool isSecondary = false)
+        {
+            Guid scheme = GetActiveScheme();
+            Guid subgroup = PowerGuids.GUID_PROCESSOR_SETTINGS_SUBGROUP;
+            Guid setting = isSecondary
+                ? PowerGuids.GUID_PROCESSOR_FREQUENCY_LIMIT1
+                : PowerGuids.GUID_PROCESSOR_FREQUENCY_LIMIT;
+
+            uint result;
+            uint status = isAC
+                ? PowrProf.PowerReadACValueIndex(IntPtr.Zero, ref scheme, ref subgroup, ref setting, out result)
+                : PowrProf.PowerReadDCValueIndex(IntPtr.Zero, ref scheme, ref subgroup, ref setting, out result);
+
+            if (status != 0)
+            {
+                Logger.Error("Can't read CPU Clock limit.");
+                return 1000;
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Sets the CPU frequency limit (in MHz) for AC or DC mode.
+        /// </summary>
+        public static void SetCpuFreqLimit(bool isAC, uint mhzValue, bool isSecondary = false)
+        {
+            Guid scheme = GetActiveScheme();
+            Guid subgroup = PowerGuids.GUID_PROCESSOR_SETTINGS_SUBGROUP;
+            Guid setting = isSecondary
+                ? PowerGuids.GUID_PROCESSOR_FREQUENCY_LIMIT1
+                : PowerGuids.GUID_PROCESSOR_FREQUENCY_LIMIT;
+
+            uint status = isAC
+                ? PowrProf.PowerWriteACValueIndex(IntPtr.Zero, ref scheme, ref subgroup, ref setting, mhzValue)
+                : PowrProf.PowerWriteDCValueIndex(IntPtr.Zero, ref scheme, ref subgroup, ref setting, mhzValue);
+
+            if (status != 0)
+            {
+                Logger.Error("Can't set CPU Clock limit.");
+                return;
+            }
+
+            Logger.Info($"Set CPU Clock limit {(isAC ? "AC" : "DC")} {(isSecondary ? "secondary" : "primary")} to {mhzValue}MHz");
             PowrProf.PowerSetActiveScheme(IntPtr.Zero, ref scheme);
         }
     }
