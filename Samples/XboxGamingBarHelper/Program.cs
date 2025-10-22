@@ -1,4 +1,5 @@
 ﻿using NLog;
+using Shared.Constants;
 using Shared.Data;
 using System;
 using System.Collections.Generic;
@@ -85,6 +86,8 @@ namespace XboxGamingBarHelper
             performanceManager.TDP.PropertyChanged += TDP_PropertyChanged;
             powerManager.CPUBoost.PropertyChanged += CPUBoost_PropertyChanged;
             powerManager.CPUEPP.PropertyChanged += CPUEPP_PropertyChanged;
+            powerManager.LimitCPUClock.PropertyChanged += CPUClock_PropertyChanged;
+            powerManager.CPUClockMax.PropertyChanged += CPUClock_PropertyChanged;
             profileManager.CurrentProfile.PropertyChanged += CurrentProfile_PropertyChanged;
 
             appServiceConnectionStatus = await connection.OpenAsync();
@@ -103,6 +106,13 @@ namespace XboxGamingBarHelper
                 }
             }
             Logger.Info("Helper close...");
+        }
+
+        private static void CPUClock_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            var cpuClock = powerManager.LimitCPUClock ? powerManager.CPUClockMax : 0;
+            Logger.Info($"Set current profile {profileManager.CurrentProfile.GameId.Name}'s CPU Clock from {profileManager.CurrentProfile.CPUClock} to {cpuClock}.");
+            profileManager.CurrentProfile.CPUClock = cpuClock;
         }
 
         private static void CPUBoost_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -125,6 +135,8 @@ namespace XboxGamingBarHelper
                 performanceManager.TDP.Value = profileManager.CurrentProfile.TDP;
                 powerManager.CPUBoost.Value = profileManager.CurrentProfile.CPUBoost;
                 powerManager.CPUEPP.Value = profileManager.CurrentProfile.CPUEPP;
+                powerManager.LimitCPUClock.Value = profileManager.CurrentProfile.CPUClock > 0;
+                powerManager.CPUClockMax.Value = profileManager.CurrentProfile.CPUClock > 0 ? profileManager.CurrentProfile.CPUClock : CPUConstants.DEFAULT_CPU_CLOCK;
                 profileManager.PerGameProfile.Value = profileManager.CurrentProfile.Use;
             }
             else

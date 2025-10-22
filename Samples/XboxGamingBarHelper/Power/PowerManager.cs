@@ -39,7 +39,7 @@ namespace XboxGamingBarHelper.Power
             cpuBoost = new CPUBoostProperty(GetCpuBoostMode(false), this);
             cpuEPP = new CPUEPPProperty((int)GetEppValue(false), this);
             var initialCPUClockMax = GetCpuFreqLimit(false);
-            Logger.Info($"Constructing PowerManager, current CPU clock limit is {initialCPUClockMax}Mhz.");
+            Logger.Debug($"Constructing PowerManager, current CPU clock limit is {initialCPUClockMax}Mhz.");
             limitCPUClock = new LimitCPUClockProperty(initialCPUClockMax != 0, this);
             cpuClockMax = new CPUClockMaxProperty(initialCPUClockMax != 0 ? (int)initialCPUClockMax : CPUConstants.DEFAULT_CPU_CLOCK, this);
         }
