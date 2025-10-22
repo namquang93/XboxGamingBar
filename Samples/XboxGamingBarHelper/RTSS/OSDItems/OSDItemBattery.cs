@@ -9,11 +9,13 @@ namespace XboxGamingBarHelper.RTSS.OSDItems
     internal class OSDItemBattery : OSDItem
     {
         private HardwareSensor batteryPercentSensor;
+        private HardwareSensor batteryDischargeRateSensor;
         private HardwareSensor batteryRemainTimeSensor;
 
-        public OSDItemBattery(HardwareSensor batteryPercentSensor, HardwareSensor batteryRemainTimeSensor) : base("BATTERY", Color.DarkCyan)
+        public OSDItemBattery(HardwareSensor batteryPercentSensor, HardwareSensor batteryDischargeRateSensor, HardwareSensor batteryRemainTimeSensor) : base("BATTERY", Color.DarkCyan)
         {
             this.batteryPercentSensor = batteryPercentSensor;
+            this.batteryDischargeRateSensor = batteryDischargeRateSensor;
             this.batteryRemainTimeSensor = batteryRemainTimeSensor;
         }
 
@@ -24,7 +26,13 @@ namespace XboxGamingBarHelper.RTSS.OSDItems
             if (osdLevel >= 2)
             {
                 osdItems.Add(new OSDItemValue(batteryPercentSensor.Value, "%"));
-                if (batteryRemainTimeSensor != null && batteryRemainTimeSensor.Value > 0)
+
+                if (batteryDischargeRateSensor.Value > 0)
+                {
+                    osdItems.Add(new OSDItemValue(batteryDischargeRateSensor.Value, "W/H", "-"));
+                }
+
+                if (batteryRemainTimeSensor.Value > 0)
                 {
                     var hours = Math.Floor(batteryRemainTimeSensor.Value / MathConstants.SECONDS_PER_HOUR);
                     var minutes = (batteryRemainTimeSensor.Value - hours * MathConstants.SECONDS_PER_HOUR) / MathConstants.SECONDS_PER_MINUTE;
