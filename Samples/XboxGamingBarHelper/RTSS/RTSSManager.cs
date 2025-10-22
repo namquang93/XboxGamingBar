@@ -28,7 +28,7 @@ namespace XboxGamingBarHelper.RTSS
             osdItems = new OSDItem[]
             {
                 new OSDItemFPS(),
-                new OSDItemBattery(performanceManager.BatteryLevel, performanceManager.BatteryDischargeRate, performanceManager.BatteryRemainingTime),
+                new OSDItemBattery(performanceManager.BatteryLevel, performanceManager.BatteryDischargeRate, performanceManager.BatteryChargeRate, performanceManager.BatteryRemainingTime),
                 new OSDItemMemory(performanceManager.MemoryUsage, performanceManager.MemoryUsed),
                 new OSDItemCPU(performanceManager.CPUUsage, performanceManager.CPUClock, performanceManager.CPUWattage, performanceManager.CPUTemperature),
                 new OSDItemGPU(performanceManager.GPUUsage, performanceManager.GPUClock, performanceManager.GPUWattage, performanceManager.GPUTemperature),

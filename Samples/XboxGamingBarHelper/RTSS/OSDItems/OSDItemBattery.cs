@@ -10,12 +10,14 @@ namespace XboxGamingBarHelper.RTSS.OSDItems
     {
         private HardwareSensor batteryPercentSensor;
         private HardwareSensor batteryDischargeRateSensor;
+        private HardwareSensor batteryChargeRateSensor;
         private HardwareSensor batteryRemainTimeSensor;
 
-        public OSDItemBattery(HardwareSensor batteryPercentSensor, HardwareSensor batteryDischargeRateSensor, HardwareSensor batteryRemainTimeSensor) : base("BATTERY", Color.DarkCyan)
+        public OSDItemBattery(HardwareSensor batteryPercentSensor, HardwareSensor batteryDischargeRateSensor, HardwareSensor batteryChargeRateSensor, HardwareSensor batteryRemainTimeSensor) : base("BATTERY", Color.DarkCyan)
         {
             this.batteryPercentSensor = batteryPercentSensor;
             this.batteryDischargeRateSensor = batteryDischargeRateSensor;
+            this.batteryChargeRateSensor = batteryChargeRateSensor;
             this.batteryRemainTimeSensor = batteryRemainTimeSensor;
         }
 
@@ -30,6 +32,11 @@ namespace XboxGamingBarHelper.RTSS.OSDItems
                 if (batteryDischargeRateSensor.Value > 0)
                 {
                     osdItems.Add(new OSDItemValue(batteryDischargeRateSensor.Value, "W/H", "-"));
+                }
+
+                if (batteryChargeRateSensor.Value > 0)
+                {
+                    osdItems.Add(new OSDItemValue(batteryChargeRateSensor.Value, "W/H", "+"));
                 }
 
                 if (batteryRemainTimeSensor.Value > 0)

@@ -101,6 +101,7 @@ namespace XboxGamingBarHelper.Performance
         public BatteryLevelSensor BatteryLevel { get; }
         public BatteryRemainingTimeSensor BatteryRemainingTime { get; }
         public BatteryDischargeRateSensor BatteryDischargeRate { get; }
+        public BatteryChargeRateSensor BatteryChargeRate { get; }
 
         private List<HardwareSensor> hardwareSensors;
 
@@ -142,6 +143,7 @@ namespace XboxGamingBarHelper.Performance
             BatteryLevel = new BatteryLevelSensor();
             BatteryRemainingTime = new BatteryRemainingTimeSensor();
             BatteryDischargeRate = new BatteryDischargeRateSensor();
+            BatteryChargeRate = new BatteryChargeRateSensor();
             hardwareSensors = new List<HardwareSensor>()
             {
                 CPUClock,
@@ -157,6 +159,7 @@ namespace XboxGamingBarHelper.Performance
                 BatteryLevel,
                 BatteryRemainingTime,
                 BatteryDischargeRate,
+                BatteryChargeRate,
             };
 
             ryzenAdjHandle = RyzenAdj.init_ryzenadj();

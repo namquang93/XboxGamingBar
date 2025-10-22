@@ -150,6 +150,7 @@
     <Compile Include="Performance\HardwareSensor.cs" />
     <Compile Include="Performance\PerformanceManager.cs" />
     <Compile Include="Performance\RyzenAdj.cs" />
+    <Compile Include="Performance\Sensors\BatteryChargeRateSensor.cs" />
     <Compile Include="Performance\Sensors\BatteryDischargeRateSensor.cs" />
     <Compile Include="Performance\Sensors\BatteryLevelSensor.cs" />
     <Compile Include="Performance\Sensors\BatteryRemainingTimeSensor.cs" />
