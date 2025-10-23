@@ -65,6 +65,7 @@ namespace XboxGamingBar
             if (widget != null)
             {
                 Logger.Info("Running as a Xbox Game Bar widget.");
+                await widget.CenterWindowAsync();
             }
             else
             {
@@ -82,6 +83,11 @@ namespace XboxGamingBar
 
         public async Task GamingWidget_LeavingBackground(object sender, LeavingBackgroundEventArgs e)
         {
+            if (widget != null)
+            {
+                await widget.CenterWindowAsync();
+            }
+
             if (App.Connection != null)
             {
                 Logger.Info("GamingWidget LeavingBackground, sync UI now.");
