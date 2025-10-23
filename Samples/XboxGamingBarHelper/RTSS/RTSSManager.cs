@@ -1,5 +1,5 @@
 ﻿using RTSSSharedMemoryNET;
-using System.Diagnostics;
+using Shared.Utilities;
 using Windows.ApplicationModel.AppService;
 using XboxGamingBarHelper.Core;
 using XboxGamingBarHelper.Performance;
@@ -35,16 +35,17 @@ namespace XboxGamingBarHelper.RTSS
             };
         }
 
-        internal static bool IsRTSSRunning()
-        {
-            return Process.GetProcessesByName("RTSS").Length > 0;
-        }
-
         public override void Update()
         {
             base.Update();
             // Console.WriteLine($"OSD level {OSDLevel}");
             
+            if (!RTSSHelper.IsRunning())
+            {
+                Logger.Debug("Rivatuner Statistics Server is not running.");
+                return;
+            }
+
             if (osd == 0)
             {
                 if (rtssOSD != null)

@@ -56,10 +56,15 @@ namespace XboxGamingBarHelper
             //}
 
             // Initialize managers.
+            Logger.Info("Initialize Performance Manager.");
             performanceManager = new PerformanceManager(connection);
+            Logger.Info("Initialize RTSS Manager.");
             rtssManager = new RTSSManager(performanceManager, connection);
+            Logger.Info("Initialize Profile Manager.");
             profileManager = new ProfileManager(connection);
+            Logger.Info("Initialize System Manager.");
             systemManager = new SystemManager(connection, profileManager.GameProfiles);
+            Logger.Info("Initialize Power Manager.");
             powerManager = new PowerManager(connection);
             Managers = new List<IManager>
             {
@@ -70,6 +75,7 @@ namespace XboxGamingBarHelper
                 powerManager
             };
 
+            Logger.Info("Initialize properties.");
             // Initialize properties.
             properties = new HelperProperties(
                 systemManager.RunningGame,
@@ -81,6 +87,7 @@ namespace XboxGamingBarHelper
                 powerManager.LimitCPUClock,
                 powerManager.CPUClockMax);
 
+            Logger.Info("Initialize callbacks.");
             systemManager.RunningGame.PropertyChanged += RunningGame_PropertyChanged;
             profileManager.PerGameProfile.PropertyChanged += PerGameProfile_PropertyChanged;
             performanceManager.TDP.PropertyChanged += TDP_PropertyChanged;
@@ -90,12 +97,15 @@ namespace XboxGamingBarHelper
             powerManager.CPUClockMax.PropertyChanged += CPUClock_PropertyChanged;
             profileManager.CurrentProfile.PropertyChanged += CurrentProfile_PropertyChanged;
 
+            Logger.Info("Start connecting to the widget.");
             appServiceConnectionStatus = await connection.OpenAsync();
             if (appServiceConnectionStatus != AppServiceConnectionStatus.Success)
             {
+                Logger.Info("Can't conncect to the widget.");
                 return;
             }
 
+            Logger.Info("Can't conncect to the widget.");
             while (appServiceConnectionStatus == AppServiceConnectionStatus.Success)
             {
                 await Task.Delay(500);

@@ -39,6 +39,7 @@ namespace XboxGamingBarHelper.Profile
         {
             gameProfiles = new Dictionary<GameId, GameProfile>();
 
+            Logger.Info("Initialize global profile.");
             // Load global profile.
             var globalProfilePath = GetGlobalProfilePath();
             if (!File.Exists(globalProfilePath))
@@ -53,6 +54,7 @@ namespace XboxGamingBarHelper.Profile
                 GlobalProfile.Path = globalProfilePath;
             }
 
+            Logger.Info("Create game profiles folder.");
             // Make sure game profiles folder is created.
             var gameProfilesFolder = GetGameProfilesFolder();
             if (!Directory.Exists(gameProfilesFolder))
@@ -60,6 +62,7 @@ namespace XboxGamingBarHelper.Profile
                 Directory.CreateDirectory(gameProfilesFolder);
             }
 
+            Logger.Info("Load game profiles.");
             // Read all existing game profiles.
             var xmlFiles = Directory.GetFiles(gameProfilesFolder, $"*{XML_EXTENSION}");
             foreach (string filePath in xmlFiles)
@@ -77,6 +80,7 @@ namespace XboxGamingBarHelper.Profile
                 }
             }
 
+            Logger.Info("Initialize own properties.");
             perGameProfile = new PerGameProfileProperty(null, this);
             currentProfile = new GameProfileProperty(GlobalProfile, this);
         }
