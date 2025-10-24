@@ -201,7 +201,7 @@ namespace XboxGamingBar
         private void SetBackgroundColor()
         {
             this.RequestedTheme = widget.RequestedTheme;
-            MainGrid.Background = (widget.RequestedTheme == ElementTheme.Dark) ? widgetDarkThemeBrush : widgetLightThemeBrush;
+            RootGrid.Background = (widget.RequestedTheme == ElementTheme.Dark) ? widgetDarkThemeBrush : widgetLightThemeBrush;
         }
 
         /// <summary>
