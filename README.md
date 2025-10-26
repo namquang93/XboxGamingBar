@@ -8,8 +8,16 @@ As of now, there are following functions:
 1. Performance Overlay using RivaTuner Statistics Server OSD.
 2. TDP Limit.
 3. Per-game Profile.
+4. CPU performance adjustments.
+  a. Enable or disable CPU Boost.
+  b. Set CPU Energy Performance Preference (EPP).
+  c. Set CPU clock speed limit.
 
-![alt text](Screenshots/v2_1.png)
+![alt text](Screenshots/v2_2.png)
+
+## Installation
+
+Please follow our [Wiki](https://github.com/namquang93/XboxGamingBar/wiki/Installation-Instruction) page for installation instruction.
 
 ## Language
 
