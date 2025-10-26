@@ -5,13 +5,13 @@
 XBox Gaming Bar is a helper tool for gamers to control all gaming-related settings using the gamepad/game controller.
 Xbox Gaming Bar is built as a Xbox Game Bar widget as the frontend, and a Win32 helper as the backend tool.
 As of now, there are following functions:
-1. Performance Overlay using RivaTuner Statistics Server OSD.
-2. TDP Limit.
-3. Per-game Profile.
-4. CPU performance adjustments.
-  a. Enable or disable CPU Boost.
-  b. Set CPU Energy Performance Preference (EPP).
-  c. Set CPU clock speed limit.
+- Performance Overlay using RivaTuner Statistics Server OSD.
+- TDP Limit.
+- Per-game Profile.
+- CPU performance adjustments.
+  - Enable or disable CPU Boost.
+  - Set CPU Energy Performance Preference (EPP).
+  - Set CPU clock speed limit.
 
 ![alt text](Screenshots/v2_2.png)
 
