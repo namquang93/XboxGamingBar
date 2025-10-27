@@ -84,6 +84,9 @@ namespace XboxGamingBarHelper.Windows
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         private static extern bool EnumDisplaySettings(string lpszDeviceName, int iModeNum, ref DEVMODE lpDevMode);
 
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        private static extern int ChangeDisplaySettings(ref DEVMODE lpDevMode, int dwFlags);
+
         private static int GetWindowProcessId(IntPtr windowHandle)
         {
             if (windowHandle == IntPtr.Zero)
@@ -159,6 +162,10 @@ namespace XboxGamingBarHelper.Windows
         }
 
         private const int ENUM_CURRENT_SETTINGS = -1;
+        private const int CDS_UPDATEREGISTRY = 0x01;
+        private const int CDS_TEST = 0x02;
+        private const int DISP_CHANGE_SUCCESSFUL = 0;
+        private const int DM_DISPLAYFREQUENCY = 0x400000;
 
         public static int GetCurrentRefreshRate()
         {
@@ -192,6 +199,51 @@ namespace XboxGamingBarHelper.Windows
                 Logger.Info($"Found refresh rate {refreshRate}");
             }
             return refreshRates;
+        }
+
+        /// <summary>
+        /// Set monitor refresh rate to a supported value.
+        /// </summary>
+        public static bool SetRefreshRateTo(int targetRate)
+        {
+            /*var supported = GetSupportedRefreshRates();
+            if (!supported.Contains(targetRate))
+            {
+                Console.WriteLine($"Error: {targetRate}Hz is not supported. Supported rates: {string.Join(", ", supported)}");
+                return false;
+            }*/
+
+            DEVMODE mode = new DEVMODE { dmSize = (short)Marshal.SizeOf(typeof(DEVMODE)) };
+
+            if (!EnumDisplaySettings(null, ENUM_CURRENT_SETTINGS, ref mode))
+            {
+                Console.WriteLine("Error: Could not retrieve current display settings.");
+                return false;
+            }
+
+            mode.dmDisplayFrequency = targetRate;
+            mode.dmFields = DM_DISPLAYFREQUENCY;
+
+            // Test before applying
+            int testResult = ChangeDisplaySettings(ref mode, CDS_TEST);
+            if (testResult != DISP_CHANGE_SUCCESSFUL)
+            {
+                Console.WriteLine($"Test failed: {targetRate}Hz not valid on this mode.");
+                return false;
+            }
+
+            // Apply permanently
+            int result = ChangeDisplaySettings(ref mode, CDS_UPDATEREGISTRY);
+            if (result == DISP_CHANGE_SUCCESSFUL)
+            {
+                Console.WriteLine($"Successfully switched to {targetRate}Hz.");
+                return true;
+            }
+            else
+            {
+                Console.WriteLine($"Failed to apply {targetRate}Hz (error code {result}).");
+                return false;
+            }
         }
     }
 }

@@ -37,6 +37,12 @@ namespace XboxGamingBarHelper.Systems
             get { return refreshRates; }
         }
 
+        private readonly RefreshRateProperty refreshRate;
+        public RefreshRateProperty RefreshRate
+        {
+            get { return refreshRate; }
+        }
+
         private IReadOnlyDictionary<GameId, GameProfile> Profiles { get; }
 
         // Keep track to current opening windows to determine currently running game.
@@ -51,6 +57,7 @@ namespace XboxGamingBarHelper.Systems
             Logger.Info("Check current running game.");
             runningGame = new RunningGameProperty(GetRunningGame(), this);
             refreshRates = new RefreshRatesProperty(User32.GetSupportedRefreshRates(), this);
+            refreshRate = new RefreshRateProperty(User32.GetCurrentRefreshRate(), this);
         }
 
         private RunningGame GetRunningGame()

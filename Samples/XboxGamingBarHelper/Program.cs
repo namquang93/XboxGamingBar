@@ -86,7 +86,8 @@ namespace XboxGamingBarHelper
                 powerManager.CPUEPP,
                 powerManager.LimitCPUClock,
                 powerManager.CPUClockMax,
-                systemManager.RefreshRates);
+                systemManager.RefreshRates,
+                systemManager.RefreshRate);
 
             Logger.Info("Initialize callbacks.");
             systemManager.RunningGame.PropertyChanged += RunningGame_PropertyChanged;

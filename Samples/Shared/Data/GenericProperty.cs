@@ -270,7 +270,7 @@ namespace Shared.Data
             else if (typeof(ValueType) == typeof(List<int>) && newValue is string listIntStringValue)
             {
                 myTypeValue = (ValueType)(object)listIntStringValue.Split(StringConstants.COMMA.ToCharArray()).Select(int.Parse).ToList();
-                Logger.Info($"SetValue string {listIntStringValue} to list {myTypeValue}");
+                Logger.Debug($"SetValue string {listIntStringValue} to list {myTypeValue}");
             }
             else if (newValue is ValueType correctValueType)
             {

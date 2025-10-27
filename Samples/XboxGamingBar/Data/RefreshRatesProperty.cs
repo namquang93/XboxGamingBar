@@ -1,4 +1,5 @@
-﻿using Shared.Enums;
+﻿using Shared.Constants;
+using Shared.Enums;
 using System;
 using System.Collections.Generic;
 using Windows.UI.Core;
@@ -8,7 +9,7 @@ namespace XboxGamingBar.Data
 {
     internal class RefreshRatesProperty : WidgetControlProperty<List<int>, ComboBox>
     {
-        public RefreshRatesProperty(ComboBox inUI, Page inOwner) : base(new List<int>() { 60 }, Function.RefreshRates, inUI, inOwner)
+        public RefreshRatesProperty(ComboBox inUI, Page inOwner) : base(new List<int>() { SystemConstants.DEFAULT_REFRESH_RATE }, Function.RefreshRates, inUI, inOwner)
         {
         }
 
@@ -28,6 +29,12 @@ namespace XboxGamingBar.Data
                     }
                 });
             }
+        }
+
+        protected override void SetControlEnabled(bool isEnabled)
+        {
+            // Refresh rates combo box should be enabled/disabled by RefreshRateProperty, not this.
+            // base.SetControlEnabled(isEnabled);
         }
     }
 }
