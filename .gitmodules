@@ -1,0 +1,3 @@
+[submodule "ADLX"]
+	path = ADLX
+	url = https://github.com/namquang93/ADLX.git
