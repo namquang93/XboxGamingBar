@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.AppService;
+using XboxGamingBarHelper.AMD;
 using XboxGamingBarHelper.Core;
 using XboxGamingBarHelper.Performance;
 using XboxGamingBarHelper.Power;
@@ -27,6 +28,7 @@ namespace XboxGamingBarHelper
         private static ProfileManager profileManager;
         private static SystemManager systemManager;
         private static PowerManager powerManager;
+        private static AMDManager amdManager;
         private static List<IManager> Managers;
         private static AppServiceConnectionStatus appServiceConnectionStatus;
 
@@ -66,13 +68,16 @@ namespace XboxGamingBarHelper
             systemManager = new SystemManager(connection, profileManager.GameProfiles);
             Logger.Info("Initialize Power Manager.");
             powerManager = new PowerManager(connection);
+            Logger.Info("Initialize AMD Manager.");
+            amdManager = new AMDManager(connection);
             Managers = new List<IManager>
             {
                 performanceManager,
                 rtssManager,
                 profileManager,
                 systemManager,
-                powerManager
+                powerManager,
+                amdManager
             };
 
             Logger.Info("Initialize properties.");
