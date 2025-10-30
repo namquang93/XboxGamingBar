@@ -578,6 +578,1026 @@ class ADLXPINVOKE {
   [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_IADLXDisplayServices")]
   public static extern void delete_IADLXDisplayServices(global::System.Runtime.InteropServices.HandleRef jarg1);
 
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXGPUMetricsSupport_IID")]
+  public static extern global::System.IntPtr IADLXGPUMetricsSupport_IID();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXGPUMetricsSupport_IsSupportedGPUUsage")]
+  public static extern int IADLXGPUMetricsSupport_IsSupportedGPUUsage(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXGPUMetricsSupport_IsSupportedGPUClockSpeed")]
+  public static extern int IADLXGPUMetricsSupport_IsSupportedGPUClockSpeed(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXGPUMetricsSupport_IsSupportedGPUVRAMClockSpeed")]
+  public static extern int IADLXGPUMetricsSupport_IsSupportedGPUVRAMClockSpeed(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXGPUMetricsSupport_IsSupportedGPUTemperature")]
+  public static extern int IADLXGPUMetricsSupport_IsSupportedGPUTemperature(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXGPUMetricsSupport_IsSupportedGPUHotspotTemperature")]
+  public static extern int IADLXGPUMetricsSupport_IsSupportedGPUHotspotTemperature(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXGPUMetricsSupport_IsSupportedGPUPower")]
+  public static extern int IADLXGPUMetricsSupport_IsSupportedGPUPower(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXGPUMetricsSupport_IsSupportedGPUTotalBoardPower")]
+  public static extern int IADLXGPUMetricsSupport_IsSupportedGPUTotalBoardPower(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXGPUMetricsSupport_IsSupportedGPUFanSpeed")]
+  public static extern int IADLXGPUMetricsSupport_IsSupportedGPUFanSpeed(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXGPUMetricsSupport_IsSupportedGPUVRAM")]
+  public static extern int IADLXGPUMetricsSupport_IsSupportedGPUVRAM(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXGPUMetricsSupport_IsSupportedGPUVoltage")]
+  public static extern int IADLXGPUMetricsSupport_IsSupportedGPUVoltage(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXGPUMetricsSupport_GetGPUUsageRange")]
+  public static extern int IADLXGPUMetricsSupport_GetGPUUsageRange(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2, global::System.Runtime.InteropServices.HandleRef jarg3);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXGPUMetricsSupport_GetGPUClockSpeedRange")]
+  public static extern int IADLXGPUMetricsSupport_GetGPUClockSpeedRange(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2, global::System.Runtime.InteropServices.HandleRef jarg3);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXGPUMetricsSupport_GetGPUVRAMClockSpeedRange")]
+  public static extern int IADLXGPUMetricsSupport_GetGPUVRAMClockSpeedRange(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2, global::System.Runtime.InteropServices.HandleRef jarg3);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXGPUMetricsSupport_GetGPUTemperatureRange")]
+  public static extern int IADLXGPUMetricsSupport_GetGPUTemperatureRange(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2, global::System.Runtime.InteropServices.HandleRef jarg3);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXGPUMetricsSupport_GetGPUHotspotTemperatureRange")]
+  public static extern int IADLXGPUMetricsSupport_GetGPUHotspotTemperatureRange(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2, global::System.Runtime.InteropServices.HandleRef jarg3);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXGPUMetricsSupport_GetGPUPowerRange")]
+  public static extern int IADLXGPUMetricsSupport_GetGPUPowerRange(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2, global::System.Runtime.InteropServices.HandleRef jarg3);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXGPUMetricsSupport_GetGPUFanSpeedRange")]
+  public static extern int IADLXGPUMetricsSupport_GetGPUFanSpeedRange(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2, global::System.Runtime.InteropServices.HandleRef jarg3);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXGPUMetricsSupport_GetGPUVRAMRange")]
+  public static extern int IADLXGPUMetricsSupport_GetGPUVRAMRange(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2, global::System.Runtime.InteropServices.HandleRef jarg3);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXGPUMetricsSupport_GetGPUVoltageRange")]
+  public static extern int IADLXGPUMetricsSupport_GetGPUVoltageRange(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2, global::System.Runtime.InteropServices.HandleRef jarg3);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXGPUMetricsSupport_GetGPUTotalBoardPowerRange")]
+  public static extern int IADLXGPUMetricsSupport_GetGPUTotalBoardPowerRange(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2, global::System.Runtime.InteropServices.HandleRef jarg3);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXGPUMetricsSupport_GetGPUIntakeTemperatureRange")]
+  public static extern int IADLXGPUMetricsSupport_GetGPUIntakeTemperatureRange(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2, global::System.Runtime.InteropServices.HandleRef jarg3);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXGPUMetricsSupport_IsSupportedGPUIntakeTemperature")]
+  public static extern int IADLXGPUMetricsSupport_IsSupportedGPUIntakeTemperature(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_IADLXGPUMetricsSupport")]
+  public static extern void delete_IADLXGPUMetricsSupport(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXSystemMetricsSupport_IID")]
+  public static extern global::System.IntPtr IADLXSystemMetricsSupport_IID();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXSystemMetricsSupport_IsSupportedCPUUsage")]
+  public static extern int IADLXSystemMetricsSupport_IsSupportedCPUUsage(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXSystemMetricsSupport_IsSupportedSystemRAM")]
+  public static extern int IADLXSystemMetricsSupport_IsSupportedSystemRAM(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXSystemMetricsSupport_IsSupportedSmartShift")]
+  public static extern int IADLXSystemMetricsSupport_IsSupportedSmartShift(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXSystemMetricsSupport_GetCPUUsageRange")]
+  public static extern int IADLXSystemMetricsSupport_GetCPUUsageRange(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2, global::System.Runtime.InteropServices.HandleRef jarg3);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXSystemMetricsSupport_GetSystemRAMRange")]
+  public static extern int IADLXSystemMetricsSupport_GetSystemRAMRange(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2, global::System.Runtime.InteropServices.HandleRef jarg3);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXSystemMetricsSupport_GetSmartShiftRange")]
+  public static extern int IADLXSystemMetricsSupport_GetSmartShiftRange(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2, global::System.Runtime.InteropServices.HandleRef jarg3);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_IADLXSystemMetricsSupport")]
+  public static extern void delete_IADLXSystemMetricsSupport(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXGPUMetrics_IID")]
+  public static extern global::System.IntPtr IADLXGPUMetrics_IID();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXGPUMetrics_TimeStamp")]
+  public static extern int IADLXGPUMetrics_TimeStamp(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXGPUMetrics_GPUUsage")]
+  public static extern int IADLXGPUMetrics_GPUUsage(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXGPUMetrics_GPUClockSpeed")]
+  public static extern int IADLXGPUMetrics_GPUClockSpeed(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXGPUMetrics_GPUVRAMClockSpeed")]
+  public static extern int IADLXGPUMetrics_GPUVRAMClockSpeed(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXGPUMetrics_GPUTemperature")]
+  public static extern int IADLXGPUMetrics_GPUTemperature(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXGPUMetrics_GPUHotspotTemperature")]
+  public static extern int IADLXGPUMetrics_GPUHotspotTemperature(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXGPUMetrics_GPUPower")]
+  public static extern int IADLXGPUMetrics_GPUPower(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXGPUMetrics_GPUTotalBoardPower")]
+  public static extern int IADLXGPUMetrics_GPUTotalBoardPower(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXGPUMetrics_GPUFanSpeed")]
+  public static extern int IADLXGPUMetrics_GPUFanSpeed(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXGPUMetrics_GPUVRAM")]
+  public static extern int IADLXGPUMetrics_GPUVRAM(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXGPUMetrics_GPUVoltage")]
+  public static extern int IADLXGPUMetrics_GPUVoltage(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXGPUMetrics_GPUIntakeTemperature")]
+  public static extern int IADLXGPUMetrics_GPUIntakeTemperature(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_IADLXGPUMetrics")]
+  public static extern void delete_IADLXGPUMetrics(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXGPUMetricsList_IID")]
+  public static extern global::System.IntPtr IADLXGPUMetricsList_IID();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXGPUMetricsList_ITEM_IID")]
+  public static extern global::System.IntPtr IADLXGPUMetricsList_ITEM_IID();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXGPUMetricsList_At")]
+  public static extern int IADLXGPUMetricsList_At(global::System.Runtime.InteropServices.HandleRef jarg1, uint jarg2, global::System.Runtime.InteropServices.HandleRef jarg3);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXGPUMetricsList_Add_Back")]
+  public static extern int IADLXGPUMetricsList_Add_Back(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_IADLXGPUMetricsList")]
+  public static extern void delete_IADLXGPUMetricsList(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXSystemMetrics_IID")]
+  public static extern global::System.IntPtr IADLXSystemMetrics_IID();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXSystemMetrics_TimeStamp")]
+  public static extern int IADLXSystemMetrics_TimeStamp(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXSystemMetrics_CPUUsage")]
+  public static extern int IADLXSystemMetrics_CPUUsage(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXSystemMetrics_SystemRAM")]
+  public static extern int IADLXSystemMetrics_SystemRAM(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXSystemMetrics_SmartShift")]
+  public static extern int IADLXSystemMetrics_SmartShift(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_IADLXSystemMetrics")]
+  public static extern void delete_IADLXSystemMetrics(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXSystemMetricsList_IID")]
+  public static extern global::System.IntPtr IADLXSystemMetricsList_IID();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXSystemMetricsList_ITEM_IID")]
+  public static extern global::System.IntPtr IADLXSystemMetricsList_ITEM_IID();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXSystemMetricsList_At")]
+  public static extern int IADLXSystemMetricsList_At(global::System.Runtime.InteropServices.HandleRef jarg1, uint jarg2, global::System.Runtime.InteropServices.HandleRef jarg3);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXSystemMetricsList_Add_Back")]
+  public static extern int IADLXSystemMetricsList_Add_Back(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_IADLXSystemMetricsList")]
+  public static extern void delete_IADLXSystemMetricsList(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXFPS_IID")]
+  public static extern global::System.IntPtr IADLXFPS_IID();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXFPS_TimeStamp")]
+  public static extern int IADLXFPS_TimeStamp(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXFPS_FPS")]
+  public static extern int IADLXFPS_FPS(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_IADLXFPS")]
+  public static extern void delete_IADLXFPS(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXFPSList_IID")]
+  public static extern global::System.IntPtr IADLXFPSList_IID();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXFPSList_ITEM_IID")]
+  public static extern global::System.IntPtr IADLXFPSList_ITEM_IID();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXFPSList_At")]
+  public static extern int IADLXFPSList_At(global::System.Runtime.InteropServices.HandleRef jarg1, uint jarg2, global::System.Runtime.InteropServices.HandleRef jarg3);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXFPSList_Add_Back")]
+  public static extern int IADLXFPSList_Add_Back(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_IADLXFPSList")]
+  public static extern void delete_IADLXFPSList(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXAllMetrics_IID")]
+  public static extern global::System.IntPtr IADLXAllMetrics_IID();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXAllMetrics_TimeStamp")]
+  public static extern int IADLXAllMetrics_TimeStamp(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXAllMetrics_GetSystemMetrics")]
+  public static extern int IADLXAllMetrics_GetSystemMetrics(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXAllMetrics_GetFPS")]
+  public static extern int IADLXAllMetrics_GetFPS(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXAllMetrics_GetGPUMetrics")]
+  public static extern int IADLXAllMetrics_GetGPUMetrics(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2, global::System.Runtime.InteropServices.HandleRef jarg3);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_IADLXAllMetrics")]
+  public static extern void delete_IADLXAllMetrics(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXAllMetricsList_IID")]
+  public static extern global::System.IntPtr IADLXAllMetricsList_IID();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXAllMetricsList_ITEM_IID")]
+  public static extern global::System.IntPtr IADLXAllMetricsList_ITEM_IID();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXAllMetricsList_At")]
+  public static extern int IADLXAllMetricsList_At(global::System.Runtime.InteropServices.HandleRef jarg1, uint jarg2, global::System.Runtime.InteropServices.HandleRef jarg3);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXAllMetricsList_Add_Back")]
+  public static extern int IADLXAllMetricsList_Add_Back(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_IADLXAllMetricsList")]
+  public static extern void delete_IADLXAllMetricsList(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXPerformanceMonitoringServices_IID")]
+  public static extern global::System.IntPtr IADLXPerformanceMonitoringServices_IID();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXPerformanceMonitoringServices_GetSamplingIntervalRange")]
+  public static extern int IADLXPerformanceMonitoringServices_GetSamplingIntervalRange(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXPerformanceMonitoringServices_SetSamplingInterval")]
+  public static extern int IADLXPerformanceMonitoringServices_SetSamplingInterval(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXPerformanceMonitoringServices_GetSamplingInterval")]
+  public static extern int IADLXPerformanceMonitoringServices_GetSamplingInterval(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXPerformanceMonitoringServices_GetMaxPerformanceMetricsHistorySizeRange")]
+  public static extern int IADLXPerformanceMonitoringServices_GetMaxPerformanceMetricsHistorySizeRange(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXPerformanceMonitoringServices_SetMaxPerformanceMetricsHistorySize")]
+  public static extern int IADLXPerformanceMonitoringServices_SetMaxPerformanceMetricsHistorySize(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXPerformanceMonitoringServices_GetMaxPerformanceMetricsHistorySize")]
+  public static extern int IADLXPerformanceMonitoringServices_GetMaxPerformanceMetricsHistorySize(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXPerformanceMonitoringServices_ClearPerformanceMetricsHistory")]
+  public static extern int IADLXPerformanceMonitoringServices_ClearPerformanceMetricsHistory(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXPerformanceMonitoringServices_GetCurrentPerformanceMetricsHistorySize")]
+  public static extern int IADLXPerformanceMonitoringServices_GetCurrentPerformanceMetricsHistorySize(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXPerformanceMonitoringServices_StartPerformanceMetricsTracking")]
+  public static extern int IADLXPerformanceMonitoringServices_StartPerformanceMetricsTracking(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXPerformanceMonitoringServices_StopPerformanceMetricsTracking")]
+  public static extern int IADLXPerformanceMonitoringServices_StopPerformanceMetricsTracking(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXPerformanceMonitoringServices_GetAllMetricsHistory")]
+  public static extern int IADLXPerformanceMonitoringServices_GetAllMetricsHistory(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2, int jarg3, global::System.Runtime.InteropServices.HandleRef jarg4);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXPerformanceMonitoringServices_GetGPUMetricsHistory")]
+  public static extern int IADLXPerformanceMonitoringServices_GetGPUMetricsHistory(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2, int jarg3, int jarg4, global::System.Runtime.InteropServices.HandleRef jarg5);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXPerformanceMonitoringServices_GetSystemMetricsHistory")]
+  public static extern int IADLXPerformanceMonitoringServices_GetSystemMetricsHistory(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2, int jarg3, global::System.Runtime.InteropServices.HandleRef jarg4);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXPerformanceMonitoringServices_GetFPSHistory")]
+  public static extern int IADLXPerformanceMonitoringServices_GetFPSHistory(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2, int jarg3, global::System.Runtime.InteropServices.HandleRef jarg4);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXPerformanceMonitoringServices_GetCurrentAllMetrics")]
+  public static extern int IADLXPerformanceMonitoringServices_GetCurrentAllMetrics(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXPerformanceMonitoringServices_GetCurrentGPUMetrics")]
+  public static extern int IADLXPerformanceMonitoringServices_GetCurrentGPUMetrics(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2, global::System.Runtime.InteropServices.HandleRef jarg3);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXPerformanceMonitoringServices_GetCurrentSystemMetrics")]
+  public static extern int IADLXPerformanceMonitoringServices_GetCurrentSystemMetrics(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXPerformanceMonitoringServices_GetCurrentFPS")]
+  public static extern int IADLXPerformanceMonitoringServices_GetCurrentFPS(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXPerformanceMonitoringServices_GetSupportedGPUMetrics")]
+  public static extern int IADLXPerformanceMonitoringServices_GetSupportedGPUMetrics(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2, global::System.Runtime.InteropServices.HandleRef jarg3);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXPerformanceMonitoringServices_GetSupportedSystemMetrics")]
+  public static extern int IADLXPerformanceMonitoringServices_GetSupportedSystemMetrics(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_IADLXPerformanceMonitoringServices")]
+  public static extern void delete_IADLXPerformanceMonitoringServices(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DAntiLag_IID")]
+  public static extern global::System.IntPtr IADLX3DAntiLag_IID();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DAntiLag_IsSupported")]
+  public static extern int IADLX3DAntiLag_IsSupported(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DAntiLag_IsEnabled")]
+  public static extern int IADLX3DAntiLag_IsEnabled(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DAntiLag_SetEnabled")]
+  public static extern int IADLX3DAntiLag_SetEnabled(global::System.Runtime.InteropServices.HandleRef jarg1, bool jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_IADLX3DAntiLag")]
+  public static extern void delete_IADLX3DAntiLag(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DAntiLag1_IID")]
+  public static extern global::System.IntPtr IADLX3DAntiLag1_IID();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DAntiLag1_GetLevel")]
+  public static extern int IADLX3DAntiLag1_GetLevel(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DAntiLag1_SetLevel")]
+  public static extern int IADLX3DAntiLag1_SetLevel(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_IADLX3DAntiLag1")]
+  public static extern void delete_IADLX3DAntiLag1(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DChill_IID")]
+  public static extern global::System.IntPtr IADLX3DChill_IID();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DChill_IsSupported")]
+  public static extern int IADLX3DChill_IsSupported(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DChill_IsEnabled")]
+  public static extern int IADLX3DChill_IsEnabled(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DChill_GetFPSRange")]
+  public static extern int IADLX3DChill_GetFPSRange(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DChill_GetMinFPS")]
+  public static extern int IADLX3DChill_GetMinFPS(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DChill_GetMaxFPS")]
+  public static extern int IADLX3DChill_GetMaxFPS(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DChill_SetEnabled")]
+  public static extern int IADLX3DChill_SetEnabled(global::System.Runtime.InteropServices.HandleRef jarg1, bool jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DChill_SetMinFPS")]
+  public static extern int IADLX3DChill_SetMinFPS(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DChill_SetMaxFPS")]
+  public static extern int IADLX3DChill_SetMaxFPS(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_IADLX3DChill")]
+  public static extern void delete_IADLX3DChill(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DBoost_IID")]
+  public static extern global::System.IntPtr IADLX3DBoost_IID();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DBoost_IsSupported")]
+  public static extern int IADLX3DBoost_IsSupported(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DBoost_IsEnabled")]
+  public static extern int IADLX3DBoost_IsEnabled(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DBoost_GetResolutionRange")]
+  public static extern int IADLX3DBoost_GetResolutionRange(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DBoost_GetResolution")]
+  public static extern int IADLX3DBoost_GetResolution(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DBoost_SetEnabled")]
+  public static extern int IADLX3DBoost_SetEnabled(global::System.Runtime.InteropServices.HandleRef jarg1, bool jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DBoost_SetResolution")]
+  public static extern int IADLX3DBoost_SetResolution(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_IADLX3DBoost")]
+  public static extern void delete_IADLX3DBoost(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DImageSharpening_IID")]
+  public static extern global::System.IntPtr IADLX3DImageSharpening_IID();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DImageSharpening_IsSupported")]
+  public static extern int IADLX3DImageSharpening_IsSupported(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DImageSharpening_IsEnabled")]
+  public static extern int IADLX3DImageSharpening_IsEnabled(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DImageSharpening_GetSharpnessRange")]
+  public static extern int IADLX3DImageSharpening_GetSharpnessRange(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DImageSharpening_GetSharpness")]
+  public static extern int IADLX3DImageSharpening_GetSharpness(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DImageSharpening_SetEnabled")]
+  public static extern int IADLX3DImageSharpening_SetEnabled(global::System.Runtime.InteropServices.HandleRef jarg1, bool jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DImageSharpening_SetSharpness")]
+  public static extern int IADLX3DImageSharpening_SetSharpness(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_IADLX3DImageSharpening")]
+  public static extern void delete_IADLX3DImageSharpening(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DEnhancedSync_IID")]
+  public static extern global::System.IntPtr IADLX3DEnhancedSync_IID();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DEnhancedSync_IsSupported")]
+  public static extern int IADLX3DEnhancedSync_IsSupported(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DEnhancedSync_IsEnabled")]
+  public static extern int IADLX3DEnhancedSync_IsEnabled(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DEnhancedSync_SetEnabled")]
+  public static extern int IADLX3DEnhancedSync_SetEnabled(global::System.Runtime.InteropServices.HandleRef jarg1, bool jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_IADLX3DEnhancedSync")]
+  public static extern void delete_IADLX3DEnhancedSync(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DWaitForVerticalRefresh_IID")]
+  public static extern global::System.IntPtr IADLX3DWaitForVerticalRefresh_IID();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DWaitForVerticalRefresh_IsSupported")]
+  public static extern int IADLX3DWaitForVerticalRefresh_IsSupported(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DWaitForVerticalRefresh_IsEnabled")]
+  public static extern int IADLX3DWaitForVerticalRefresh_IsEnabled(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DWaitForVerticalRefresh_GetMode")]
+  public static extern int IADLX3DWaitForVerticalRefresh_GetMode(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DWaitForVerticalRefresh_SetMode")]
+  public static extern int IADLX3DWaitForVerticalRefresh_SetMode(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_IADLX3DWaitForVerticalRefresh")]
+  public static extern void delete_IADLX3DWaitForVerticalRefresh(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DFrameRateTargetControl_IID")]
+  public static extern global::System.IntPtr IADLX3DFrameRateTargetControl_IID();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DFrameRateTargetControl_IsSupported")]
+  public static extern int IADLX3DFrameRateTargetControl_IsSupported(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DFrameRateTargetControl_IsEnabled")]
+  public static extern int IADLX3DFrameRateTargetControl_IsEnabled(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DFrameRateTargetControl_GetFPSRange")]
+  public static extern int IADLX3DFrameRateTargetControl_GetFPSRange(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DFrameRateTargetControl_GetFPS")]
+  public static extern int IADLX3DFrameRateTargetControl_GetFPS(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DFrameRateTargetControl_SetEnabled")]
+  public static extern int IADLX3DFrameRateTargetControl_SetEnabled(global::System.Runtime.InteropServices.HandleRef jarg1, bool jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DFrameRateTargetControl_SetFPS")]
+  public static extern int IADLX3DFrameRateTargetControl_SetFPS(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_IADLX3DFrameRateTargetControl")]
+  public static extern void delete_IADLX3DFrameRateTargetControl(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DAntiAliasing_IID")]
+  public static extern global::System.IntPtr IADLX3DAntiAliasing_IID();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DAntiAliasing_IsSupported")]
+  public static extern int IADLX3DAntiAliasing_IsSupported(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DAntiAliasing_GetMode")]
+  public static extern int IADLX3DAntiAliasing_GetMode(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DAntiAliasing_GetLevel")]
+  public static extern int IADLX3DAntiAliasing_GetLevel(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DAntiAliasing_GetMethod")]
+  public static extern int IADLX3DAntiAliasing_GetMethod(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DAntiAliasing_SetMode")]
+  public static extern int IADLX3DAntiAliasing_SetMode(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DAntiAliasing_SetLevel")]
+  public static extern int IADLX3DAntiAliasing_SetLevel(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DAntiAliasing_SetMethod")]
+  public static extern int IADLX3DAntiAliasing_SetMethod(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_IADLX3DAntiAliasing")]
+  public static extern void delete_IADLX3DAntiAliasing(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DMorphologicalAntiAliasing_IID")]
+  public static extern global::System.IntPtr IADLX3DMorphologicalAntiAliasing_IID();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DMorphologicalAntiAliasing_IsSupported")]
+  public static extern int IADLX3DMorphologicalAntiAliasing_IsSupported(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DMorphologicalAntiAliasing_IsEnabled")]
+  public static extern int IADLX3DMorphologicalAntiAliasing_IsEnabled(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DMorphologicalAntiAliasing_SetEnabled")]
+  public static extern int IADLX3DMorphologicalAntiAliasing_SetEnabled(global::System.Runtime.InteropServices.HandleRef jarg1, bool jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_IADLX3DMorphologicalAntiAliasing")]
+  public static extern void delete_IADLX3DMorphologicalAntiAliasing(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DAnisotropicFiltering_IID")]
+  public static extern global::System.IntPtr IADLX3DAnisotropicFiltering_IID();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DAnisotropicFiltering_IsSupported")]
+  public static extern int IADLX3DAnisotropicFiltering_IsSupported(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DAnisotropicFiltering_IsEnabled")]
+  public static extern int IADLX3DAnisotropicFiltering_IsEnabled(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DAnisotropicFiltering_GetLevel")]
+  public static extern int IADLX3DAnisotropicFiltering_GetLevel(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DAnisotropicFiltering_SetEnabled")]
+  public static extern int IADLX3DAnisotropicFiltering_SetEnabled(global::System.Runtime.InteropServices.HandleRef jarg1, bool jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DAnisotropicFiltering_SetLevel")]
+  public static extern int IADLX3DAnisotropicFiltering_SetLevel(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_IADLX3DAnisotropicFiltering")]
+  public static extern void delete_IADLX3DAnisotropicFiltering(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DTessellation_IID")]
+  public static extern global::System.IntPtr IADLX3DTessellation_IID();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DTessellation_IsSupported")]
+  public static extern int IADLX3DTessellation_IsSupported(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DTessellation_GetMode")]
+  public static extern int IADLX3DTessellation_GetMode(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DTessellation_GetLevel")]
+  public static extern int IADLX3DTessellation_GetLevel(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DTessellation_SetMode")]
+  public static extern int IADLX3DTessellation_SetMode(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DTessellation_SetLevel")]
+  public static extern int IADLX3DTessellation_SetLevel(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_IADLX3DTessellation")]
+  public static extern void delete_IADLX3DTessellation(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DRadeonSuperResolution_IID")]
+  public static extern global::System.IntPtr IADLX3DRadeonSuperResolution_IID();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DRadeonSuperResolution_IsSupported")]
+  public static extern int IADLX3DRadeonSuperResolution_IsSupported(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DRadeonSuperResolution_IsEnabled")]
+  public static extern int IADLX3DRadeonSuperResolution_IsEnabled(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DRadeonSuperResolution_SetEnabled")]
+  public static extern int IADLX3DRadeonSuperResolution_SetEnabled(global::System.Runtime.InteropServices.HandleRef jarg1, bool jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DRadeonSuperResolution_GetSharpnessRange")]
+  public static extern int IADLX3DRadeonSuperResolution_GetSharpnessRange(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DRadeonSuperResolution_GetSharpness")]
+  public static extern int IADLX3DRadeonSuperResolution_GetSharpness(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DRadeonSuperResolution_SetSharpness")]
+  public static extern int IADLX3DRadeonSuperResolution_SetSharpness(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_IADLX3DRadeonSuperResolution")]
+  public static extern void delete_IADLX3DRadeonSuperResolution(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DResetShaderCache_IID")]
+  public static extern global::System.IntPtr IADLX3DResetShaderCache_IID();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DResetShaderCache_IsSupported")]
+  public static extern int IADLX3DResetShaderCache_IsSupported(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DResetShaderCache_ResetShaderCache")]
+  public static extern int IADLX3DResetShaderCache_ResetShaderCache(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_IADLX3DResetShaderCache")]
+  public static extern void delete_IADLX3DResetShaderCache(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DSettingsChangedEvent_IID")]
+  public static extern global::System.IntPtr IADLX3DSettingsChangedEvent_IID();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DSettingsChangedEvent_GetGPU")]
+  public static extern int IADLX3DSettingsChangedEvent_GetGPU(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DSettingsChangedEvent_IsAntiLagChanged")]
+  public static extern bool IADLX3DSettingsChangedEvent_IsAntiLagChanged(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DSettingsChangedEvent_IsChillChanged")]
+  public static extern bool IADLX3DSettingsChangedEvent_IsChillChanged(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DSettingsChangedEvent_IsBoostChanged")]
+  public static extern bool IADLX3DSettingsChangedEvent_IsBoostChanged(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DSettingsChangedEvent_IsImageSharpeningChanged")]
+  public static extern bool IADLX3DSettingsChangedEvent_IsImageSharpeningChanged(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DSettingsChangedEvent_IsEnhancedSyncChanged")]
+  public static extern bool IADLX3DSettingsChangedEvent_IsEnhancedSyncChanged(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DSettingsChangedEvent_IsWaitForVerticalRefreshChanged")]
+  public static extern bool IADLX3DSettingsChangedEvent_IsWaitForVerticalRefreshChanged(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DSettingsChangedEvent_IsFrameRateTargetControlChanged")]
+  public static extern bool IADLX3DSettingsChangedEvent_IsFrameRateTargetControlChanged(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DSettingsChangedEvent_IsAntiAliasingChanged")]
+  public static extern bool IADLX3DSettingsChangedEvent_IsAntiAliasingChanged(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DSettingsChangedEvent_IsMorphologicalAntiAliasingChanged")]
+  public static extern bool IADLX3DSettingsChangedEvent_IsMorphologicalAntiAliasingChanged(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DSettingsChangedEvent_IsAnisotropicFilteringChanged")]
+  public static extern bool IADLX3DSettingsChangedEvent_IsAnisotropicFilteringChanged(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DSettingsChangedEvent_IsTessellationModeChanged")]
+  public static extern bool IADLX3DSettingsChangedEvent_IsTessellationModeChanged(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DSettingsChangedEvent_IsRadeonSuperResolutionChanged")]
+  public static extern bool IADLX3DSettingsChangedEvent_IsRadeonSuperResolutionChanged(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DSettingsChangedEvent_IsResetShaderCache")]
+  public static extern bool IADLX3DSettingsChangedEvent_IsResetShaderCache(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_IADLX3DSettingsChangedEvent")]
+  public static extern void delete_IADLX3DSettingsChangedEvent(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DSettingsChangedListener_On3DSettingsChanged")]
+  public static extern bool IADLX3DSettingsChangedListener_On3DSettingsChanged(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_IADLX3DSettingsChangedListener")]
+  public static extern void delete_IADLX3DSettingsChangedListener(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DSettingsChangedHandling_IID")]
+  public static extern global::System.IntPtr IADLX3DSettingsChangedHandling_IID();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DSettingsChangedHandling_Add3DSettingsEventListener")]
+  public static extern int IADLX3DSettingsChangedHandling_Add3DSettingsEventListener(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DSettingsChangedHandling_Remove3DSettingsEventListener")]
+  public static extern int IADLX3DSettingsChangedHandling_Remove3DSettingsEventListener(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_IADLX3DSettingsChangedHandling")]
+  public static extern void delete_IADLX3DSettingsChangedHandling(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DSettingsServices_IID")]
+  public static extern global::System.IntPtr IADLX3DSettingsServices_IID();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DSettingsServices_GetAntiLag")]
+  public static extern int IADLX3DSettingsServices_GetAntiLag(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2, global::System.Runtime.InteropServices.HandleRef jarg3);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DSettingsServices_GetChill")]
+  public static extern int IADLX3DSettingsServices_GetChill(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2, global::System.Runtime.InteropServices.HandleRef jarg3);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DSettingsServices_GetBoost")]
+  public static extern int IADLX3DSettingsServices_GetBoost(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2, global::System.Runtime.InteropServices.HandleRef jarg3);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DSettingsServices_GetImageSharpening")]
+  public static extern int IADLX3DSettingsServices_GetImageSharpening(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2, global::System.Runtime.InteropServices.HandleRef jarg3);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DSettingsServices_GetEnhancedSync")]
+  public static extern int IADLX3DSettingsServices_GetEnhancedSync(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2, global::System.Runtime.InteropServices.HandleRef jarg3);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DSettingsServices_GetWaitForVerticalRefresh")]
+  public static extern int IADLX3DSettingsServices_GetWaitForVerticalRefresh(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2, global::System.Runtime.InteropServices.HandleRef jarg3);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DSettingsServices_GetFrameRateTargetControl")]
+  public static extern int IADLX3DSettingsServices_GetFrameRateTargetControl(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2, global::System.Runtime.InteropServices.HandleRef jarg3);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DSettingsServices_GetAntiAliasing")]
+  public static extern int IADLX3DSettingsServices_GetAntiAliasing(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2, global::System.Runtime.InteropServices.HandleRef jarg3);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DSettingsServices_GetMorphologicalAntiAliasing")]
+  public static extern int IADLX3DSettingsServices_GetMorphologicalAntiAliasing(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2, global::System.Runtime.InteropServices.HandleRef jarg3);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DSettingsServices_GetAnisotropicFiltering")]
+  public static extern int IADLX3DSettingsServices_GetAnisotropicFiltering(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2, global::System.Runtime.InteropServices.HandleRef jarg3);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DSettingsServices_GetTessellation")]
+  public static extern int IADLX3DSettingsServices_GetTessellation(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2, global::System.Runtime.InteropServices.HandleRef jarg3);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DSettingsServices_GetRadeonSuperResolution")]
+  public static extern int IADLX3DSettingsServices_GetRadeonSuperResolution(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DSettingsServices_GetResetShaderCache")]
+  public static extern int IADLX3DSettingsServices_GetResetShaderCache(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2, global::System.Runtime.InteropServices.HandleRef jarg3);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DSettingsServices_Get3DSettingsChangedHandling")]
+  public static extern int IADLX3DSettingsServices_Get3DSettingsChangedHandling(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_IADLX3DSettingsServices")]
+  public static extern void delete_IADLX3DSettingsServices(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_RGB_gamutR_set")]
+  public static extern void ADLX_RGB_gamutR_set(global::System.Runtime.InteropServices.HandleRef jarg1, double jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_RGB_gamutR_get")]
+  public static extern double ADLX_RGB_gamutR_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_RGB_gamutG_set")]
+  public static extern void ADLX_RGB_gamutG_set(global::System.Runtime.InteropServices.HandleRef jarg1, double jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_RGB_gamutG_get")]
+  public static extern double ADLX_RGB_gamutG_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_RGB_gamutB_set")]
+  public static extern void ADLX_RGB_gamutB_set(global::System.Runtime.InteropServices.HandleRef jarg1, double jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_RGB_gamutB_get")]
+  public static extern double ADLX_RGB_gamutB_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_new_ADLX_RGB")]
+  public static extern global::System.IntPtr new_ADLX_RGB();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_ADLX_RGB")]
+  public static extern void delete_ADLX_RGB(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_Point_x_set")]
+  public static extern void ADLX_Point_x_set(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_Point_x_get")]
+  public static extern int ADLX_Point_x_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_Point_y_set")]
+  public static extern void ADLX_Point_y_set(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_Point_y_get")]
+  public static extern int ADLX_Point_y_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_new_ADLX_Point")]
+  public static extern global::System.IntPtr new_ADLX_Point();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_ADLX_Point")]
+  public static extern void delete_ADLX_Point(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_GamutColorSpace_red_set")]
+  public static extern void ADLX_GamutColorSpace_red_set(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_GamutColorSpace_red_get")]
+  public static extern global::System.IntPtr ADLX_GamutColorSpace_red_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_GamutColorSpace_green_set")]
+  public static extern void ADLX_GamutColorSpace_green_set(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_GamutColorSpace_green_get")]
+  public static extern global::System.IntPtr ADLX_GamutColorSpace_green_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_GamutColorSpace_blue_set")]
+  public static extern void ADLX_GamutColorSpace_blue_set(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_GamutColorSpace_blue_get")]
+  public static extern global::System.IntPtr ADLX_GamutColorSpace_blue_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_new_ADLX_GamutColorSpace")]
+  public static extern global::System.IntPtr new_ADLX_GamutColorSpace();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_ADLX_GamutColorSpace")]
+  public static extern void delete_ADLX_GamutColorSpace(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_GammaRamp_gamma_set")]
+  public static extern void ADLX_GammaRamp_gamma_set(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_GammaRamp_gamma_get")]
+  public static extern global::System.IntPtr ADLX_GammaRamp_gamma_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_new_ADLX_GammaRamp")]
+  public static extern global::System.IntPtr new_ADLX_GammaRamp();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_ADLX_GammaRamp")]
+  public static extern void delete_ADLX_GammaRamp(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_RegammaCoeff_coefficientA0_set")]
+  public static extern void ADLX_RegammaCoeff_coefficientA0_set(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_RegammaCoeff_coefficientA0_get")]
+  public static extern int ADLX_RegammaCoeff_coefficientA0_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_RegammaCoeff_coefficientA1_set")]
+  public static extern void ADLX_RegammaCoeff_coefficientA1_set(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_RegammaCoeff_coefficientA1_get")]
+  public static extern int ADLX_RegammaCoeff_coefficientA1_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_RegammaCoeff_coefficientA2_set")]
+  public static extern void ADLX_RegammaCoeff_coefficientA2_set(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_RegammaCoeff_coefficientA2_get")]
+  public static extern int ADLX_RegammaCoeff_coefficientA2_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_RegammaCoeff_coefficientA3_set")]
+  public static extern void ADLX_RegammaCoeff_coefficientA3_set(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_RegammaCoeff_coefficientA3_get")]
+  public static extern int ADLX_RegammaCoeff_coefficientA3_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_RegammaCoeff_gamma_set")]
+  public static extern void ADLX_RegammaCoeff_gamma_set(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_RegammaCoeff_gamma_get")]
+  public static extern int ADLX_RegammaCoeff_gamma_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_new_ADLX_RegammaCoeff")]
+  public static extern global::System.IntPtr new_ADLX_RegammaCoeff();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_ADLX_RegammaCoeff")]
+  public static extern void delete_ADLX_RegammaCoeff(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_TimingInfo_timingFlags_set")]
+  public static extern void ADLX_TimingInfo_timingFlags_set(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_TimingInfo_timingFlags_get")]
+  public static extern int ADLX_TimingInfo_timingFlags_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_TimingInfo_hTotal_set")]
+  public static extern void ADLX_TimingInfo_hTotal_set(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_TimingInfo_hTotal_get")]
+  public static extern int ADLX_TimingInfo_hTotal_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_TimingInfo_vTotal_set")]
+  public static extern void ADLX_TimingInfo_vTotal_set(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_TimingInfo_vTotal_get")]
+  public static extern int ADLX_TimingInfo_vTotal_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_TimingInfo_hDisplay_set")]
+  public static extern void ADLX_TimingInfo_hDisplay_set(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_TimingInfo_hDisplay_get")]
+  public static extern int ADLX_TimingInfo_hDisplay_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_TimingInfo_vDisplay_set")]
+  public static extern void ADLX_TimingInfo_vDisplay_set(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_TimingInfo_vDisplay_get")]
+  public static extern int ADLX_TimingInfo_vDisplay_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_TimingInfo_hFrontPorch_set")]
+  public static extern void ADLX_TimingInfo_hFrontPorch_set(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_TimingInfo_hFrontPorch_get")]
+  public static extern int ADLX_TimingInfo_hFrontPorch_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_TimingInfo_vFrontPorch_set")]
+  public static extern void ADLX_TimingInfo_vFrontPorch_set(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_TimingInfo_vFrontPorch_get")]
+  public static extern int ADLX_TimingInfo_vFrontPorch_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_TimingInfo_hSyncWidth_set")]
+  public static extern void ADLX_TimingInfo_hSyncWidth_set(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_TimingInfo_hSyncWidth_get")]
+  public static extern int ADLX_TimingInfo_hSyncWidth_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_TimingInfo_vSyncWidth_set")]
+  public static extern void ADLX_TimingInfo_vSyncWidth_set(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_TimingInfo_vSyncWidth_get")]
+  public static extern int ADLX_TimingInfo_vSyncWidth_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_TimingInfo_hPolarity_set")]
+  public static extern void ADLX_TimingInfo_hPolarity_set(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_TimingInfo_hPolarity_get")]
+  public static extern int ADLX_TimingInfo_hPolarity_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_TimingInfo_vPolarity_set")]
+  public static extern void ADLX_TimingInfo_vPolarity_set(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_TimingInfo_vPolarity_get")]
+  public static extern int ADLX_TimingInfo_vPolarity_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_new_ADLX_TimingInfo")]
+  public static extern global::System.IntPtr new_ADLX_TimingInfo();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_ADLX_TimingInfo")]
+  public static extern void delete_ADLX_TimingInfo(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_CustomResolution_resWidth_set")]
+  public static extern void ADLX_CustomResolution_resWidth_set(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_CustomResolution_resWidth_get")]
+  public static extern int ADLX_CustomResolution_resWidth_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_CustomResolution_resHeight_set")]
+  public static extern void ADLX_CustomResolution_resHeight_set(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_CustomResolution_resHeight_get")]
+  public static extern int ADLX_CustomResolution_resHeight_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_CustomResolution_refreshRate_set")]
+  public static extern void ADLX_CustomResolution_refreshRate_set(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_CustomResolution_refreshRate_get")]
+  public static extern int ADLX_CustomResolution_refreshRate_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_CustomResolution_presentation_set")]
+  public static extern void ADLX_CustomResolution_presentation_set(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_CustomResolution_presentation_get")]
+  public static extern int ADLX_CustomResolution_presentation_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_CustomResolution_timingStandard_set")]
+  public static extern void ADLX_CustomResolution_timingStandard_set(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_CustomResolution_timingStandard_get")]
+  public static extern int ADLX_CustomResolution_timingStandard_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_CustomResolution_GPixelClock_set")]
+  public static extern void ADLX_CustomResolution_GPixelClock_set(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_CustomResolution_GPixelClock_get")]
+  public static extern int ADLX_CustomResolution_GPixelClock_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_CustomResolution_detailedTiming_set")]
+  public static extern void ADLX_CustomResolution_detailedTiming_set(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_CustomResolution_detailedTiming_get")]
+  public static extern global::System.IntPtr ADLX_CustomResolution_detailedTiming_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_new_ADLX_CustomResolution")]
+  public static extern global::System.IntPtr new_ADLX_CustomResolution();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_ADLX_CustomResolution")]
+  public static extern void delete_ADLX_CustomResolution(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_IntRange_minValue_set")]
+  public static extern void ADLX_IntRange_minValue_set(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_IntRange_minValue_get")]
+  public static extern int ADLX_IntRange_minValue_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_IntRange_maxValue_set")]
+  public static extern void ADLX_IntRange_maxValue_set(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_IntRange_maxValue_get")]
+  public static extern int ADLX_IntRange_maxValue_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_IntRange_step_set")]
+  public static extern void ADLX_IntRange_step_set(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_IntRange_step_get")]
+  public static extern int ADLX_IntRange_step_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_new_ADLX_IntRange")]
+  public static extern global::System.IntPtr new_ADLX_IntRange();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_ADLX_IntRange")]
+  public static extern void delete_ADLX_IntRange(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_UINT16_RGB_red_set")]
+  public static extern void ADLX_UINT16_RGB_red_set(global::System.Runtime.InteropServices.HandleRef jarg1, ushort jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_UINT16_RGB_red_get")]
+  public static extern ushort ADLX_UINT16_RGB_red_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_UINT16_RGB_green_set")]
+  public static extern void ADLX_UINT16_RGB_green_set(global::System.Runtime.InteropServices.HandleRef jarg1, ushort jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_UINT16_RGB_green_get")]
+  public static extern ushort ADLX_UINT16_RGB_green_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_UINT16_RGB_blue_set")]
+  public static extern void ADLX_UINT16_RGB_blue_set(global::System.Runtime.InteropServices.HandleRef jarg1, ushort jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_UINT16_RGB_blue_get")]
+  public static extern ushort ADLX_UINT16_RGB_blue_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_new_ADLX_UINT16_RGB")]
+  public static extern global::System.IntPtr new_ADLX_UINT16_RGB();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_ADLX_UINT16_RGB")]
+  public static extern void delete_ADLX_UINT16_RGB(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_3DLUT_Data_data_set")]
+  public static extern void ADLX_3DLUT_Data_data_set(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_3DLUT_Data_data_get")]
+  public static extern global::System.IntPtr ADLX_3DLUT_Data_data_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_new_ADLX_3DLUT_Data")]
+  public static extern global::System.IntPtr new_ADLX_3DLUT_Data();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_ADLX_3DLUT_Data")]
+  public static extern void delete_ADLX_3DLUT_Data(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_LUID_lowPart_set")]
+  public static extern void ADLX_LUID_lowPart_set(global::System.Runtime.InteropServices.HandleRef jarg1, uint jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_LUID_lowPart_get")]
+  public static extern uint ADLX_LUID_lowPart_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_LUID_highPart_set")]
+  public static extern void ADLX_LUID_highPart_set(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_ADLX_LUID_highPart_get")]
+  public static extern int ADLX_LUID_highPart_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_new_ADLX_LUID")]
+  public static extern global::System.IntPtr new_ADLX_LUID();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_ADLX_LUID")]
+  public static extern void delete_ADLX_LUID(global::System.Runtime.InteropServices.HandleRef jarg1);
+
   [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXGPU_IID")]
   public static extern global::System.IntPtr IADLXGPU_IID();
 
@@ -818,6 +1838,36 @@ class ADLXPINVOKE {
   [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_uintP_value")]
   public static extern uint uintP_value(global::System.Runtime.InteropServices.HandleRef jarg1);
 
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_new_boolP")]
+  public static extern global::System.IntPtr new_boolP();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_copy_boolP")]
+  public static extern global::System.IntPtr copy_boolP(bool jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_boolP")]
+  public static extern void delete_boolP(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_boolP_assign")]
+  public static extern void boolP_assign(global::System.Runtime.InteropServices.HandleRef jarg1, bool jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_boolP_value")]
+  public static extern bool boolP_value(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_new_int64P")]
+  public static extern global::System.IntPtr new_int64P();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_copy_int64P")]
+  public static extern global::System.IntPtr copy_int64P(long jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_int64P")]
+  public static extern void delete_int64P(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_int64P_assign")]
+  public static extern void int64P_assign(global::System.Runtime.InteropServices.HandleRef jarg1, long jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_int64P_value")]
+  public static extern long int64P_value(global::System.Runtime.InteropServices.HandleRef jarg1);
+
   [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_new_displayTypeP")]
   public static extern global::System.IntPtr new_displayTypeP();
 
@@ -862,6 +1912,81 @@ class ADLXPINVOKE {
 
   [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_disScanTypeP_value")]
   public static extern int disScanTypeP_value(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_new_intRangeP")]
+  public static extern global::System.IntPtr new_intRangeP();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_copy_intRangeP")]
+  public static extern global::System.IntPtr copy_intRangeP(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_intRangeP")]
+  public static extern void delete_intRangeP(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_intRangeP_assign")]
+  public static extern void intRangeP_assign(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_intRangeP_value")]
+  public static extern global::System.IntPtr intRangeP_value(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_new_anisotropicFilteringLevelP")]
+  public static extern global::System.IntPtr new_anisotropicFilteringLevelP();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_copy_anisotropicFilteringLevelP")]
+  public static extern global::System.IntPtr copy_anisotropicFilteringLevelP(int jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_anisotropicFilteringLevelP")]
+  public static extern void delete_anisotropicFilteringLevelP(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_anisotropicFilteringLevelP_assign")]
+  public static extern void anisotropicFilteringLevelP_assign(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_anisotropicFilteringLevelP_value")]
+  public static extern int anisotropicFilteringLevelP_value(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_new_antiAliasingLevelP")]
+  public static extern global::System.IntPtr new_antiAliasingLevelP();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_copy_antiAliasingLevelP")]
+  public static extern global::System.IntPtr copy_antiAliasingLevelP(int jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_antiAliasingLevelP")]
+  public static extern void delete_antiAliasingLevelP(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_antiAliasingLevelP_assign")]
+  public static extern void antiAliasingLevelP_assign(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_antiAliasingLevelP_value")]
+  public static extern int antiAliasingLevelP_value(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_new_antiAliasingModeP")]
+  public static extern global::System.IntPtr new_antiAliasingModeP();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_copy_antiAliasingModeP")]
+  public static extern global::System.IntPtr copy_antiAliasingModeP(int jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_antiAliasingModeP")]
+  public static extern void delete_antiAliasingModeP(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_antiAliasingModeP_assign")]
+  public static extern void antiAliasingModeP_assign(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_antiAliasingModeP_value")]
+  public static extern int antiAliasingModeP_value(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_new_antiAliasingMethodP")]
+  public static extern global::System.IntPtr new_antiAliasingMethodP();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_copy_antiAliasingMethodP")]
+  public static extern global::System.IntPtr copy_antiAliasingMethodP(int jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_antiAliasingMethodP")]
+  public static extern void delete_antiAliasingMethodP(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_antiAliasingMethodP_assign")]
+  public static extern void antiAliasingMethodP_assign(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_antiAliasingMethodP_value")]
+  public static extern int antiAliasingMethodP_value(global::System.Runtime.InteropServices.HandleRef jarg1);
 
   [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_new_adlx_sizeP")]
   public static extern global::System.IntPtr new_adlx_sizeP();
@@ -938,6 +2063,231 @@ class ADLXPINVOKE {
   [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_displayChangeHandlP_Ptr_value")]
   public static extern global::System.IntPtr displayChangeHandlP_Ptr_value(global::System.Runtime.InteropServices.HandleRef jarg1);
 
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_new_performanceMonitoringSerP_Ptr")]
+  public static extern global::System.IntPtr new_performanceMonitoringSerP_Ptr();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_copy_performanceMonitoringSerP_Ptr")]
+  public static extern global::System.IntPtr copy_performanceMonitoringSerP_Ptr(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_performanceMonitoringSerP_Ptr")]
+  public static extern void delete_performanceMonitoringSerP_Ptr(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_performanceMonitoringSerP_Ptr_assign")]
+  public static extern void performanceMonitoringSerP_Ptr_assign(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_performanceMonitoringSerP_Ptr_value")]
+  public static extern global::System.IntPtr performanceMonitoringSerP_Ptr_value(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_new_systemMetricsSupportP_Ptr")]
+  public static extern global::System.IntPtr new_systemMetricsSupportP_Ptr();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_copy_systemMetricsSupportP_Ptr")]
+  public static extern global::System.IntPtr copy_systemMetricsSupportP_Ptr(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_systemMetricsSupportP_Ptr")]
+  public static extern void delete_systemMetricsSupportP_Ptr(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_systemMetricsSupportP_Ptr_assign")]
+  public static extern void systemMetricsSupportP_Ptr_assign(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_systemMetricsSupportP_Ptr_value")]
+  public static extern global::System.IntPtr systemMetricsSupportP_Ptr_value(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_new_allMetricsListP_Ptr")]
+  public static extern global::System.IntPtr new_allMetricsListP_Ptr();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_copy_allMetricsListP_Ptr")]
+  public static extern global::System.IntPtr copy_allMetricsListP_Ptr(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_allMetricsListP_Ptr")]
+  public static extern void delete_allMetricsListP_Ptr(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_allMetricsListP_Ptr_assign")]
+  public static extern void allMetricsListP_Ptr_assign(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_allMetricsListP_Ptr_value")]
+  public static extern global::System.IntPtr allMetricsListP_Ptr_value(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_new_allMetricsP_Ptr")]
+  public static extern global::System.IntPtr new_allMetricsP_Ptr();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_copy_allMetricsP_Ptr")]
+  public static extern global::System.IntPtr copy_allMetricsP_Ptr(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_allMetricsP_Ptr")]
+  public static extern void delete_allMetricsP_Ptr(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_allMetricsP_Ptr_assign")]
+  public static extern void allMetricsP_Ptr_assign(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_allMetricsP_Ptr_value")]
+  public static extern global::System.IntPtr allMetricsP_Ptr_value(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_new_fpsP_Ptr")]
+  public static extern global::System.IntPtr new_fpsP_Ptr();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_copy_fpsP_Ptr")]
+  public static extern global::System.IntPtr copy_fpsP_Ptr(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_fpsP_Ptr")]
+  public static extern void delete_fpsP_Ptr(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_fpsP_Ptr_assign")]
+  public static extern void fpsP_Ptr_assign(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_fpsP_Ptr_value")]
+  public static extern global::System.IntPtr fpsP_Ptr_value(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_new_systemMetricsP_Ptr")]
+  public static extern global::System.IntPtr new_systemMetricsP_Ptr();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_copy_systemMetricsP_Ptr")]
+  public static extern global::System.IntPtr copy_systemMetricsP_Ptr(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_systemMetricsP_Ptr")]
+  public static extern void delete_systemMetricsP_Ptr(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_systemMetricsP_Ptr_assign")]
+  public static extern void systemMetricsP_Ptr_assign(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_systemMetricsP_Ptr_value")]
+  public static extern global::System.IntPtr systemMetricsP_Ptr_value(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_new_gpuListP_Ptr")]
+  public static extern global::System.IntPtr new_gpuListP_Ptr();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_copy_gpuListP_Ptr")]
+  public static extern global::System.IntPtr copy_gpuListP_Ptr(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_gpuListP_Ptr")]
+  public static extern void delete_gpuListP_Ptr(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_gpuListP_Ptr_assign")]
+  public static extern void gpuListP_Ptr_assign(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_gpuListP_Ptr_value")]
+  public static extern global::System.IntPtr gpuListP_Ptr_value(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_new_gpuP_Ptr")]
+  public static extern global::System.IntPtr new_gpuP_Ptr();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_copy_gpuP_Ptr")]
+  public static extern global::System.IntPtr copy_gpuP_Ptr(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_gpuP_Ptr")]
+  public static extern void delete_gpuP_Ptr(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_gpuP_Ptr_assign")]
+  public static extern void gpuP_Ptr_assign(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_gpuP_Ptr_value")]
+  public static extern global::System.IntPtr gpuP_Ptr_value(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_new_gpuMetricsP_Ptr")]
+  public static extern global::System.IntPtr new_gpuMetricsP_Ptr();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_copy_gpuMetricsP_Ptr")]
+  public static extern global::System.IntPtr copy_gpuMetricsP_Ptr(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_gpuMetricsP_Ptr")]
+  public static extern void delete_gpuMetricsP_Ptr(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_gpuMetricsP_Ptr_assign")]
+  public static extern void gpuMetricsP_Ptr_assign(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_gpuMetricsP_Ptr_value")]
+  public static extern global::System.IntPtr gpuMetricsP_Ptr_value(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_new_fpsListP_Ptr")]
+  public static extern global::System.IntPtr new_fpsListP_Ptr();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_copy_fpsListP_Ptr")]
+  public static extern global::System.IntPtr copy_fpsListP_Ptr(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_fpsListP_Ptr")]
+  public static extern void delete_fpsListP_Ptr(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_fpsListP_Ptr_assign")]
+  public static extern void fpsListP_Ptr_assign(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_fpsListP_Ptr_value")]
+  public static extern global::System.IntPtr fpsListP_Ptr_value(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_new_gpuMetricsListP_Ptr")]
+  public static extern global::System.IntPtr new_gpuMetricsListP_Ptr();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_copy_gpuMetricsListP_Ptr")]
+  public static extern global::System.IntPtr copy_gpuMetricsListP_Ptr(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_gpuMetricsListP_Ptr")]
+  public static extern void delete_gpuMetricsListP_Ptr(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_gpuMetricsListP_Ptr_assign")]
+  public static extern void gpuMetricsListP_Ptr_assign(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_gpuMetricsListP_Ptr_value")]
+  public static extern global::System.IntPtr gpuMetricsListP_Ptr_value(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_new_threeDSettingsSerP_Ptr")]
+  public static extern global::System.IntPtr new_threeDSettingsSerP_Ptr();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_copy_threeDSettingsSerP_Ptr")]
+  public static extern global::System.IntPtr copy_threeDSettingsSerP_Ptr(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_threeDSettingsSerP_Ptr")]
+  public static extern void delete_threeDSettingsSerP_Ptr(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_threeDSettingsSerP_Ptr_assign")]
+  public static extern void threeDSettingsSerP_Ptr_assign(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_threeDSettingsSerP_Ptr_value")]
+  public static extern global::System.IntPtr threeDSettingsSerP_Ptr_value(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_new_threeDSettingsChangedHandlingP_Ptr")]
+  public static extern global::System.IntPtr new_threeDSettingsChangedHandlingP_Ptr();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_copy_threeDSettingsChangedHandlingP_Ptr")]
+  public static extern global::System.IntPtr copy_threeDSettingsChangedHandlingP_Ptr(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_threeDSettingsChangedHandlingP_Ptr")]
+  public static extern void delete_threeDSettingsChangedHandlingP_Ptr(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_threeDSettingsChangedHandlingP_Ptr_assign")]
+  public static extern void threeDSettingsChangedHandlingP_Ptr_assign(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_threeDSettingsChangedHandlingP_Ptr_value")]
+  public static extern global::System.IntPtr threeDSettingsChangedHandlingP_Ptr_value(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_new_threeDAnisotropicFilteringP_Ptr")]
+  public static extern global::System.IntPtr new_threeDAnisotropicFilteringP_Ptr();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_copy_threeDAnisotropicFilteringP_Ptr")]
+  public static extern global::System.IntPtr copy_threeDAnisotropicFilteringP_Ptr(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_threeDAnisotropicFilteringP_Ptr")]
+  public static extern void delete_threeDAnisotropicFilteringP_Ptr(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_threeDAnisotropicFilteringP_Ptr_assign")]
+  public static extern void threeDAnisotropicFilteringP_Ptr_assign(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_threeDAnisotropicFilteringP_Ptr_value")]
+  public static extern global::System.IntPtr threeDAnisotropicFilteringP_Ptr_value(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_new_threeDAntiAliasingP_Ptr")]
+  public static extern global::System.IntPtr new_threeDAntiAliasingP_Ptr();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_copy_threeDAntiAliasingP_Ptr")]
+  public static extern global::System.IntPtr copy_threeDAntiAliasingP_Ptr(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_threeDAntiAliasingP_Ptr")]
+  public static extern void delete_threeDAntiAliasingP_Ptr(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_threeDAntiAliasingP_Ptr_assign")]
+  public static extern void threeDAntiAliasingP_Ptr_assign(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_threeDAntiAliasingP_Ptr_value")]
+  public static extern global::System.IntPtr threeDAntiAliasingP_Ptr_value(global::System.Runtime.InteropServices.HandleRef jarg1);
+
   [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_new_charP_Ptr")]
   public static extern global::System.IntPtr new_charP_Ptr();
 
@@ -967,6 +2317,87 @@ class ADLXPINVOKE {
 
   [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXDisplayServices_SWIGUpcast")]
   public static extern global::System.IntPtr IADLXDisplayServices_SWIGUpcast(global::System.IntPtr jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXGPUMetricsSupport_SWIGUpcast")]
+  public static extern global::System.IntPtr IADLXGPUMetricsSupport_SWIGUpcast(global::System.IntPtr jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXSystemMetricsSupport_SWIGUpcast")]
+  public static extern global::System.IntPtr IADLXSystemMetricsSupport_SWIGUpcast(global::System.IntPtr jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXGPUMetrics_SWIGUpcast")]
+  public static extern global::System.IntPtr IADLXGPUMetrics_SWIGUpcast(global::System.IntPtr jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXGPUMetricsList_SWIGUpcast")]
+  public static extern global::System.IntPtr IADLXGPUMetricsList_SWIGUpcast(global::System.IntPtr jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXSystemMetrics_SWIGUpcast")]
+  public static extern global::System.IntPtr IADLXSystemMetrics_SWIGUpcast(global::System.IntPtr jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXSystemMetricsList_SWIGUpcast")]
+  public static extern global::System.IntPtr IADLXSystemMetricsList_SWIGUpcast(global::System.IntPtr jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXFPS_SWIGUpcast")]
+  public static extern global::System.IntPtr IADLXFPS_SWIGUpcast(global::System.IntPtr jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXFPSList_SWIGUpcast")]
+  public static extern global::System.IntPtr IADLXFPSList_SWIGUpcast(global::System.IntPtr jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXAllMetrics_SWIGUpcast")]
+  public static extern global::System.IntPtr IADLXAllMetrics_SWIGUpcast(global::System.IntPtr jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXAllMetricsList_SWIGUpcast")]
+  public static extern global::System.IntPtr IADLXAllMetricsList_SWIGUpcast(global::System.IntPtr jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXPerformanceMonitoringServices_SWIGUpcast")]
+  public static extern global::System.IntPtr IADLXPerformanceMonitoringServices_SWIGUpcast(global::System.IntPtr jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DAntiLag_SWIGUpcast")]
+  public static extern global::System.IntPtr IADLX3DAntiLag_SWIGUpcast(global::System.IntPtr jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DAntiLag1_SWIGUpcast")]
+  public static extern global::System.IntPtr IADLX3DAntiLag1_SWIGUpcast(global::System.IntPtr jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DChill_SWIGUpcast")]
+  public static extern global::System.IntPtr IADLX3DChill_SWIGUpcast(global::System.IntPtr jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DBoost_SWIGUpcast")]
+  public static extern global::System.IntPtr IADLX3DBoost_SWIGUpcast(global::System.IntPtr jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DImageSharpening_SWIGUpcast")]
+  public static extern global::System.IntPtr IADLX3DImageSharpening_SWIGUpcast(global::System.IntPtr jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DEnhancedSync_SWIGUpcast")]
+  public static extern global::System.IntPtr IADLX3DEnhancedSync_SWIGUpcast(global::System.IntPtr jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DWaitForVerticalRefresh_SWIGUpcast")]
+  public static extern global::System.IntPtr IADLX3DWaitForVerticalRefresh_SWIGUpcast(global::System.IntPtr jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DFrameRateTargetControl_SWIGUpcast")]
+  public static extern global::System.IntPtr IADLX3DFrameRateTargetControl_SWIGUpcast(global::System.IntPtr jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DAntiAliasing_SWIGUpcast")]
+  public static extern global::System.IntPtr IADLX3DAntiAliasing_SWIGUpcast(global::System.IntPtr jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DMorphologicalAntiAliasing_SWIGUpcast")]
+  public static extern global::System.IntPtr IADLX3DMorphologicalAntiAliasing_SWIGUpcast(global::System.IntPtr jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DAnisotropicFiltering_SWIGUpcast")]
+  public static extern global::System.IntPtr IADLX3DAnisotropicFiltering_SWIGUpcast(global::System.IntPtr jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DTessellation_SWIGUpcast")]
+  public static extern global::System.IntPtr IADLX3DTessellation_SWIGUpcast(global::System.IntPtr jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DRadeonSuperResolution_SWIGUpcast")]
+  public static extern global::System.IntPtr IADLX3DRadeonSuperResolution_SWIGUpcast(global::System.IntPtr jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DResetShaderCache_SWIGUpcast")]
+  public static extern global::System.IntPtr IADLX3DResetShaderCache_SWIGUpcast(global::System.IntPtr jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DSettingsChangedHandling_SWIGUpcast")]
+  public static extern global::System.IntPtr IADLX3DSettingsChangedHandling_SWIGUpcast(global::System.IntPtr jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLX3DSettingsServices_SWIGUpcast")]
+  public static extern global::System.IntPtr IADLX3DSettingsServices_SWIGUpcast(global::System.IntPtr jarg1);
 
   [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_IADLXGPU_SWIGUpcast")]
   public static extern global::System.IntPtr IADLXGPU_SWIGUpcast(global::System.IntPtr jarg1);
