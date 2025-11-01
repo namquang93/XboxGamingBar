@@ -47,8 +47,6 @@ namespace Shared.Utilities
 
         public static bool ToXMLFile<T>(T obj, string path)
         {
-            Logger.Info($"Saving {obj.GetType().Name} to {path}");
-
             var directoryName = Path.GetDirectoryName(path);
             if (!string.IsNullOrEmpty(directoryName) && !Directory.Exists(directoryName))
             {
@@ -65,20 +63,11 @@ namespace Shared.Utilities
             }
 
             var serializer = new XmlSerializer(typeof(T));
-            try
+            using (var writer = new StreamWriter(path))
             {
-                using (var writer = new StreamWriter(path))
-                {
-                    serializer.Serialize(writer, obj);
-                }
-                Logger.Info($"Saved {typeof(T).Name} to {path}.");
+                serializer.Serialize(writer, obj);
             }
-            catch (Exception ex)
-            {
-                Logger.Error($"Got exception {ex} while saving {obj.GetType().Name} to {path}");
-                return false;
-            }
-
+            
             return true;
         }
 
