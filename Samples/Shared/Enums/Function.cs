@@ -13,6 +13,6 @@
         CPUClockMax,
         RefreshRates,
         RefreshRate,
-        //PossibleRunningGame,
+        TrackedGame,
     }
 }

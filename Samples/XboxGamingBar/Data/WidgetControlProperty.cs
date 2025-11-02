@@ -6,7 +6,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace XboxGamingBar.Data
 {
-    internal class WidgetControlProperty<ValueType, UIType> : WidgetProperty<ValueType, UIType> where UIType : Control
+    internal class WidgetControlProperty<ValueType, UIType> : WidgetUIProperty<ValueType, UIType> where UIType : Control
     {
         public WidgetControlProperty(ValueType inValue, Function inFunction, UIType inUI, Page inOwner) : base(inValue, inFunction, inUI, inOwner)
         {

@@ -94,6 +94,7 @@
     <Compile Include="Data\RefreshRateProperty.cs" />
     <Compile Include="Data\RefreshRatesProperty.cs" />
     <Compile Include="Data\RunningGameProperty.cs" />
+    <Compile Include="Data\TrackedGameProperty.cs" />
     <Compile Include="Data\WidgetSliderProperty.cs" />
     <Compile Include="Data\TDPProperty.cs" />
     <Compile Include="Data\WidgetControlProperty.cs" />
@@ -107,6 +108,7 @@
     <Compile Include="Converter\MegahertzStringConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Converter\WattStringConverter.cs" />
+    <Compile Include="WidgetUIProperty.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
