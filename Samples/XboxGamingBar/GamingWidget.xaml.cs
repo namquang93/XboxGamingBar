@@ -1,6 +1,7 @@
 ﻿using Microsoft.Gaming.XboxGameBar;
 using NLog;
 using Shared.Data;
+using Shared.Utilities;
 using System;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
@@ -140,7 +141,7 @@ namespace XboxGamingBar
                 if (target.IsGame)
                 {
                     Logger.Info($"Tracked game DisplayName={target.DisplayName} AumId={target.AumId} TitleId={target.TitleId} IsFullscreen={target.IsFullscreen}");
-                    trackedGame.SetValue(new TrackedGame(target.AumId, target.DisplayName, target.TitleId, target.IsFullscreen));
+                    trackedGame.SetValue(new TrackedGame(target.AumId, target.DisplayName, StringHelper.CleanStringForSerialization(target.TitleId), target.IsFullscreen));
                 }
                 else
                 {
