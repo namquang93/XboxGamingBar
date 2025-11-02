@@ -6,7 +6,7 @@ namespace XboxGamingBarHelper.Systems
 {
     internal class RunningGameProperty : HelperProperty<RunningGame, SystemManager>
     {
-        public RunningGameProperty(RunningGame inValue, SystemManager inManager) : base(inValue, null, Function.CurrentGame, inManager)
+        public RunningGameProperty(RunningGame inValue, SystemManager inManager) : base(inValue, null, Function.RunningGame, inManager)
         {
         }
 

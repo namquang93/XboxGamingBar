@@ -50,7 +50,7 @@ namespace XboxGamingBar
             InitializeComponent();
             tdp = new TDPProperty(4, TDPSlider, this);
             osd = new OSDProperty(0, PerformanceOverlaySlider, this);
-            runningGame = new RunningGameProperty(CurrentGameText, PerGameProfileToggle, this);
+            runningGame = new RunningGameProperty(RunningGameText, PerGameProfileToggle, this);
             perGameProfile = new PerGameProfileProperty(PerGameProfileToggle, this);
             cpuBoost = new CPUBoostProperty(CPUBoostToggle, this);
             cpuEPP = new CPUEPPProperty(80, CPUEPPSlider, this);
