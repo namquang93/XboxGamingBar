@@ -178,12 +178,23 @@ namespace XboxGamingBar
 
                     if (appTargetTracker.Setting == XboxGameBarAppTargetSetting.Enabled)
                     {
-                        Logger.Info("Create new app target tracker to track current game.");
+                        Logger.Info("Created new app target tracker to track current game.");
+                        var initialTarget = appTargetTracker.GetTarget();
+                        if (initialTarget.IsGame)
+                        {
+                            Logger.Info($"Initial tracked game DisplayName={initialTarget.DisplayName} AumId={initialTarget.AumId} TitleId={initialTarget.TitleId} IsFullscreen={initialTarget.IsFullscreen}");
+                            trackedGame.SetValue(new TrackedGame(initialTarget.AumId, initialTarget.DisplayName, StringHelper.CleanStringForSerialization(initialTarget.TitleId), initialTarget.IsFullscreen));
+                        }
+                        else
+                        {
+                            trackedGame.SetValue(new TrackedGame());
+                            Logger.Info("No initial game target found.");
+                        }
                         appTargetTracker.TargetChanged += AppTargetTracker_TargetChanged;
                     }
                     else
                     {
-                        Logger.Info("Create new app target tracker but not enabled.");
+                        Logger.Info("Created new app target tracker but not enabled.");
                     }
                 }
             }
