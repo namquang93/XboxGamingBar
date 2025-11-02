@@ -31,7 +31,7 @@ namespace XboxGamingBarHelper.Systems
             return !string.IsNullOrEmpty(Value.DisplayName) || !string.IsNullOrEmpty(Value.TitleId);
         }
 
-        public TrackedGameProperty(TrackedGame inValue, SystemManager inManager) : base(inValue, null, Function.TrackedGame, inManager)
+        public TrackedGameProperty(SystemManager inManager) : base(new TrackedGame(), null, Function.TrackedGame, inManager)
         {
         }
     }

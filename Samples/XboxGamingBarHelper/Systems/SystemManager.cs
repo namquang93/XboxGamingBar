@@ -64,9 +64,9 @@ namespace XboxGamingBarHelper.Systems
             Logger.Info("Save profiles for detecting games.");
             Profiles = profiles;
 
-            trackedGame = new TrackedGameProperty(new TrackedGame(), this);
+            trackedGame = new TrackedGameProperty(this);
             Logger.Info("Check current running game.");
-            runningGame = new RunningGameProperty(GetRunningGame(), this);
+            runningGame = new RunningGameProperty(this);
             Logger.Info("Check supported refresh rates.");
             refreshRates = new RefreshRatesProperty(User32.GetSupportedRefreshRates(), this);
             Logger.Info("Check current refresh rate.");
