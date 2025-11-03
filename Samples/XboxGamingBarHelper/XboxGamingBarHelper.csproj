@@ -339,7 +339,12 @@
     <Compile Include="ADLXDepends\SWIGTYPE_p_unsigned_short.cs" />
     <Compile Include="ADLXDepends\SWIGTYPE_p_void.cs" />
     <Compile Include="ADLXDepends\SWIGTYPE_p_wchar_t.cs" />
+    <Compile Include="AMD\AMDDelegates.cs" />
     <Compile Include="AMD\AMDManager.cs" />
+    <Compile Include="AMD\AMDSetting.cs" />
+    <Compile Include="AMD\AMDUtilities.cs" />
+    <Compile Include="AMD\Properties\RadeonSuperResolutionProperties.cs" />
+    <Compile Include="AMD\Settings\RadeonSuperResolutionSetting.cs" />
     <Compile Include="Core\HelperProperties.cs" />
     <Compile Include="Core\HelperProperty.cs" />
     <Compile Include="Core\IManager.cs" />

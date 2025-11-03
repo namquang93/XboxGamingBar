@@ -15,5 +15,7 @@
         RefreshRate,
         TrackedGame,
         RTSSInstalled,
+        RadeonSuperResolutionSupported,
+        RadeonSuperResolutionEnabled,
     }
 }

@@ -1,20 +1,38 @@
 ﻿using System;
 using Windows.ApplicationModel.AppService;
+using XboxGamingBarHelper.AMD.Properties;
+using XboxGamingBarHelper.AMD.Settings;
 using XboxGamingBarHelper.Core;
 
 namespace XboxGamingBarHelper.AMD
 {
     internal class AMDManager : Manager
     {
-        private ADLXHelper adlxHelper;
-        private IADLXSystem adlxSystemSevices;
-        private IADLXDisplayServices adlxDisplayServices;
-        private IADLXGPU adlxInternalGPU;
-        private IADLXGPU adlxDedicatedGPU;
-        private IADLXGPU adlxSecondDedicatedGPU;
-        private IADLX3DSettingsServices2 adlx3DSettingsServices;
+        // ADLX stuff
+        private readonly ADLX_RESULT adlxInitializeResult;
+        private readonly ADLXHelper adlxHelper;
+        private readonly IADLXSystem adlxSystemSevices;
+        private readonly IADLXDisplayServices adlxDisplayServices;
+        private readonly IADLXGPU adlxInternalGPU;
+        private readonly IADLXGPU adlxDedicatedGPU;
+        private readonly IADLXGPU adlxSecondDedicatedGPU;
+        private readonly IADLX3DSettingsServices2 adlx3DSettingsServices;
 
-        private ADLX_RESULT adlxInitializeResult;
+        // AMD Settings.
+        private readonly RadeonSuperResolutionSetting radeonSuperResolutionSetting;
+
+        // AMD Properties.
+        private readonly RadeonSuperResolutionSupportedProperty radeonSuperResolutionSupported;
+        public RadeonSuperResolutionSupportedProperty RadeonSuperResolutionSupported
+        {
+            get { return radeonSuperResolutionSupported; }
+        }
+
+        private readonly RadeonSuperResolutionEnabledProperty radeonSuperResolutionEnabled;
+        public RadeonSuperResolutionEnabledProperty RadeonSuperResolutionEnabled
+        {
+            get { return radeonSuperResolutionEnabled; }
+        }
 
         public AMDManager(AppServiceConnection connection) : base(connection)
         {
@@ -92,7 +110,13 @@ namespace XboxGamingBarHelper.AMD
             adlxSystemSevices.Get3DSettingsServices(threeDSettingsServicesPointer);
             adlx3DSettingsServices = new IADLX3DSettingsServices2(ADLXPINVOKE.threeDSettingsSerP_Ptr_value(SWIGTYPE_p_p_adlx__IADLX3DSettingsServices.getCPtr(threeDSettingsServicesPointer)), false);
 
-
+            Logger.Info("Get Radeon Super Resolution.");
+            var threeDRadeonSuperResolutionPointer = ADLX.new_threeDRadeonSuperResolutionP_Ptr();
+            adlx3DSettingsServices.GetRadeonSuperResolution(threeDRadeonSuperResolutionPointer);
+            var threeDRadeonSuperResolution = ADLX.threeDRadeonSuperResolutionP_Ptr_value(threeDRadeonSuperResolutionPointer);
+            radeonSuperResolutionSetting = new RadeonSuperResolutionSetting(threeDRadeonSuperResolution);
+            radeonSuperResolutionSupported = new RadeonSuperResolutionSupportedProperty(radeonSuperResolutionSetting.IsSupported(), this);
+            radeonSuperResolutionEnabled = new RadeonSuperResolutionEnabledProperty(radeonSuperResolutionSetting.IsEnabled(), this);
         }
 
         ~AMDManager()
@@ -102,6 +126,8 @@ namespace XboxGamingBarHelper.AMD
             adlxInternalGPU.Release();
             adlxDedicatedGPU.Release();
             adlxSecondDedicatedGPU.Release();
+            adlx3DSettingsServices.Release();
+            radeonSuperResolutionSetting.Release();
         }
 
         public override void Update()
