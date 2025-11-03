@@ -30,6 +30,7 @@ namespace XboxGamingBar.Data
 
         protected virtual void SetControlEnabled(bool isEnabled)
         {
+            Logger.Debug($"{GetType().Name} Set {UI.Name} {(isEnabled ? "enabled" : "disabled")}.");
             if (UI != null)
             {
                 UI.IsEnabled = isEnabled;

@@ -14,5 +14,6 @@
         RefreshRates,
         RefreshRate,
         TrackedGame,
+        RTSSInstalled,
     }
 }
