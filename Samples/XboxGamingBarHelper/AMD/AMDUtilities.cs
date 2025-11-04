@@ -18,9 +18,9 @@ namespace XboxGamingBarHelper.AMD
                 return false;
             }
 
-            var supported = ADLX.boolP_value(boolPointer);
+            var boolValue = ADLX.boolP_value(boolPointer);
             ADLX.delete_boolP(boolPointer);
-            return supported;
+            return boolValue;
         }
 
         internal static Tuple<int, int> GetIntRangeValue(GetIntRange func)
@@ -34,10 +34,26 @@ namespace XboxGamingBarHelper.AMD
                 return new Tuple<int, int>(0, 0);
             }
 
-            var intRange = ADLX.intRangeP_value(intRangePointer);
+            var intRangeValue = ADLX.intRangeP_value(intRangePointer);
             ADLX.delete_intRangeP(intRangePointer);
             intRangePointer?.Dispose();
-            return new Tuple<int, int>(intRange.minValue, intRange.maxValue);
+            return new Tuple<int, int>(intRangeValue.minValue, intRangeValue.maxValue);
+        }
+
+        internal static int GetIntValue(GetInt func)
+        {
+            var intPointer = ADLX.new_intP();
+            var getValueResult = func(intPointer);
+            if (getValueResult != ADLX_RESULT.ADLX_OK)
+            {
+                ADLX.delete_intP(intPointer);
+                Logger.Error($"Failed to get AMD int value. ADLX_RESULT: {getValueResult}");
+                return 0;
+            }
+
+            var intValue = ADLX.intP_value(intPointer);
+            ADLX.delete_intP(intPointer);
+            return intValue;
         }
     }
 }

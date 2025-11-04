@@ -38,6 +38,12 @@ namespace XboxGamingBarHelper.AMD
             get { return amdRadeonSuperResolutionEnabled; }
         }
 
+        private readonly AMDRadeonSuperResolutionSharpnessProperty amdRadeonSuperResolutionSharpness;
+        public AMDRadeonSuperResolutionSharpnessProperty AMDRadeonSuperResolutionSharpness
+        {
+            get { return amdRadeonSuperResolutionSharpness; }
+        }
+
         public AMDManager(AppServiceConnection connection) : base(connection)
         {
             // Initialize ADLX with ADLXHelper
@@ -121,6 +127,10 @@ namespace XboxGamingBarHelper.AMD
             amdRadeonSuperResolutionSetting = new AMDRadeonSuperResolutionSetting(threeDRadeonSuperResolution);
             amdRadeonSuperResolutionSupported = new AMDRadeonSuperResolutionSupportedProperty(amdRadeonSuperResolutionSetting.IsSupported(), this);
             amdRadeonSuperResolutionEnabled = new AMDRadeonSuperResolutionEnabledProperty(amdRadeonSuperResolutionSetting.IsEnabled(), this);
+            amdRadeonSuperResolutionSharpness = new AMDRadeonSuperResolutionSharpnessProperty(amdRadeonSuperResolutionSetting.GetSharpness(), this);
+
+            var sharpnessRange = amdRadeonSuperResolutionSetting.GetSharpnessRange();
+            Logger.Info($"Radeon Super Resolution Sharpness Range: {sharpnessRange.Item1} - {sharpnessRange.Item2}");
         }
 
         ~AMDManager()

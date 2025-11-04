@@ -55,6 +55,7 @@ namespace XboxGamingBar
 
         private readonly AMDRadeonSuperResolutionEnabledProperty amdRadeonSuperResolutionEnabled;
         private readonly AMDRadeonSuperResolutionSupportedProperty amdRadeonSuperResolutionSupported;
+        private readonly AMDRadeonSuperResolutionSharpnessProperty amdRadeonSuperResolutionSharpness;
 
         private readonly WidgetProperties properties;
 
@@ -75,6 +76,7 @@ namespace XboxGamingBar
             rtssInstalled = new RTSSInstalledProperty(PerformanceOverlaySlider, this);
             amdRadeonSuperResolutionEnabled = new AMDRadeonSuperResolutionEnabledProperty(AMDRadeonSuperResolutionToggle, this);
             amdRadeonSuperResolutionSupported = new AMDRadeonSuperResolutionSupportedProperty(AMDRadeonSuperResolutionToggle, this);
+            amdRadeonSuperResolutionSharpness = new AMDRadeonSuperResolutionSharpnessProperty(AMDRadeonSuperResolutionSharpnessSlider, this);
             properties = new WidgetProperties(
                 osd,
                 tdp,
@@ -89,7 +91,8 @@ namespace XboxGamingBar
                 trackedGame,
                 rtssInstalled,
                 amdRadeonSuperResolutionEnabled,
-                amdRadeonSuperResolutionSupported
+                amdRadeonSuperResolutionSupported,
+                amdRadeonSuperResolutionSharpness
                 );
         }
 

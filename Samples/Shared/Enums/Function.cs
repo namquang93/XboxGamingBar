@@ -17,5 +17,6 @@
         RTSSInstalled,
         AMDRadeonSuperResolutionSupported,
         AMDRadeonSuperResolutionEnabled,
+        AMDRadeonSuperResolutionSharpness,
     }
 }

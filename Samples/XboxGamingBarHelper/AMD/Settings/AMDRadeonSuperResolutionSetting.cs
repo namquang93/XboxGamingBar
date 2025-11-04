@@ -6,7 +6,7 @@ namespace XboxGamingBarHelper.AMD.Settings
     {
         public AMDRadeonSuperResolutionSetting(IADLX3DRadeonSuperResolution setting) : base(setting)
         {
-            
+
         }
 
         public override bool IsSupported()
@@ -27,6 +27,16 @@ namespace XboxGamingBarHelper.AMD.Settings
         public Tuple<int, int> GetSharpnessRange()
         {
             return AMDUtilities.GetIntRangeValue(adlxSetting.GetSharpnessRange);
+        }
+
+        public int GetSharpness()
+        {
+            return AMDUtilities.GetIntValue(adlxSetting.GetSharpness);
+        }
+
+        public void SetSharpness(int sharpness)
+        {
+            adlxSetting.SetSharpness(sharpness);
         }
     }
 }

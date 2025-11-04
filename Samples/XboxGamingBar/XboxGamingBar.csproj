@@ -85,7 +85,9 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converter\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Converter\SharpnessPercentStringConverter.cs" />
     <Compile Include="Data\AMDRadeonSuperResolutionEnabledProperty.cs" />
+    <Compile Include="Data\AMDRadeonSuperResolutionSharpnessProperty.cs" />
     <Compile Include="Data\CPUBoostProperty.cs" />
     <Compile Include="Data\LimitCPUClockProperty.cs" />
     <Compile Include="Data\CPUClockMaxProperty.cs" />
