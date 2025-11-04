@@ -1,6 +1,8 @@
-﻿namespace XboxGamingBarHelper.AMD
+﻿using System;
+
+namespace XboxGamingBarHelper.AMD
 {
-    internal abstract class AMDSetting<SettingType> where SettingType : IADLXInterface
+    internal abstract class AMDSetting<SettingType> : IDisposable where SettingType : IADLXInterface
     {
         public abstract bool IsSupported();
         public abstract bool IsEnabled();
@@ -16,7 +18,7 @@
 
         ~AMDSetting()
         {
-            adlxSetting?.Release();
+            adlxSetting?.Dispose();
         }
 
         public virtual int Release()
@@ -24,6 +26,11 @@
             if (adlxSetting == null) return 0;
 
             return adlxSetting.Release();
+        }
+
+        public void Dispose()
+        {
+            adlxSetting?.Dispose();
         }
     }
 }

@@ -3,9 +3,9 @@ using Windows.UI.Xaml.Controls;
 
 namespace XboxGamingBar.Data
 {
-    internal class AMDRadeonSuperResolutionSupportedProperty : WidgetControlProperty<bool, ToggleSwitch>
+    internal class AMDRadeonSuperResolutionSupportedProperty : WidgetControlEnabledProperty<ToggleSwitch>
     {
-        public AMDRadeonSuperResolutionSupportedProperty(ToggleSwitch inUI, Page inOwner) : base(false, Function.AMDRadeonSuperResolutionSupported, inUI, inOwner)
+        public AMDRadeonSuperResolutionSupportedProperty(ToggleSwitch inUI, Page inOwner) : base(Function.AMDRadeonSuperResolutionSupported, inUI, inOwner)
         {
         }
     }

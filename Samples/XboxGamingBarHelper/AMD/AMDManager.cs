@@ -20,6 +20,10 @@ namespace XboxGamingBarHelper.AMD
 
         // AMD Settings.
         private readonly AMDRadeonSuperResolutionSetting amdRadeonSuperResolutionSetting;
+        public AMDRadeonSuperResolutionSetting AMDRadeonSuperResolutionSetting
+        {
+            get { return amdRadeonSuperResolutionSetting; }
+        }
 
         // AMD Properties.
         private readonly AMDRadeonSuperResolutionSupportedProperty amdRadeonSuperResolutionSupported;
@@ -121,13 +125,13 @@ namespace XboxGamingBarHelper.AMD
 
         ~AMDManager()
         {
-            adlxHelper.Dispose();
-            adlxDisplayServices.Release();
-            adlxInternalGPU.Release();
-            adlxDedicatedGPU.Release();
-            adlxSecondDedicatedGPU.Release();
-            adlx3DSettingsServices.Release();
-            amdRadeonSuperResolutionSetting.Release();
+            adlxDisplayServices?.Dispose();
+            adlxInternalGPU?.Dispose();
+            adlxDedicatedGPU?.Dispose();
+            adlxSecondDedicatedGPU?.Dispose();
+            adlx3DSettingsServices?.Dispose();
+            amdRadeonSuperResolutionSetting?.Dispose();
+            adlxHelper?.Dispose();
         }
 
         public override void Update()

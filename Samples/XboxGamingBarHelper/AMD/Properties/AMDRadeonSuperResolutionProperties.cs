@@ -15,5 +15,13 @@ namespace XboxGamingBarHelper.AMD.Properties
         public AMDRadeonSuperResolutionEnabledProperty(bool inValue, AMDManager inManager) : base(inValue, null, Function.AMDRadeonSuperResolutionEnabled, inManager)
         {
         }
+
+        protected override void NotifyPropertyChanged(string propertyName = "")
+        {
+            base.NotifyPropertyChanged(propertyName);
+
+            Logger.Info($"AMDRadeonSuperResolutionEnabledProperty NotifyPropertyChanged: {Value}");
+            Manager.AMDRadeonSuperResolutionSetting.SetEnabled(Value);
+        }
     }
 }
