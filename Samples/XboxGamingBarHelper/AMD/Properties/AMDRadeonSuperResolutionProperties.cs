@@ -22,7 +22,6 @@ namespace XboxGamingBarHelper.AMD.Properties
         {
             base.NotifyPropertyChanged(propertyName);
 
-            Logger.Info($"AMDRadeonSuperResolutionEnabledProperty NotifyPropertyChanged: {Value}");
             Manager.AMDRadeonSuperResolutionSetting.SetEnabled(Value);
         }
     }

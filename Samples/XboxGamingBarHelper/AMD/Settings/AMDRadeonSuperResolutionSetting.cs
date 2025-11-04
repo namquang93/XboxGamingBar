@@ -6,7 +6,6 @@ namespace XboxGamingBarHelper.AMD.Settings
     {
         public AMDRadeonSuperResolutionSetting(IADLX3DRadeonSuperResolution setting) : base(setting)
         {
-
         }
 
         public override bool IsSupported()

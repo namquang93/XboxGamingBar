@@ -44,6 +44,7 @@
                     <RowDefinition x:Name="Row_21_Spacer_7" Height="20"/>
                     <RowDefinition x:Name="Row_22_AMDRadeonSuperResolutionToggle" Height="36"/>
                     <RowDefinition x:Name="Row_23_AMDRadeonSuperResolutionSlider" Height="Auto"/>
+                    <RowDefinition x:Name="Row_24_AMDFluidMotionFrameToggle" Height="36"/>
                     <!-- Add more RowDefinitions as needed, each with Height="200" -->
                 </Grid.RowDefinitions>
 
@@ -137,6 +138,11 @@
                     TickPlacement="BottomRight"
                     IsEnabled="False"
                     Visibility="{Binding ElementName=AMDRadeonSuperResolutionToggle, Path=IsOn, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+                <TextBlock x:Name="AMDFluidMotionFrameText" Text="AMD Fluid Motion Frame" FontWeight="SemiBold" FontSize="18" Grid.Row="24"
+                    TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" Width="250" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                <ToggleSwitch x:Name="AMDFluidMotionFrameToggle" IsEnabled="False" OffContent="Disabled" OnContent="Enabled"
+                    FlowDirection="RightToLeft" Grid.Row="24" VerticalAlignment="Center" HorizontalAlignment="Right" />
 
             </Grid>
         </Grid>

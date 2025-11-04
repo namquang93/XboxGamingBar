@@ -97,7 +97,9 @@ namespace XboxGamingBarHelper
                 rtssManager.RTSSInstalled,
                 amdManager.AMDRadeonSuperResolutionEnabled,
                 amdManager.AMDRadeonSuperResolutionSupported,
-                amdManager.AMDRadeonSuperResolutionSharpness);
+                amdManager.AMDRadeonSuperResolutionSharpness,
+                amdManager.AMDFluidMotionFrameEnabled,
+                amdManager.AMDFluidMotionFrameSupported);
 
             Logger.Info("Initialize callbacks.");
             systemManager.RunningGame.PropertyChanged += RunningGame_PropertyChanged;

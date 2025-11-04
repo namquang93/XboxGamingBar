@@ -25,6 +25,12 @@ namespace XboxGamingBarHelper.AMD
             get { return amdRadeonSuperResolutionSetting; }
         }
 
+        private readonly AMDFluidMotionFrameSetting amdFluidMotionFrameSetting;
+        public AMDFluidMotionFrameSetting AMDFluidMotionFrameSetting
+        {
+            get { return amdFluidMotionFrameSetting; }
+        }
+
         // AMD Properties.
         private readonly AMDRadeonSuperResolutionSupportedProperty amdRadeonSuperResolutionSupported;
         public AMDRadeonSuperResolutionSupportedProperty AMDRadeonSuperResolutionSupported
@@ -42,6 +48,18 @@ namespace XboxGamingBarHelper.AMD
         public AMDRadeonSuperResolutionSharpnessProperty AMDRadeonSuperResolutionSharpness
         {
             get { return amdRadeonSuperResolutionSharpness; }
+        }
+
+        private readonly AMDFluidMotionFrameSupportedProperty amdFluidMotionFrameSupported;
+        public AMDFluidMotionFrameSupportedProperty AMDFluidMotionFrameSupported
+        {
+            get { return amdFluidMotionFrameSupported; }
+        }
+
+        private readonly AMDFluidMotionFrameEnabledProperty amdFluidMotionFrameEnabled;
+        public AMDFluidMotionFrameEnabledProperty AMDFluidMotionFrameEnabled
+        {
+            get { return amdFluidMotionFrameEnabled; }
         }
 
         public AMDManager(AppServiceConnection connection) : base(connection)
@@ -129,8 +147,13 @@ namespace XboxGamingBarHelper.AMD
             amdRadeonSuperResolutionEnabled = new AMDRadeonSuperResolutionEnabledProperty(amdRadeonSuperResolutionSetting.IsEnabled(), this);
             amdRadeonSuperResolutionSharpness = new AMDRadeonSuperResolutionSharpnessProperty(amdRadeonSuperResolutionSetting.GetSharpness(), this);
 
-            var sharpnessRange = amdRadeonSuperResolutionSetting.GetSharpnessRange();
-            Logger.Info($"Radeon Super Resolution Sharpness Range: {sharpnessRange.Item1} - {sharpnessRange.Item2}");
+            Logger.Info("Get AMD Fluid Motion Frame.");
+            var threeDFluidMotionFramePointer = ADLX.new_threeDAMDFluidMotionFramesP_Ptr();
+            adlx3DSettingsServices.GetAMDFluidMotionFrames(threeDFluidMotionFramePointer);
+            var threeDFluidMotionFrame = ADLX.threeDAMDFluidMotionFramesP_Ptr_value(threeDFluidMotionFramePointer);
+            amdFluidMotionFrameSetting = new AMDFluidMotionFrameSetting(threeDFluidMotionFrame);
+            amdFluidMotionFrameSupported = new AMDFluidMotionFrameSupportedProperty(amdFluidMotionFrameSetting.IsSupported(), this);
+            amdFluidMotionFrameEnabled = new AMDFluidMotionFrameEnabledProperty(amdFluidMotionFrameSetting.IsEnabled(), this);
         }
 
         ~AMDManager()
@@ -141,6 +164,7 @@ namespace XboxGamingBarHelper.AMD
             adlxSecondDedicatedGPU?.Dispose();
             adlx3DSettingsServices?.Dispose();
             amdRadeonSuperResolutionSetting?.Dispose();
+            amdFluidMotionFrameSetting?.Dispose();
             adlxHelper?.Dispose();
         }
 

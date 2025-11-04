@@ -56,6 +56,8 @@ namespace XboxGamingBar
         private readonly AMDRadeonSuperResolutionEnabledProperty amdRadeonSuperResolutionEnabled;
         private readonly AMDRadeonSuperResolutionSupportedProperty amdRadeonSuperResolutionSupported;
         private readonly AMDRadeonSuperResolutionSharpnessProperty amdRadeonSuperResolutionSharpness;
+        private readonly AMDFluidMotionFrameEnabledProperty amdFluidMotionFrameEnabled;
+        private readonly AMDFluidMotionFrameSupportedProperty amdFluidMotionFrameSupported;
 
         private readonly WidgetProperties properties;
 
@@ -77,6 +79,8 @@ namespace XboxGamingBar
             amdRadeonSuperResolutionEnabled = new AMDRadeonSuperResolutionEnabledProperty(AMDRadeonSuperResolutionToggle, this);
             amdRadeonSuperResolutionSupported = new AMDRadeonSuperResolutionSupportedProperty(AMDRadeonSuperResolutionToggle, this);
             amdRadeonSuperResolutionSharpness = new AMDRadeonSuperResolutionSharpnessProperty(AMDRadeonSuperResolutionSharpnessSlider, this);
+            amdFluidMotionFrameEnabled = new AMDFluidMotionFrameEnabledProperty(AMDFluidMotionFrameToggle, this);
+            amdFluidMotionFrameSupported = new AMDFluidMotionFrameSupportedProperty(AMDFluidMotionFrameToggle, this);
             properties = new WidgetProperties(
                 osd,
                 tdp,
@@ -92,7 +96,9 @@ namespace XboxGamingBar
                 rtssInstalled,
                 amdRadeonSuperResolutionEnabled,
                 amdRadeonSuperResolutionSupported,
-                amdRadeonSuperResolutionSharpness
+                amdRadeonSuperResolutionSharpness,
+                amdFluidMotionFrameEnabled,
+                amdFluidMotionFrameSupported
                 );
         }
 

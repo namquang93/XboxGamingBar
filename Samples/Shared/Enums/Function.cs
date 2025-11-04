@@ -18,5 +18,7 @@
         AMDRadeonSuperResolutionSupported,
         AMDRadeonSuperResolutionEnabled,
         AMDRadeonSuperResolutionSharpness,
+        AMDFluidMotionFrameSupported,
+        AMDFluidMotionFrameEnabled
     }
 }
