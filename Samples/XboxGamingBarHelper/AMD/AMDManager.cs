@@ -19,19 +19,19 @@ namespace XboxGamingBarHelper.AMD
         private readonly IADLX3DSettingsServices2 adlx3DSettingsServices;
 
         // AMD Settings.
-        private readonly RadeonSuperResolutionSetting radeonSuperResolutionSetting;
+        private readonly AMDRadeonSuperResolutionSetting amdRadeonSuperResolutionSetting;
 
         // AMD Properties.
-        private readonly RadeonSuperResolutionSupportedProperty radeonSuperResolutionSupported;
-        public RadeonSuperResolutionSupportedProperty RadeonSuperResolutionSupported
+        private readonly AMDRadeonSuperResolutionSupportedProperty amdRadeonSuperResolutionSupported;
+        public AMDRadeonSuperResolutionSupportedProperty AMDRadeonSuperResolutionSupported
         {
-            get { return radeonSuperResolutionSupported; }
+            get { return amdRadeonSuperResolutionSupported; }
         }
 
-        private readonly RadeonSuperResolutionEnabledProperty radeonSuperResolutionEnabled;
-        public RadeonSuperResolutionEnabledProperty RadeonSuperResolutionEnabled
+        private readonly AMDRadeonSuperResolutionEnabledProperty amdRadeonSuperResolutionEnabled;
+        public AMDRadeonSuperResolutionEnabledProperty AMDRadeonSuperResolutionEnabled
         {
-            get { return radeonSuperResolutionEnabled; }
+            get { return amdRadeonSuperResolutionEnabled; }
         }
 
         public AMDManager(AppServiceConnection connection) : base(connection)
@@ -114,9 +114,9 @@ namespace XboxGamingBarHelper.AMD
             var threeDRadeonSuperResolutionPointer = ADLX.new_threeDRadeonSuperResolutionP_Ptr();
             adlx3DSettingsServices.GetRadeonSuperResolution(threeDRadeonSuperResolutionPointer);
             var threeDRadeonSuperResolution = ADLX.threeDRadeonSuperResolutionP_Ptr_value(threeDRadeonSuperResolutionPointer);
-            radeonSuperResolutionSetting = new RadeonSuperResolutionSetting(threeDRadeonSuperResolution);
-            radeonSuperResolutionSupported = new RadeonSuperResolutionSupportedProperty(radeonSuperResolutionSetting.IsSupported(), this);
-            radeonSuperResolutionEnabled = new RadeonSuperResolutionEnabledProperty(radeonSuperResolutionSetting.IsEnabled(), this);
+            amdRadeonSuperResolutionSetting = new AMDRadeonSuperResolutionSetting(threeDRadeonSuperResolution);
+            amdRadeonSuperResolutionSupported = new AMDRadeonSuperResolutionSupportedProperty(amdRadeonSuperResolutionSetting.IsSupported(), this);
+            amdRadeonSuperResolutionEnabled = new AMDRadeonSuperResolutionEnabledProperty(amdRadeonSuperResolutionSetting.IsEnabled(), this);
         }
 
         ~AMDManager()
@@ -127,7 +127,7 @@ namespace XboxGamingBarHelper.AMD
             adlxDedicatedGPU.Release();
             adlxSecondDedicatedGPU.Release();
             adlx3DSettingsServices.Release();
-            radeonSuperResolutionSetting.Release();
+            amdRadeonSuperResolutionSetting.Release();
         }
 
         public override void Update()

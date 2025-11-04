@@ -2,9 +2,9 @@
 
 namespace XboxGamingBarHelper.AMD.Settings
 {
-    internal class RadeonSuperResolutionSetting : AMDSetting<IADLX3DRadeonSuperResolution>
+    internal class AMDRadeonSuperResolutionSetting : AMDSetting<IADLX3DRadeonSuperResolution>
     {
-        public RadeonSuperResolutionSetting(IADLX3DRadeonSuperResolution setting) : base(setting)
+        public AMDRadeonSuperResolutionSetting(IADLX3DRadeonSuperResolution setting) : base(setting)
         {
             
         }

@@ -343,8 +343,8 @@
     <Compile Include="AMD\AMDManager.cs" />
     <Compile Include="AMD\AMDSetting.cs" />
     <Compile Include="AMD\AMDUtilities.cs" />
-    <Compile Include="AMD\Properties\RadeonSuperResolutionProperties.cs" />
-    <Compile Include="AMD\Settings\RadeonSuperResolutionSetting.cs" />
+    <Compile Include="AMD\Properties\AMDRadeonSuperResolutionProperties.cs" />
+    <Compile Include="AMD\Settings\AMDRadeonSuperResolutionSetting.cs" />
     <Compile Include="Core\HelperProperties.cs" />
     <Compile Include="Core\HelperProperty.cs" />
     <Compile Include="Core\IManager.cs" />

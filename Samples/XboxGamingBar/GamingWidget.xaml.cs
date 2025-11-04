@@ -52,6 +52,10 @@ namespace XboxGamingBar
         private readonly RefreshRateProperty refreshRate;
         private readonly TrackedGameProperty trackedGame;
         private readonly RTSSInstalledProperty rtssInstalled;
+
+        private readonly AMDRadeonSuperResolutionEnabledProperty amdRadeonSuperResolutionEnabled;
+        private readonly AMDRadeonSuperResolutionSupportedProperty amdRadeonSuperResolutionSupported;
+
         private readonly WidgetProperties properties;
 
         public GamingWidget()
@@ -69,7 +73,24 @@ namespace XboxGamingBar
             refreshRate = new RefreshRateProperty(RefreshRatesComboBox, this);
             trackedGame = new TrackedGameProperty(new TrackedGame());
             rtssInstalled = new RTSSInstalledProperty(PerformanceOverlaySlider, this);
-            properties = new WidgetProperties(osd, tdp, runningGame, perGameProfile, cpuBoost, cpuEPP, limitCPUClock, cpuClockMax, refreshRates, refreshRate, trackedGame, rtssInstalled);
+            amdRadeonSuperResolutionEnabled = new AMDRadeonSuperResolutionEnabledProperty(AMDRadeonSuperResolutionToggle, this);
+            amdRadeonSuperResolutionSupported = new AMDRadeonSuperResolutionSupportedProperty(AMDRadeonSuperResolutionToggle, this);
+            properties = new WidgetProperties(
+                osd,
+                tdp,
+                runningGame,
+                perGameProfile,
+                cpuBoost,
+                cpuEPP,
+                limitCPUClock,
+                cpuClockMax,
+                refreshRates,
+                refreshRate,
+                trackedGame,
+                rtssInstalled,
+                amdRadeonSuperResolutionEnabled,
+                amdRadeonSuperResolutionSupported
+                );
         }
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
