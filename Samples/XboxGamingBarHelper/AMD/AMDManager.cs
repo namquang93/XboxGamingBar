@@ -31,6 +31,12 @@ namespace XboxGamingBarHelper.AMD
             get { return amdFluidMotionFrameSetting; }
         }
 
+        private readonly AMDAntiLagSetting amdAntiLagSetting;
+        public AMDAntiLagSetting AMDAntiLagSetting
+        {
+            get { return amdAntiLagSetting; }
+        }
+
         // AMD Properties.
         private readonly AMDRadeonSuperResolutionSupportedProperty amdRadeonSuperResolutionSupported;
         public AMDRadeonSuperResolutionSupportedProperty AMDRadeonSuperResolutionSupported
@@ -60,6 +66,18 @@ namespace XboxGamingBarHelper.AMD
         public AMDFluidMotionFrameEnabledProperty AMDFluidMotionFrameEnabled
         {
             get { return amdFluidMotionFrameEnabled; }
+        }
+
+        private readonly AMDAntiLagSupportedProperty amdAntiLagSupported;
+        public AMDAntiLagSupportedProperty AMDAntiLagSupported
+        {
+            get { return amdAntiLagSupported; }
+        }
+
+        private readonly AMDAntiLagEnabledProperty amdAntiLagEnabled;
+        public AMDAntiLagEnabledProperty AMDAntiLagEnabled
+        {
+            get { return amdAntiLagEnabled; }
         }
 
         public AMDManager(AppServiceConnection connection) : base(connection)
@@ -154,6 +172,14 @@ namespace XboxGamingBarHelper.AMD
             amdFluidMotionFrameSetting = new AMDFluidMotionFrameSetting(threeDFluidMotionFrame);
             amdFluidMotionFrameSupported = new AMDFluidMotionFrameSupportedProperty(amdFluidMotionFrameSetting.IsSupported(), this);
             amdFluidMotionFrameEnabled = new AMDFluidMotionFrameEnabledProperty(amdFluidMotionFrameSetting.IsEnabled(), this);
+
+            Logger.Info("Get AMD Anti-Lag.");
+            var threeDAntiLagPointer = ADLX.new_threeDAntiLagP_Ptr();
+            adlx3DSettingsServices.GetAntiLag(adlxInternalGPU, threeDAntiLagPointer);
+            var threeDAntiLag = ADLX.threeDAntiLagP_Ptr_value(threeDAntiLagPointer);
+            amdAntiLagSetting = new AMDAntiLagSetting(threeDAntiLag);
+            amdAntiLagSupported = new AMDAntiLagSupportedProperty(amdAntiLagSetting.IsSupported(), this);
+            amdAntiLagEnabled = new AMDAntiLagEnabledProperty(amdAntiLagSetting.IsEnabled(), this);
         }
 
         ~AMDManager()

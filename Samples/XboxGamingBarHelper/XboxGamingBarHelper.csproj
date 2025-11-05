@@ -343,9 +343,11 @@
     <Compile Include="AMD\AMDManager.cs" />
     <Compile Include="AMD\AMDSetting.cs" />
     <Compile Include="AMD\AMDUtilities.cs" />
+    <Compile Include="AMD\Properties\AMDAntiLagProperties.cs" />
     <Compile Include="AMD\Properties\AMDFluidMotionFrameProperties.cs" />
     <Compile Include="AMD\Properties\AMDRadeonSuperResolutionProperties.cs" />
     <Compile Include="AMD\Settings\AMDFluidMotionFrameSetting.cs" />
+    <Compile Include="AMD\Settings\AMDAntiLagSetting.cs" />
     <Compile Include="AMD\Settings\AMDRadeonSuperResolutionSetting.cs" />
     <Compile Include="Core\HelperProperties.cs" />
     <Compile Include="Core\HelperProperty.cs" />
