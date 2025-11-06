@@ -90,6 +90,8 @@
     <Compile Include="Data\AMDAntiLagSupportedProperty.cs" />
     <Compile Include="Data\AMDFluidMotionFrameEnabledProperty.cs" />
     <Compile Include="Data\AMDFluidMotionFrameSupportedProperty.cs" />
+    <Compile Include="Data\AMDRadeonBoostEnabledProperty.cs" />
+    <Compile Include="Data\AMDRadeonBoostSupportedProperty.cs" />
     <Compile Include="Data\AMDRadeonSuperResolutionEnabledProperty.cs" />
     <Compile Include="Data\AMDRadeonSuperResolutionSharpnessProperty.cs" />
     <Compile Include="Data\CPUBoostProperty.cs" />

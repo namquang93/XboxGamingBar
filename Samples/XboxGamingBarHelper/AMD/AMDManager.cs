@@ -37,6 +37,12 @@ namespace XboxGamingBarHelper.AMD
             get { return amdAntiLagSetting; }
         }
 
+        private readonly AMDRadeonBoostSetting amdRadeonBoostSetting;
+        public AMDRadeonBoostSetting AMDRadeonBoostSetting
+        {
+            get { return amdRadeonBoostSetting; }
+        }
+
         // AMD Properties.
         private readonly AMDRadeonSuperResolutionSupportedProperty amdRadeonSuperResolutionSupported;
         public AMDRadeonSuperResolutionSupportedProperty AMDRadeonSuperResolutionSupported
@@ -78,6 +84,18 @@ namespace XboxGamingBarHelper.AMD
         public AMDAntiLagEnabledProperty AMDAntiLagEnabled
         {
             get { return amdAntiLagEnabled; }
+        }
+
+        private readonly AMDRadeonBoostSupportedProperty amdRadeonBoostSupported;
+        public AMDRadeonBoostSupportedProperty AMDRadeonBoostSupported
+        {
+            get { return amdRadeonBoostSupported; }
+        }
+
+        private readonly AMDRadeonBoostEnabledProperty amdRadeonBoostEnabled;
+        public AMDRadeonBoostEnabledProperty AMDRadeonBoostEnabled
+        {
+            get { return amdRadeonBoostEnabled; }
         }
 
         public AMDManager(AppServiceConnection connection) : base(connection)
@@ -180,6 +198,14 @@ namespace XboxGamingBarHelper.AMD
             amdAntiLagSetting = new AMDAntiLagSetting(threeDAntiLag);
             amdAntiLagSupported = new AMDAntiLagSupportedProperty(amdAntiLagSetting.IsSupported(), this);
             amdAntiLagEnabled = new AMDAntiLagEnabledProperty(amdAntiLagSetting.IsEnabled(), this);
+
+            Logger.Info("Get AMD Radeon Boost.");
+            var threeDRadeonBoostPointer = ADLX.new_threeDBoostP_Ptr();
+            adlx3DSettingsServices.GetBoost(adlxInternalGPU, threeDRadeonBoostPointer);
+            var threeDRadeonBoost = ADLX.threeDBoostP_Ptr_value(threeDRadeonBoostPointer);
+            amdRadeonBoostSetting = new AMDRadeonBoostSetting(threeDRadeonBoost);
+            amdRadeonBoostSupported = new AMDRadeonBoostSupportedProperty(amdRadeonBoostSetting.IsSupported(), this);
+            amdRadeonBoostEnabled = new AMDRadeonBoostEnabledProperty(amdRadeonBoostSetting.IsEnabled(), this);
         }
 
         ~AMDManager()

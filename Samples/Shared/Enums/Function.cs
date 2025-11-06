@@ -21,6 +21,8 @@
         AMDFluidMotionFrameSupported,
         AMDFluidMotionFrameEnabled,
         AMDAntiLagSupported,
-        AMDAntiLagEnabled
+        AMDAntiLagEnabled,
+        AMDRadeonBoostSupported,
+        AMDRadeonBoostEnabled
     }
 }
