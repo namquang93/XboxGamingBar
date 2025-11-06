@@ -14,6 +14,7 @@
         <converter:MegahertzStringConverter x:Key="MegahertzStringConverter"/>
         <converter:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         <converter:SharpnessPercentStringConverter x:Key="SharpnessPercentStringConverter"/>
+        <converter:RadeonBoostResolutionStringConverter x:Key="RadeonBoostResolutionStringConverter"/>
     </Page.Resources>
 
     <ScrollViewer x:Name="RootScrollViewer" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
@@ -47,6 +48,7 @@
                     <RowDefinition x:Name="Row_24_AMDFluidMotionFrameToggle" Height="36"/>
                     <RowDefinition x:Name="Row_25_AMDAntiLagToggle" Height="36"/>
                     <RowDefinition x:Name="Row_26_AMDRadeonBoostToggle" Height="36"/>
+                    <RowDefinition x:Name="Row_27_AMDRadeonBoostResolutionSlider" Height="Auto"/>
                     <!-- Add more RowDefinitions as needed, each with Height="200" -->
                 </Grid.RowDefinitions>
 
@@ -153,8 +155,15 @@
 
                 <TextBlock x:Name="AMDRadeonBoostText" Text="Radeon Boost" FontWeight="SemiBold" FontSize="18" Grid.Row="26"
                     TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" Width="250" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                <ToggleSwitch x:Name="AMDRadeonBoostToggle" IsEnabled="False" OffContent="Disabled" OnContent="Enabled"
+                <ToggleSwitch x:Name="AMDRadeonBoostToggle" IsEnabled="False" OffContent="Disabled" OnContent="{Binding ElementName=AMDRadeonBoostResolutionSlider, Path=Value, Converter={StaticResource RadeonBoostResolutionStringConverter}}"
                     FlowDirection="RightToLeft" Grid.Row="26" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                <Slider x:Name="AMDRadeonBoostResolutionSlider" Grid.Row="27" Margin="0,0,0,0"
+                    Minimum="0" Maximum="1"
+                    TickFrequency="1"
+                    SnapsTo="Ticks"
+                    TickPlacement="BottomRight"
+                    IsEnabled="False"
+                    Visibility="{Binding ElementName=AMDRadeonBoostToggle, Path=IsOn, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
             </Grid>
         </Grid>

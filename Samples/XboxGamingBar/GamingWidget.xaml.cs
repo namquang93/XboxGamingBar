@@ -62,6 +62,7 @@ namespace XboxGamingBar
         private readonly AMDAntiLagSupportedProperty amdAntiLagSupported;
         private readonly AMDRadeonBoostEnabledProperty amdRadeonBoostEnabled;
         private readonly AMDRadeonBoostSupportedProperty amdRadeonBoostSupported;
+        private readonly AMDRadeonBoostResolutionProperty amdRadeonBoostResolution;
 
         private readonly WidgetProperties properties;
 
@@ -89,6 +90,7 @@ namespace XboxGamingBar
             amdAntiLagSupported = new AMDAntiLagSupportedProperty(AMDAntiLagToggle, this);
             amdRadeonBoostEnabled = new AMDRadeonBoostEnabledProperty(AMDRadeonBoostToggle, this);
             amdRadeonBoostSupported = new AMDRadeonBoostSupportedProperty(AMDRadeonBoostToggle, this);
+            amdRadeonBoostResolution = new AMDRadeonBoostResolutionProperty(AMDRadeonBoostResolutionSlider, this);
             properties = new WidgetProperties(
                 osd,
                 tdp,
@@ -110,7 +112,8 @@ namespace XboxGamingBar
                 amdAntiLagEnabled,
                 amdAntiLagSupported,
                 amdRadeonBoostEnabled,
-                amdRadeonBoostSupported
+                amdRadeonBoostSupported,
+                amdRadeonBoostResolution
                 );
         }
 
@@ -194,7 +197,7 @@ namespace XboxGamingBar
                 }
                 else
                 {
-                    Logger.Info($"Tracked non-game DisplayName={target.DisplayName} AumId={target.AumId} TitleId={target.TitleId} IsFullscreen={target.IsFullscreen}");
+                    Logger.Debug($"Tracked non-game DisplayName={target.DisplayName} AumId={target.AumId} TitleId={target.TitleId} IsFullscreen={target.IsFullscreen}");
                     trackedGame.SetValue(new TrackedGame());
                 }
             }

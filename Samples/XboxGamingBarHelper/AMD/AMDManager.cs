@@ -97,6 +97,12 @@ namespace XboxGamingBarHelper.AMD
             get { return amdRadeonBoostEnabled; }
         }
 
+        private readonly AMDRadeonBoostResolutionProperty amdRadeonBoostResolution;
+        public AMDRadeonBoostResolutionProperty AMDRadeonBoostResolution
+        {
+            get { return amdRadeonBoostResolution; }
+        }
+
         public AMDManager(AppServiceConnection connection) : base(connection)
         {
             // Initialize ADLX with ADLXHelper
@@ -205,6 +211,8 @@ namespace XboxGamingBarHelper.AMD
             amdRadeonBoostSetting = new AMDRadeonBoostSetting(threeDRadeonBoost);
             amdRadeonBoostSupported = new AMDRadeonBoostSupportedProperty(amdRadeonBoostSetting.IsSupported(), this);
             amdRadeonBoostEnabled = new AMDRadeonBoostEnabledProperty(amdRadeonBoostSetting.IsEnabled(), this);
+            var amdRadeonBoostResolutionRange = amdRadeonBoostSetting.GetResolutionRange();
+            amdRadeonBoostResolution = new AMDRadeonBoostResolutionProperty(amdRadeonBoostSetting.GetResolution() == amdRadeonBoostResolutionRange.Item1 ? 0 : 1, this);
         }
 
         ~AMDManager()

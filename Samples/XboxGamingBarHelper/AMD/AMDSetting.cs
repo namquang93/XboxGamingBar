@@ -51,7 +51,7 @@ namespace XboxGamingBarHelper.AMD
         {
             if (isSupportedFunction == null)
             {
-                //Logger.Warn("IsSupported function is not available.");
+                Logger.Warn($"{GetType().Name} IsSupported function is not available.");
                 return false;
             }
 
@@ -62,7 +62,7 @@ namespace XboxGamingBarHelper.AMD
         {
             if (isEnabledFunction == null)
             {
-                //Logger.Warn("IsEnabled function is not available.");
+                Logger.Warn($"{GetType().Name} IsEnabled function is not available.");
                 return false;
             }
 
@@ -73,7 +73,7 @@ namespace XboxGamingBarHelper.AMD
         {
             if (setEnabledMethod == null)
             {
-                //Logger.Warn("SetEnabled method is not available.");
+                Logger.Warn($"{GetType().Name} SetEnabled method is not available.");
                 return;
             }
 

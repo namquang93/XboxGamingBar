@@ -23,6 +23,7 @@
         AMDAntiLagSupported,
         AMDAntiLagEnabled,
         AMDRadeonBoostSupported,
-        AMDRadeonBoostEnabled
+        AMDRadeonBoostEnabled,
+        AMDRadeonBoostResolution
     }
 }
