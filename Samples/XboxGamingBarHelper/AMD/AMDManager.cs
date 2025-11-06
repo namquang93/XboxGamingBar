@@ -1,5 +1,4 @@
-﻿using System;
-using Windows.ApplicationModel.AppService;
+﻿using Windows.ApplicationModel.AppService;
 using XboxGamingBarHelper.AMD.Properties;
 using XboxGamingBarHelper.AMD.Settings;
 using XboxGamingBarHelper.Core;
