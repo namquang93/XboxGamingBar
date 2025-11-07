@@ -50,6 +50,8 @@
                     <RowDefinition x:Name="Row_26_AMDRadeonBoostToggle" Height="36"/>
                     <RowDefinition x:Name="Row_27_AMDRadeonBoostResolutionSlider" Height="Auto"/>
                     <RowDefinition x:Name="Row_28_AMDRadeonChillToggle" Height="36"/>
+                    <RowDefinition x:Name="Row_29_AMDRadeonChillMinFPSSlider" Height="Auto"/>
+                    <RowDefinition x:Name="Row_30_AMDRadeonChillMaxFPSSlider" Height="Auto"/>
                     <!-- Add more RowDefinitions as needed, each with Height="200" -->
                 </Grid.RowDefinitions>
 
@@ -170,6 +172,21 @@
                     TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" Width="250" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                 <ToggleSwitch x:Name="AMDRadeonChillToggle" IsEnabled="False" OffContent="Disabled" OnContent="Enabled"
                     FlowDirection="RightToLeft" Grid.Row="28" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                <Slider x:Name="AMDRadeonChillMinFPSSlider" Grid.Row="29" Margin="0,0,0,0"
+                    Minimum="30" Maximum="300"
+                    TickFrequency="5"
+                    SnapsTo="Ticks"
+                    TickPlacement="BottomRight"
+                    IsEnabled="False"
+                    Visibility="{Binding ElementName=AMDRadeonChillToggle, Path=IsOn, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                <Slider x:Name="AMDRadeonChillMaxFPSSlider" Grid.Row="30" Margin="0,0,0,0"
+                    Minimum="30" Maximum="300"
+                    TickFrequency="5"
+                    SnapsTo="Ticks"
+                    TickPlacement="BottomRight"
+                    IsEnabled="False"
+                    Visibility="{Binding ElementName=AMDRadeonChillToggle, Path=IsOn, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                
 
             </Grid>
         </Grid>

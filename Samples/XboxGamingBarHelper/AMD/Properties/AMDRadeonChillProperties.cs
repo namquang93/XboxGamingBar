@@ -35,21 +35,13 @@ namespace XboxGamingBarHelper.AMD.Properties
         {
             base.NotifyPropertyChanged(propertyName);
 
-            //(int min, int max) = Manager.AMDRadeonChillSetting.GetMinFPSRange();
-            //if (min == 0 && max == 100)
-            //{
-            //    Manager.AMDRadeonChillSetting.SetMinFPS(Value);
-            //}
-            //else
-            //{
-            //    Manager.AMDRadeonChillSetting.SetMinFPS((int)Math.Round(min + Value / 100.0f * (max - min)));
-            //}
+            Manager.AMDRadeonChillSetting.SetMinFPS(Value);
         }
     }
 
     internal class AMDRadeonChillMaxFPSProperty : HelperProperty<int, AMDManager>
     {
-        public AMDRadeonChillMaxFPSProperty(int inValue, AMDManager inManager) : base(inValue, null, Function.AMDRadeonChillMinFPS, inManager)
+        public AMDRadeonChillMaxFPSProperty(int inValue, AMDManager inManager) : base(inValue, null, Function.AMDRadeonChillMaxFPS, inManager)
         {
         }
 
@@ -57,15 +49,7 @@ namespace XboxGamingBarHelper.AMD.Properties
         {
             base.NotifyPropertyChanged(propertyName);
 
-            //(int min, int max) = Manager.AMDRadeonChillSetting.GetMinFPSRange();
-            //if (min == 0 && max == 100)
-            //{
-            //    Manager.AMDRadeonChillSetting.SetMinFPS(Value);
-            //}
-            //else
-            //{
-            //    Manager.AMDRadeonChillSetting.SetMinFPS((int)Math.Round(min + Value / 100.0f * (max - min)));
-            //}
+            Manager.AMDRadeonChillSetting.SetMaxFPS(Value);
         }
     }
 }
