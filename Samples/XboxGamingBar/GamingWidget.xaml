@@ -49,6 +49,7 @@
                     <RowDefinition x:Name="Row_25_AMDAntiLagToggle" Height="36"/>
                     <RowDefinition x:Name="Row_26_AMDRadeonBoostToggle" Height="36"/>
                     <RowDefinition x:Name="Row_27_AMDRadeonBoostResolutionSlider" Height="Auto"/>
+                    <RowDefinition x:Name="Row_28_AMDRadeonChillToggle" Height="36"/>
                     <!-- Add more RowDefinitions as needed, each with Height="200" -->
                 </Grid.RowDefinitions>
 
@@ -164,6 +165,11 @@
                     TickPlacement="BottomRight"
                     IsEnabled="False"
                     Visibility="{Binding ElementName=AMDRadeonBoostToggle, Path=IsOn, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+                <TextBlock x:Name="AMDRadeonChillText" Text="Radeon Chill" FontWeight="SemiBold" FontSize="18" Grid.Row="28"
+                    TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" Width="250" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                <ToggleSwitch x:Name="AMDRadeonChillToggle" IsEnabled="False" OffContent="Disabled" OnContent="Enabled"
+                    FlowDirection="RightToLeft" Grid.Row="28" VerticalAlignment="Center" HorizontalAlignment="Right" />
 
             </Grid>
         </Grid>

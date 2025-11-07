@@ -104,7 +104,9 @@ namespace XboxGamingBarHelper
                 amdManager.AMDAntiLagSupported,
                 amdManager.AMDRadeonBoostEnabled,
                 amdManager.AMDRadeonBoostSupported,
-                amdManager.AMDRadeonBoostResolution);
+                amdManager.AMDRadeonBoostResolution,
+                amdManager.AMDRadeonChillEnabled,
+                amdManager.AMDRadeonChillSupported);
 
             Logger.Info("Initialize callbacks.");
             systemManager.RunningGame.PropertyChanged += RunningGame_PropertyChanged;

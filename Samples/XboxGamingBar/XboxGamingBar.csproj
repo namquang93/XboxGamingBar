@@ -94,6 +94,8 @@
     <Compile Include="Data\AMDRadeonBoostEnabledProperty.cs" />
     <Compile Include="Data\AMDRadeonBoostResolutionProperty.cs" />
     <Compile Include="Data\AMDRadeonBoostSupportedProperty.cs" />
+    <Compile Include="Data\AMDRadeonChillEnabledProperty.cs" />
+    <Compile Include="Data\AMDRadeonChillSupportedProperty.cs" />
     <Compile Include="Data\AMDRadeonSuperResolutionEnabledProperty.cs" />
     <Compile Include="Data\AMDRadeonSuperResolutionSharpnessProperty.cs" />
     <Compile Include="Data\CPUBoostProperty.cs" />

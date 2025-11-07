@@ -24,6 +24,10 @@
         AMDAntiLagEnabled,
         AMDRadeonBoostSupported,
         AMDRadeonBoostEnabled,
-        AMDRadeonBoostResolution
+        AMDRadeonBoostResolution,
+        AMDRadeonChillSupported,
+        AMDRadeonChillEnabled,
+        AMDRadeonChillMinFPS,
+        AMDRadeonChillMaxFPS,
     }
 }

@@ -63,6 +63,8 @@ namespace XboxGamingBar
         private readonly AMDRadeonBoostEnabledProperty amdRadeonBoostEnabled;
         private readonly AMDRadeonBoostSupportedProperty amdRadeonBoostSupported;
         private readonly AMDRadeonBoostResolutionProperty amdRadeonBoostResolution;
+        private readonly AMDRadeonChillEnabledProperty amdRadeonChillEnabled;
+        private readonly AMDRadeonChillSupportedProperty amdRadeonChillSupported;
 
         private readonly WidgetProperties properties;
 
@@ -91,6 +93,8 @@ namespace XboxGamingBar
             amdRadeonBoostEnabled = new AMDRadeonBoostEnabledProperty(AMDRadeonBoostToggle, this);
             amdRadeonBoostSupported = new AMDRadeonBoostSupportedProperty(AMDRadeonBoostToggle, this);
             amdRadeonBoostResolution = new AMDRadeonBoostResolutionProperty(AMDRadeonBoostResolutionSlider, this);
+            amdRadeonChillEnabled = new AMDRadeonChillEnabledProperty(AMDRadeonChillToggle, this);
+            amdRadeonChillSupported = new AMDRadeonChillSupportedProperty(AMDRadeonChillToggle, this);
             properties = new WidgetProperties(
                 osd,
                 tdp,
@@ -113,7 +117,9 @@ namespace XboxGamingBar
                 amdAntiLagSupported,
                 amdRadeonBoostEnabled,
                 amdRadeonBoostSupported,
-                amdRadeonBoostResolution
+                amdRadeonBoostResolution,
+                amdRadeonChillEnabled,
+                amdRadeonChillSupported
                 );
         }
 

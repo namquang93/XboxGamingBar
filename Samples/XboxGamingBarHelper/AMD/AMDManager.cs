@@ -42,6 +42,12 @@ namespace XboxGamingBarHelper.AMD
             get { return amdRadeonBoostSetting; }
         }
 
+        private readonly AMDRadeonChillSetting amdRadeonChillSetting;
+        public AMDRadeonChillSetting AMDRadeonChillSetting
+        {
+            get { return amdRadeonChillSetting; }
+        }
+
         // AMD Properties.
         private readonly AMDRadeonSuperResolutionSupportedProperty amdRadeonSuperResolutionSupported;
         public AMDRadeonSuperResolutionSupportedProperty AMDRadeonSuperResolutionSupported
@@ -101,6 +107,30 @@ namespace XboxGamingBarHelper.AMD
         public AMDRadeonBoostResolutionProperty AMDRadeonBoostResolution
         {
             get { return amdRadeonBoostResolution; }
+        }
+
+        private readonly AMDRadeonChillSupportedProperty amdRadeonChillSupported;
+        public AMDRadeonChillSupportedProperty AMDRadeonChillSupported
+        {
+            get { return amdRadeonChillSupported; }
+        }
+
+        private readonly AMDRadeonChillEnabledProperty amdRadeonChillEnabled;
+        public AMDRadeonChillEnabledProperty AMDRadeonChillEnabled
+        {
+            get { return amdRadeonChillEnabled; }
+        }
+
+        private readonly AMDRadeonChillMinFPSProperty amdRadeonChillMinFPS;
+        public AMDRadeonChillMinFPSProperty AMDRadeonChillMinFPS
+        {
+            get { return amdRadeonChillMinFPS; }
+        }
+
+        private readonly AMDRadeonChillMaxFPSProperty amdRadeonChillMaxFPS;
+        public AMDRadeonChillMaxFPSProperty AMDRadeonChillMaxFPS
+        {
+            get { return amdRadeonChillMaxFPS; }
         }
 
         public AMDManager(AppServiceConnection connection) : base(connection)
@@ -213,6 +243,18 @@ namespace XboxGamingBarHelper.AMD
             amdRadeonBoostEnabled = new AMDRadeonBoostEnabledProperty(amdRadeonBoostSetting.IsEnabled(), this);
             var amdRadeonBoostResolutionRange = amdRadeonBoostSetting.GetResolutionRange();
             amdRadeonBoostResolution = new AMDRadeonBoostResolutionProperty(amdRadeonBoostSetting.GetResolution() == amdRadeonBoostResolutionRange.Item1 ? 0 : 1, this);
+
+            Logger.Info("Get AMD Radeon Chill.");
+            var threeDRadeonChillPointer = ADLX.new_threeDChillP_Ptr();
+            adlx3DSettingsServices.GetChill(adlxInternalGPU, threeDRadeonChillPointer);
+            var threeDRadeonChill = ADLX.threeDChillP_Ptr_value(threeDRadeonChillPointer);
+            amdRadeonChillSetting = new AMDRadeonChillSetting(threeDRadeonChill);
+            amdRadeonChillEnabled = new AMDRadeonChillEnabledProperty(amdRadeonChillSetting.IsEnabled(), this);
+            amdRadeonChillSupported = new AMDRadeonChillSupportedProperty(amdRadeonChillSetting.IsSupported(), this);
+            amdRadeonChillMinFPS = new AMDRadeonChillMinFPSProperty(amdRadeonChillSetting.GetMinFPS(), this);
+            amdRadeonChillMaxFPS = new AMDRadeonChillMaxFPSProperty(amdRadeonChillSetting.GetMaxFPS(), this);
+
+            Logger.Info("AMD Manager initialized successfully.");
         }
 
         ~AMDManager()
