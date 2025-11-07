@@ -4,6 +4,7 @@ using Shared.Data;
 using Shared.Utilities;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.AppService;
@@ -22,7 +23,7 @@ namespace XboxGamingBar
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class GamingWidget : Page
+    public sealed partial class GamingWidget : Page, INotifyPropertyChanged
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private static readonly List<string> BlackListAppTrackerNames = new List<string>()
@@ -67,8 +68,11 @@ namespace XboxGamingBar
         private readonly AMDRadeonChillSupportedProperty amdRadeonChillSupported;
         private readonly AMDRadeonChillMinFPSProperty amdRadeonChillMinFPSProperty;
         private readonly AMDRadeonChillMaxFPSProperty amdRadeonChillMaxFPSProperty;
+        private string RadeonChillOnText => string.Format("Idle FPS: {0} - Max FPS: {1}", amdRadeonChillMinFPSProperty.Value, amdRadeonChillMaxFPSProperty.Value);
 
         private readonly WidgetProperties properties;
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public GamingWidget()
         {
@@ -100,6 +104,9 @@ namespace XboxGamingBar
             amdRadeonChillMinFPSProperty = new AMDRadeonChillMinFPSProperty(AMDRadeonChillMinFPSSlider, this);
             amdRadeonChillMaxFPSProperty = new AMDRadeonChillMaxFPSProperty(AMDRadeonChillMaxFPSSlider, this);
 
+            amdRadeonChillMinFPSProperty.PropertyChanged += AmdRadeonChillFPSChanged;
+            amdRadeonChillMaxFPSProperty.PropertyChanged += AmdRadeonChillFPSChanged;
+
             properties = new WidgetProperties(
                 osd,
                 tdp,
@@ -128,6 +135,11 @@ namespace XboxGamingBar
                 amdRadeonChillMinFPSProperty,
                 amdRadeonChillMaxFPSProperty
                 );
+        }
+
+        private void AmdRadeonChillFPSChanged(object sender, PropertyChangedEventArgs e)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(RadeonChillOnText)));
         }
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
