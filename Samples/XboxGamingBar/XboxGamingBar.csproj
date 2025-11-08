@@ -120,6 +120,7 @@
     <Compile Include="Data\WidgetProperty.cs" />
     <Compile Include="Data\WidgetPropertyWithAdditionalUI.cs" />
     <Compile Include="Data\WidgetToggleProperty.cs" />
+    <Compile Include="Event\BackgroundTaskCancellationEventArgs.cs" />
     <Compile Include="GamingWidget.xaml.cs">
       <DependentUpon>GamingWidget.xaml</DependentUpon>
     </Compile>

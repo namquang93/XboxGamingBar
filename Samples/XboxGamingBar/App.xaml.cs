@@ -8,6 +8,7 @@ using Windows.ApplicationModel.Background;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using XboxGamingBar.Event;
 
 namespace XboxGamingBar
 {
@@ -81,11 +82,11 @@ namespace XboxGamingBar
         /// </summary>
         private void OnTaskCanceled(IBackgroundTaskInstance sender, BackgroundTaskCancellationReason reason)
         {
-            Logger.Info("App task canceled");
+            Logger.Info($"App task canceled because {reason}");
             AppServiceDeferral?.Complete();
             AppServiceDeferral = null;
             Connection = null;
-            AppServiceDisconnected?.Invoke(this, null);
+            AppServiceDisconnected?.Invoke(this, new BackgroundTaskCancellationEventArgs(reason));
         }
 
         protected override void OnActivated(IActivatedEventArgs args)

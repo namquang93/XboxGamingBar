@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.AppService;
+using Windows.ApplicationModel.Background;
 using Windows.Foundation.Metadata;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
@@ -15,6 +16,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using XboxGamingBar.Data;
+using XboxGamingBar.Event;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -292,15 +294,19 @@ namespace XboxGamingBar
                 Logger.Info("Stopped widget activity.");
             }
 
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-            {
-                Logger.Info("AppService Disconnected");
+            var eventArgs = e as BackgroundTaskCancellationEventArgs;
+            Logger.Info($"AppService disconnected due to {eventArgs.Reason}, trying to relaunch.");
+            await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
+
+            // await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            // {
+                // Logger.Info("AppService Disconnected");
                 // disable UI to access the connection
                 // btnRegKey.IsEnabled = false;
 
                 // ask user if they want to reconnect
                 // Reconnect();
-            });
+            // });
         }
 
         private async void GamingWidget_RequestedThemeChanged(XboxGameBarWidget sender, object args)
