@@ -48,6 +48,8 @@ namespace XboxGamingBarHelper.AMD
             get { return amdRadeonChillSetting; }
         }
 
+        private readonly AMD3DSettingsChangedListener amd3DSettingsChangedListener;
+
         // AMD Properties.
         private readonly AMDRadeonSuperResolutionSupportedProperty amdRadeonSuperResolutionSupported;
         public AMDRadeonSuperResolutionSupportedProperty AMDRadeonSuperResolutionSupported
@@ -260,6 +262,13 @@ namespace XboxGamingBarHelper.AMD
             amdRadeonAntiLagEnabled.PropertyChanged += AmdRadeonAntiLagEnabled;
             amdRadeonBoostEnabled.PropertyChanged += AmdRadeonBoostEnabled;
             amdRadeonChillEnabled.PropertyChanged += AmdRadeonChillEnabled;
+
+            var threeDSettingsChangedHandlingPointer = ADLX.new_threeDSettingsChangedHandlingP_Ptr();
+            //ADLX.new_threeDSettingsChangedHandlingP_Ptr
+            adlx3DSettingsServices.Get3DSettingsChangedHandling(threeDSettingsChangedHandlingPointer);
+            var threeDSettingsChangedHandling = ADLX.threeDSettingsChangedHandlingP_Ptr_value(threeDSettingsChangedHandlingPointer);
+            amd3DSettingsChangedListener = new AMD3DSettingsChangedListener(this);
+            threeDSettingsChangedHandling.Add3DSettingsEventListener(amd3DSettingsChangedListener);
         }
 
         private void AmdRadeonChillEnabled(object sender, System.ComponentModel.PropertyChangedEventArgs e)

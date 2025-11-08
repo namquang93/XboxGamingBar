@@ -339,6 +339,7 @@
     <Compile Include="ADLXDepends\SWIGTYPE_p_unsigned_short.cs" />
     <Compile Include="ADLXDepends\SWIGTYPE_p_void.cs" />
     <Compile Include="ADLXDepends\SWIGTYPE_p_wchar_t.cs" />
+    <Compile Include="AMD\AMD3DSettingsChangedListener.cs" />
     <Compile Include="AMD\AMDDelegates.cs" />
     <Compile Include="AMD\AMDManager.cs" />
     <Compile Include="AMD\AMDSetting.cs" />
