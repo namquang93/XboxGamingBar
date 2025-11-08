@@ -46,7 +46,7 @@
                     <RowDefinition x:Name="Row_22_AMDRadeonSuperResolutionToggle" Height="36"/>
                     <RowDefinition x:Name="Row_23_AMDRadeonSuperResolutionSlider" Height="Auto"/>
                     <RowDefinition x:Name="Row_24_AMDFluidMotionFrameToggle" Height="36"/>
-                    <RowDefinition x:Name="Row_25_AMDAntiLagToggle" Height="36"/>
+                    <RowDefinition x:Name="Row_25_AMDRadeonAntiLagToggle" Height="36"/>
                     <RowDefinition x:Name="Row_26_AMDRadeonBoostToggle" Height="36"/>
                     <RowDefinition x:Name="Row_27_AMDRadeonBoostResolutionSlider" Height="Auto"/>
                     <RowDefinition x:Name="Row_28_AMDRadeonChillToggle" Height="36"/>
@@ -151,9 +151,9 @@
                 <ToggleSwitch x:Name="AMDFluidMotionFrameToggle" IsEnabled="False" OffContent="Disabled" OnContent="Enabled"
                     FlowDirection="RightToLeft" Grid.Row="24" VerticalAlignment="Center" HorizontalAlignment="Right" />
 
-                <TextBlock x:Name="AMDAntiLagText" Text="Radeon Anti-Lag" FontWeight="SemiBold" FontSize="18" Grid.Row="25"
+                <TextBlock x:Name="AMDRadeonAntiLagText" Text="Radeon Anti-Lag" FontWeight="SemiBold" FontSize="18" Grid.Row="25"
                     TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" Width="250" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                <ToggleSwitch x:Name="AMDAntiLagToggle" IsEnabled="False" OffContent="Disabled" OnContent="Enabled"
+                <ToggleSwitch x:Name="AMDRadeonAntiLagToggle" IsEnabled="False" OffContent="Disabled" OnContent="Enabled"
                     FlowDirection="RightToLeft" Grid.Row="25" VerticalAlignment="Center" HorizontalAlignment="Right" />
 
                 <TextBlock x:Name="AMDRadeonBoostText" Text="Radeon Boost" FontWeight="SemiBold" FontSize="18" Grid.Row="26"

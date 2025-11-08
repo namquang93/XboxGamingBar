@@ -30,10 +30,10 @@ namespace XboxGamingBarHelper.AMD
             get { return amdFluidMotionFrameSetting; }
         }
 
-        private readonly AMDAntiLagSetting amdAntiLagSetting;
-        public AMDAntiLagSetting AMDAntiLagSetting
+        private readonly AMDRadeonAntiLagSetting amdRadeonAntiLagSetting;
+        public AMDRadeonAntiLagSetting AMDRadeonAntiLagSetting
         {
-            get { return amdAntiLagSetting; }
+            get { return amdRadeonAntiLagSetting; }
         }
 
         private readonly AMDRadeonBoostSetting amdRadeonBoostSetting;
@@ -79,16 +79,16 @@ namespace XboxGamingBarHelper.AMD
             get { return amdFluidMotionFrameEnabled; }
         }
 
-        private readonly AMDAntiLagSupportedProperty amdAntiLagSupported;
-        public AMDAntiLagSupportedProperty AMDAntiLagSupported
+        private readonly AMDRadeonAntiLagSupportedProperty amdRadeonAntiLagSupported;
+        public AMDRadeonAntiLagSupportedProperty AMDRadeonAntiLagSupported
         {
-            get { return amdAntiLagSupported; }
+            get { return amdRadeonAntiLagSupported; }
         }
 
-        private readonly AMDAntiLagEnabledProperty amdAntiLagEnabled;
-        public AMDAntiLagEnabledProperty AMDAntiLagEnabled
+        private readonly AMDRadeonAntiLagEnabledProperty amdRadeonAntiLagEnabled;
+        public AMDRadeonAntiLagEnabledProperty AMDRadeonAntiLagEnabled
         {
-            get { return amdAntiLagEnabled; }
+            get { return amdRadeonAntiLagEnabled; }
         }
 
         private readonly AMDRadeonBoostSupportedProperty amdRadeonBoostSupported;
@@ -230,9 +230,9 @@ namespace XboxGamingBarHelper.AMD
             var threeDAntiLagPointer = ADLX.new_threeDAntiLagP_Ptr();
             adlx3DSettingsServices.GetAntiLag(adlxInternalGPU, threeDAntiLagPointer);
             var threeDAntiLag = ADLX.threeDAntiLagP_Ptr_value(threeDAntiLagPointer);
-            amdAntiLagSetting = new AMDAntiLagSetting(threeDAntiLag);
-            amdAntiLagSupported = new AMDAntiLagSupportedProperty(amdAntiLagSetting.IsSupported(), this);
-            amdAntiLagEnabled = new AMDAntiLagEnabledProperty(amdAntiLagSetting.IsEnabled(), this);
+            amdRadeonAntiLagSetting = new AMDRadeonAntiLagSetting(threeDAntiLag);
+            amdRadeonAntiLagSupported = new AMDRadeonAntiLagSupportedProperty(amdRadeonAntiLagSetting.IsSupported(), this);
+            amdRadeonAntiLagEnabled = new AMDRadeonAntiLagEnabledProperty(amdRadeonAntiLagSetting.IsEnabled(), this);
 
             Logger.Info("Get AMD Radeon Boost.");
             var threeDRadeonBoostPointer = ADLX.new_threeDBoostP_Ptr();
@@ -255,6 +255,85 @@ namespace XboxGamingBarHelper.AMD
             amdRadeonChillMaxFPS = new AMDRadeonChillMaxFPSProperty(amdRadeonChillSetting.GetMaxFPS(), this);
 
             Logger.Info("AMD Manager initialized successfully.");
+
+            amdFluidMotionFrameEnabled.PropertyChanged += AmdFluidMotionFrameEnabled;
+            amdRadeonAntiLagEnabled.PropertyChanged += AmdRadeonAntiLagEnabled;
+            amdRadeonBoostEnabled.PropertyChanged += AmdRadeonBoostEnabled;
+            amdRadeonChillEnabled.PropertyChanged += AmdRadeonChillEnabled;
+        }
+
+        private void AmdRadeonChillEnabled(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (amdRadeonChillEnabled)
+            {
+                if (amdRadeonAntiLagSupported && amdRadeonAntiLagEnabled)
+                {
+                    Logger.Info($"AMD Radeon Chill enabled, Radeon Anti-Lag should be disabled too.");
+                    amdRadeonAntiLagEnabled.SetValue(false);
+                }
+                else
+                {
+                    Logger.Info($"AMD Radeon Chill enabled but Radeon Anti-Lag is not supported or enabled.");
+                }
+
+                if (amdRadeonBoostSupported && amdRadeonBoostEnabled)
+                {
+                    Logger.Info($"AMD Radeon Chill enabled, Radeon Boost should be disabled too.");
+                    amdRadeonBoostEnabled.SetValue(false);
+                }
+                else
+                {
+                    Logger.Info($"AMD Radeon Chill enabled but Radeon Boost is not supported or enabled.");
+                }
+            }
+        }
+
+        private void AmdRadeonBoostEnabled(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (amdRadeonBoostEnabled)
+            {
+                if (amdRadeonChillSupported && amdRadeonChillEnabled)
+                {
+                    Logger.Info($"Radeon Boost enabled, AMD Radeon Chill should be disabled too.");
+                    amdRadeonChillEnabled.SetValue(false);
+                }
+                else
+                {
+                    Logger.Info($"Radeon Boost enabled but AMD Radeon Chill is not supported or enabled.");
+                }
+            }
+        }
+
+        private void AmdRadeonAntiLagEnabled(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (amdRadeonAntiLagEnabled)
+            {
+                if (amdRadeonChillSupported && amdRadeonChillEnabled)
+                {
+                    Logger.Info($"Radeon Anti-Lag enabled, AMD Radeon Chill should be disabled too.");
+                    amdRadeonChillEnabled.SetValue(false);
+                }
+                else
+                {
+                    Logger.Info($"Radeon Anti-Lag enabled but AMD Radeon Chill is not supported or enabled.");
+                }
+            }
+        }
+
+        private void AmdFluidMotionFrameEnabled(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (amdFluidMotionFrameEnabled)
+            {
+                if (amdRadeonAntiLagSupported && !amdRadeonAntiLagEnabled)
+                {
+                    Logger.Info($"AMD Fluid Motion Frame enabled, Radeon Anti-Lag should be enabled too.");
+                    amdRadeonAntiLagEnabled.SetValue(true);
+                }
+                else
+                {
+                    Logger.Info($"AMD Fluid Motion Frame enabled but Radeon Anti-Lag is not supported or already enabled.");
+                }
+            }
         }
 
         ~AMDManager()

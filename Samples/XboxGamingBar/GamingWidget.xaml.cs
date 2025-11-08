@@ -59,8 +59,8 @@ namespace XboxGamingBar
         private readonly AMDRadeonSuperResolutionSharpnessProperty amdRadeonSuperResolutionSharpness;
         private readonly AMDFluidMotionFrameEnabledProperty amdFluidMotionFrameEnabled;
         private readonly AMDFluidMotionFrameSupportedProperty amdFluidMotionFrameSupported;
-        private readonly AMDAntiLagEnabledProperty amdAntiLagEnabled;
-        private readonly AMDAntiLagSupportedProperty amdAntiLagSupported;
+        private readonly AMDRadeonAntiLagEnabledProperty amdRadeonAntiLagEnabled;
+        private readonly AMDRadeonAntiLagSupportedProperty amdRadeonAntiLagSupported;
         private readonly AMDRadeonBoostEnabledProperty amdRadeonBoostEnabled;
         private readonly AMDRadeonBoostSupportedProperty amdRadeonBoostSupported;
         private readonly AMDRadeonBoostResolutionProperty amdRadeonBoostResolution;
@@ -94,8 +94,8 @@ namespace XboxGamingBar
             amdRadeonSuperResolutionSharpness = new AMDRadeonSuperResolutionSharpnessProperty(AMDRadeonSuperResolutionSharpnessSlider, this);
             amdFluidMotionFrameEnabled = new AMDFluidMotionFrameEnabledProperty(AMDFluidMotionFrameToggle, this);
             amdFluidMotionFrameSupported = new AMDFluidMotionFrameSupportedProperty(AMDFluidMotionFrameToggle, this);
-            amdAntiLagEnabled = new AMDAntiLagEnabledProperty(AMDAntiLagToggle, this);
-            amdAntiLagSupported = new AMDAntiLagSupportedProperty(AMDAntiLagToggle, this);
+            amdRadeonAntiLagEnabled = new AMDRadeonAntiLagEnabledProperty(AMDRadeonAntiLagToggle, this);
+            amdRadeonAntiLagSupported = new AMDRadeonAntiLagSupportedProperty(AMDRadeonAntiLagToggle, this);
             amdRadeonBoostEnabled = new AMDRadeonBoostEnabledProperty(AMDRadeonBoostToggle, this);
             amdRadeonBoostSupported = new AMDRadeonBoostSupportedProperty(AMDRadeonBoostToggle, this);
             amdRadeonBoostResolution = new AMDRadeonBoostResolutionProperty(AMDRadeonBoostResolutionSlider, this);
@@ -125,8 +125,8 @@ namespace XboxGamingBar
                 amdRadeonSuperResolutionSharpness,
                 amdFluidMotionFrameEnabled,
                 amdFluidMotionFrameSupported,
-                amdAntiLagEnabled,
-                amdAntiLagSupported,
+                amdRadeonAntiLagEnabled,
+                amdRadeonAntiLagSupported,
                 amdRadeonBoostEnabled,
                 amdRadeonBoostSupported,
                 amdRadeonBoostResolution,
