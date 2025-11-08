@@ -294,19 +294,31 @@ namespace XboxGamingBar
                 Logger.Info("Stopped widget activity.");
             }
 
+            //await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            //{
+            //    Logger.Info("AppService disconnected, disable UI elements");
+            //    PerformanceOverlaySlider.IsEnabled = false;
+            //    TDPSlider.IsEnabled = false;
+            //    PerGameProfileToggle.IsEnabled = false;
+            //    CPUBoostToggle.IsEnabled = false;
+            //    CPUEPPSlider.IsEnabled = false;
+            //    LimitCPUClockToggle.IsEnabled = false;
+            //    CPUClockMaxSlider.IsEnabled = false;
+            //    RefreshRatesComboBox.IsEnabled = false;
+            //    AMDRadeonSuperResolutionToggle.IsEnabled = false;
+            //    AMDRadeonSuperResolutionSharpnessSlider.IsEnabled = false;
+            //    AMDFluidMotionFrameToggle.IsEnabled = false;
+            //    AMDRadeonAntiLagToggle.IsEnabled = false;
+            //    AMDRadeonBoostToggle.IsEnabled = false;
+            //    AMDRadeonBoostResolutionSlider.IsEnabled = false;
+            //    AMDRadeonChillToggle.IsEnabled = false;
+            //    AMDRadeonChillMinFPSSlider.IsEnabled = false;
+            //    AMDRadeonChillMaxFPSSlider.IsEnabled = false;
+            //});
+
             var eventArgs = e as BackgroundTaskCancellationEventArgs;
             Logger.Info($"AppService disconnected due to {eventArgs.Reason}, trying to relaunch.");
             await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
-
-            // await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-            // {
-                // Logger.Info("AppService Disconnected");
-                // disable UI to access the connection
-                // btnRegKey.IsEnabled = false;
-
-                // ask user if they want to reconnect
-                // Reconnect();
-            // });
         }
 
         private async void GamingWidget_RequestedThemeChanged(XboxGameBarWidget sender, object args)
