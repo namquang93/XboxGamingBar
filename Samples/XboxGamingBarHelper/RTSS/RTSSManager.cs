@@ -1,6 +1,8 @@
 ﻿using RTSSSharedMemoryNET;
+using Shared.Enums;
 using Shared.Utilities;
 using System;
+using System.Diagnostics;
 using Windows.ApplicationModel.AppService;
 using XboxGamingBarHelper.Core;
 using XboxGamingBarHelper.Performance;
@@ -29,6 +31,8 @@ namespace XboxGamingBarHelper.RTSS
             get { return rtssInstalled; }
         }
 
+        private RivatunerStatisticsServerState rtssState;
+
         public RTSSManager(PerformanceManager performanceManager, AppServiceConnection connection) : base(connection)
         {
             osd = new OSDProperty(0, null, this);
@@ -41,6 +45,8 @@ namespace XboxGamingBarHelper.RTSS
                 new OSDItemCPU(performanceManager.CPUUsage, performanceManager.CPUClock, performanceManager.CPUWattage, performanceManager.CPUTemperature),
                 new OSDItemGPU(performanceManager.GPUUsage, performanceManager.GPUClock, performanceManager.GPUWattage, performanceManager.GPUTemperature),
             };
+
+            rtssState = RivatunerStatisticsServerState.NotInstalled;
         }
 
         public override void Update()
@@ -50,10 +56,11 @@ namespace XboxGamingBarHelper.RTSS
             var isRTSSInstalled = RTSSHelper.IsInstalled();
             if (rtssInstalled.Value != isRTSSInstalled)
                 rtssInstalled.SetValue(isRTSSInstalled);
-            
-            if (!RTSSHelper.IsRunning())
+
+            if (!isRTSSInstalled)
             {
-                Logger.Debug("Rivatuner Statistics Server is not running.");
+                Logger.Debug("Rivatuner Statistics Server is not installed.");
+                rtssState = RivatunerStatisticsServerState.NotInstalled;
                 return;
             }
 
@@ -66,18 +73,58 @@ namespace XboxGamingBarHelper.RTSS
                     rtssOSD = null;
                 }
 
-                var osdEntries = RTSSSharedMemoryNET.OSD.GetOSDEntries();
-                for (int i = 0; i < osdEntries.Length; i++)
+                //var osdEntries = RTSSSharedMemoryNET.OSD.GetOSDEntries();
+                //for (int i = 0; i < osdEntries.Length; i++)
+                //{
+                //    OSDEntry osdEntry = osdEntries[i];
+                //    if (osdEntry.Owner == OSDAppName)
+                //    {
+                //        osdEntry.Text = string.Empty;
+                //    }
+                //}
+
+                var rtssProcess = RTSSHelper.GetProcess();
+                if (rtssProcess != null)
                 {
-                    OSDEntry osdEntry = osdEntries[i];
-                    if (osdEntry.Owner == OSDAppName)
+                    try
                     {
-                        osdEntry.Text = string.Empty;
+                        Logger.Info("Stopping Rivatuner Statistics Server..");
+                        rtssProcess.Kill();
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Error(ex, "Failed to stop Rivatuner Statistics Server.");
                     }
                 }
+                rtssState = RivatunerStatisticsServerState.NotRunning;
 
                 return;
             }
+
+            if (!RTSSHelper.IsRunning())
+            {
+                if (rtssState == RivatunerStatisticsServerState.Starting)
+                {
+                    Logger.Info("Starting Rivatuner Statistics Server..");
+                }
+                else
+                {
+                    rtssState = RivatunerStatisticsServerState.Starting;
+                    try
+                    {
+                        Logger.Info("Start Rivatuner Statistics Server.");
+                        Process.Start(RTSSHelper.ExecutablePath());
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Error(ex, "Failed to start Rivatuner Statistics Server.");
+                        rtssState = RivatunerStatisticsServerState.NotRunning;
+                    }
+                }
+                return;
+            }
+
+            rtssState = RivatunerStatisticsServerState.Running;
 
             if (rtssOSD == null)
             {

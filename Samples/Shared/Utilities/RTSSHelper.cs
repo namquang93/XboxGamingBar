@@ -6,15 +6,25 @@ namespace Shared.Utilities
 {
     public static partial class RTSSHelper
     {
-        public static bool IsRunning()
+        public static Process GetProcess()
         {
             var rtssProcessses = Process.GetProcessesByName("RTSS");
             if (rtssProcessses.Length == 0)
             {
+                return null;
+            }
+
+            return rtssProcessses[0];
+        }
+
+        public static bool IsRunning()
+        {
+            var rtssProcess = GetProcess();
+            if (rtssProcess == null)
+            {
                 return false;
             }
 
-            var rtssProcess = rtssProcessses[0];
             return (DateTime.Now - rtssProcess.StartTime).TotalSeconds >= 2.0f;
         }
 
@@ -37,6 +47,16 @@ namespace Shared.Utilities
 
                 return (string)key.GetValue("InstallDir");
             }
+        }
+
+        public static string ExecutablePath()
+        {
+            var installLocation = InstalledLocation();
+            if (string.IsNullOrEmpty(installLocation))
+            {
+                return string.Empty;
+            }
+            return System.IO.Path.Combine(installLocation, "RTSS.exe");
         }
     }
 }
