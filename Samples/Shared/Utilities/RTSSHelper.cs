@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using System;
 using System.Diagnostics;
 
 namespace Shared.Utilities
@@ -7,7 +8,14 @@ namespace Shared.Utilities
     {
         public static bool IsRunning()
         {
-            return Process.GetProcessesByName("RTSS").Length > 0;
+            var rtssProcessses = Process.GetProcessesByName("RTSS");
+            if (rtssProcessses.Length == 0)
+            {
+                return false;
+            }
+
+            var rtssProcess = rtssProcessses[0];
+            return (DateTime.Now - rtssProcess.StartTime).TotalSeconds >= 2.0f;
         }
 
         public static bool IsInstalled()
