@@ -212,7 +212,7 @@ namespace XboxGamingBar
 
             if (target == null)
             {
-                //Logger.Info("Found no target.");
+                Logger.Info("Found no target.");
                 trackedGame.SetValue(new TrackedGame());
             }
             else
@@ -224,7 +224,7 @@ namespace XboxGamingBar
                 }
                 else
                 {
-                    Logger.Debug($"Tracked non-game DisplayName={target.DisplayName} AumId={target.AumId} TitleId={target.TitleId} IsFullscreen={target.IsFullscreen}");
+                    Logger.Info($"Tracked non-game DisplayName={target.DisplayName} AumId={target.AumId} TitleId={target.TitleId} IsFullscreen={target.IsFullscreen}");
                     trackedGame.SetValue(new TrackedGame());
                 }
             }
