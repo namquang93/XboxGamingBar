@@ -162,6 +162,7 @@ namespace XboxGamingBar
                 Logger.Info("Running as a Xbox Game Bar widget.");
                 await widget.CenterWindowAsync();
                 widget.RequestedThemeChanged += GamingWidget_RequestedThemeChanged;
+                widget.SettingsClicked += GamingWidget_SettingsClicked;
             }
             else
             {
@@ -327,6 +328,11 @@ namespace XboxGamingBar
             {
                 SetBackgroundColor();
             });
+        }
+
+        private async void GamingWidget_SettingsClicked(XboxGameBarWidget sender, object args)
+        {
+            await widget.ActivateSettingsAsync();
         }
 
         private void SetBackgroundColor()

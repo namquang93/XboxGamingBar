@@ -125,6 +125,9 @@
       <DependentUpon>GamingWidget.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converter\MegahertzStringConverter.cs" />
+    <Compile Include="GamingWidgetSettings.xaml.cs">
+      <DependentUpon>GamingWidgetSettings.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Converter\WattStringConverter.cs" />
     <Compile Include="WidgetUIProperty.cs" />
@@ -224,6 +227,10 @@
     <Page Include="GamingWidget.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="GamingWidgetSettings.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
