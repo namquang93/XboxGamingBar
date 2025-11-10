@@ -358,6 +358,8 @@
     <Compile Include="Core\HelperProperty.cs" />
     <Compile Include="Core\IManager.cs" />
     <Compile Include="Core\Manager.cs" />
+    <Compile Include="OnScreenDisplay\IOnScreenDisplayProvider.cs" />
+    <Compile Include="OnScreenDisplay\OnScreenDisplayManager.cs" />
     <Compile Include="Performance\HardwareSensor.cs" />
     <Compile Include="Performance\PerformanceManager.cs" />
     <Compile Include="Performance\RyzenAdj.cs" />
@@ -394,7 +396,7 @@
     <Compile Include="RTSS\OSDItems\OSDItemGPU.cs" />
     <Compile Include="RTSS\OSDItems\OSDItemMemory.cs" />
     <Compile Include="RTSS\OSDItemValue.cs" />
-    <Compile Include="RTSS\OSDProperty.cs" />
+    <Compile Include="OnScreenDisplay\OnScreenDisplayProperty.cs" />
     <Compile Include="RTSS\RTSSInstalledProperty.cs" />
     <Compile Include="RTSS\RTSSManager.cs" />
     <Compile Include="Settings\AutoStartRTSSProperty.cs" />

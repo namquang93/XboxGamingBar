@@ -9,6 +9,7 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.AppService;
 using XboxGamingBarHelper.AMD;
 using XboxGamingBarHelper.Core;
+using XboxGamingBarHelper.OnScreenDisplay;
 using XboxGamingBarHelper.Performance;
 using XboxGamingBarHelper.Power;
 using XboxGamingBarHelper.Profile;
@@ -32,6 +33,7 @@ namespace XboxGamingBarHelper
         private static AMDManager amdManager;
         private static SettingsManager settingsManager;
         private static List<IManager> Managers;
+        private static OnScreenDisplayProperty onScreenDisplay;
         private static AppServiceConnectionStatus appServiceConnectionStatus;
 
         // Properties
@@ -85,10 +87,11 @@ namespace XboxGamingBarHelper
             };
 
             Logger.Info("Initialize properties.");
+            onScreenDisplay = new OnScreenDisplayProperty(0, null, rtssManager);
             // Initialize properties.
             properties = new HelperProperties(
                 systemManager.RunningGame,
-                rtssManager.OSD,
+                onScreenDisplay,
                 performanceManager.TDP,
                 profileManager.PerGameProfile,
                 powerManager.CPUBoost,

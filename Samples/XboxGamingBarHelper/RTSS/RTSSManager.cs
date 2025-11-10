@@ -4,14 +4,14 @@ using Shared.Utilities;
 using System;
 using System.Diagnostics;
 using Windows.ApplicationModel.AppService;
-using XboxGamingBarHelper.Core;
+using XboxGamingBarHelper.OnScreenDisplay;
 using XboxGamingBarHelper.Performance;
 using XboxGamingBarHelper.RTSS.OSDItems;
 using XboxGamingBarHelper.Settings;
 
 namespace XboxGamingBarHelper.RTSS
 {
-    internal class RTSSManager : Manager
+    internal class RTSSManager : OnScreenDisplayManager
     {
         private const string OSDSeparator = " <C=6E006A>|<C> ";
         private const string OSDBackground = "<P=0,0><L0><C=80000000><B=0,0>\b<C>";
@@ -19,12 +19,6 @@ namespace XboxGamingBarHelper.RTSS
 
         private OSD rtssOSD;
         private readonly OSDItem[] osdItems;
-
-        private readonly OSDProperty osd;
-        public OSDProperty OSD
-        {
-            get { return osd; }
-        }
 
         private readonly RTSSInstalledProperty rtssInstalled;
         public RTSSInstalledProperty RTSSInstalled
@@ -36,7 +30,7 @@ namespace XboxGamingBarHelper.RTSS
 
         public RTSSManager(PerformanceManager performanceManager, AppServiceConnection connection) : base(connection)
         {
-            osd = new OSDProperty(0, null, this);
+            
             rtssInstalled = new RTSSInstalledProperty(this);
             osdItems = new OSDItem[]
             {
@@ -65,7 +59,7 @@ namespace XboxGamingBarHelper.RTSS
                 return;
             }
 
-            if (osd == 0)
+            if (onScreenDisplayLevel == 0)
             {
                 if (rtssOSD != null)
                 {
@@ -73,16 +67,6 @@ namespace XboxGamingBarHelper.RTSS
                     rtssOSD.Dispose();
                     rtssOSD = null;
                 }
-
-                //var osdEntries = RTSSSharedMemoryNET.OSD.GetOSDEntries();
-                //for (int i = 0; i < osdEntries.Length; i++)
-                //{
-                //    OSDEntry osdEntry = osdEntries[i];
-                //    if (osdEntry.Owner == OSDAppName)
-                //    {
-                //        osdEntry.Text = string.Empty;
-                //    }
-                //}
 
                 var rtssProcess = RTSSHelper.GetProcess();
                 if (rtssProcess != null && SettingsManager.GetInstance().AutoStartRTSS)
@@ -138,7 +122,7 @@ namespace XboxGamingBarHelper.RTSS
             string osdString = OSDBackground;
             for (int i = 0; i < osdItems.Length; i++)
             {
-                var osdItemString = osdItems[i].GetOSDString(osd);
+                var osdItemString = osdItems[i].GetOSDString(onScreenDisplayLevel);
                 if (string.IsNullOrEmpty(osdItemString))
                     continue;
 
