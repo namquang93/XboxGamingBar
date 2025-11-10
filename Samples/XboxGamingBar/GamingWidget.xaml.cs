@@ -56,6 +56,7 @@ namespace XboxGamingBar
         private readonly TrackedGameProperty trackedGame;
         private readonly RTSSInstalledProperty rtssInstalled;
 
+        // AMD properties
         private readonly AMDRadeonSuperResolutionEnabledProperty amdRadeonSuperResolutionEnabled;
         private readonly AMDRadeonSuperResolutionSupportedProperty amdRadeonSuperResolutionSupported;
         private readonly AMDRadeonSuperResolutionSharpnessProperty amdRadeonSuperResolutionSharpness;
@@ -324,7 +325,7 @@ namespace XboxGamingBar
 
         private async void GamingWidget_RequestedThemeChanged(XboxGameBarWidget sender, object args)
         {
-            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 SetBackgroundColor();
             });

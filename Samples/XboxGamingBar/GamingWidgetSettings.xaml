@@ -6,9 +6,21 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    d:DesignHeight="300" d:DesignWidth="300">
 
-    <Grid>
+    <ScrollViewer x:Name="RootScrollViewer" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <Grid x:Name="RootGrid">
+            <Grid x:Name="MainGrid" Margin="15,15,15,15">
+                <Grid.RowDefinitions>
+                    <RowDefinition x:Name="Row_0_ProgressRing" Height="Auto"/>
+                    <RowDefinition x:Name="Row_1_AutoManageRTSS" Height="36"/>
+                </Grid.RowDefinitions>
 
-    </Grid>
+                <TextBlock x:Name="AutoStartRTSSText" Text="Auto Start RTSS" FontWeight="SemiBold" FontSize="18" Grid.Row="1"
+                    TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" Width="250" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                <ToggleSwitch x:Name="AutoStartRTSSToggle" IsEnabled="False" OffContent="Disabled" OnContent="Enabled"
+                    FlowDirection="RightToLeft" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Right" />
+            </Grid>
+        </Grid>
+    </ScrollViewer>
 </Page>

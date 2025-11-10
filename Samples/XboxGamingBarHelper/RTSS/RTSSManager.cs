@@ -7,6 +7,7 @@ using Windows.ApplicationModel.AppService;
 using XboxGamingBarHelper.Core;
 using XboxGamingBarHelper.Performance;
 using XboxGamingBarHelper.RTSS.OSDItems;
+using XboxGamingBarHelper.Settings;
 
 namespace XboxGamingBarHelper.RTSS
 {
@@ -84,7 +85,7 @@ namespace XboxGamingBarHelper.RTSS
                 //}
 
                 var rtssProcess = RTSSHelper.GetProcess();
-                if (rtssProcess != null)
+                if (rtssProcess != null && SettingsManager.GetInstance().AutoStartRTSS)
                 {
                     try
                     {
@@ -103,22 +104,25 @@ namespace XboxGamingBarHelper.RTSS
 
             if (!RTSSHelper.IsRunning())
             {
-                if (rtssState == RivatunerStatisticsServerState.Starting)
+                if (SettingsManager.GetInstance().AutoStartRTSS)
                 {
-                    Logger.Info("Starting Rivatuner Statistics Server..");
-                }
-                else
-                {
-                    rtssState = RivatunerStatisticsServerState.Starting;
-                    try
+                    if (rtssState == RivatunerStatisticsServerState.Starting)
                     {
-                        Logger.Info("Start Rivatuner Statistics Server.");
-                        Process.Start(RTSSHelper.ExecutablePath());
+                        Logger.Info("Starting Rivatuner Statistics Server..");
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        Logger.Error(ex, "Failed to start Rivatuner Statistics Server.");
-                        rtssState = RivatunerStatisticsServerState.NotRunning;
+                        rtssState = RivatunerStatisticsServerState.Starting;
+                        try
+                        {
+                            Logger.Info("Start Rivatuner Statistics Server.");
+                            Process.Start(RTSSHelper.ExecutablePath());
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.Error(ex, "Failed to start Rivatuner Statistics Server.");
+                            rtssState = RivatunerStatisticsServerState.NotRunning;
+                        }
                     }
                 }
                 return;

@@ -13,6 +13,7 @@ using XboxGamingBarHelper.Performance;
 using XboxGamingBarHelper.Power;
 using XboxGamingBarHelper.Profile;
 using XboxGamingBarHelper.RTSS;
+using XboxGamingBarHelper.Settings;
 using XboxGamingBarHelper.Systems;
 
 namespace XboxGamingBarHelper
@@ -29,6 +30,7 @@ namespace XboxGamingBarHelper
         private static SystemManager systemManager;
         private static PowerManager powerManager;
         private static AMDManager amdManager;
+        private static SettingsManager settingsManager;
         private static List<IManager> Managers;
         private static AppServiceConnectionStatus appServiceConnectionStatus;
 
@@ -70,6 +72,7 @@ namespace XboxGamingBarHelper
             powerManager = new PowerManager(connection);
             Logger.Info("Initialize AMD Manager.");
             amdManager = new AMDManager(connection);
+            settingsManager = SettingsManager.CreateInstance(connection);
             Managers = new List<IManager>
             {
                 performanceManager,
@@ -77,7 +80,8 @@ namespace XboxGamingBarHelper
                 profileManager,
                 systemManager,
                 powerManager,
-                amdManager
+                amdManager,
+                settingsManager
             };
 
             Logger.Info("Initialize properties.");
@@ -108,7 +112,8 @@ namespace XboxGamingBarHelper
                 amdManager.AMDRadeonChillEnabled,
                 amdManager.AMDRadeonChillSupported,
                 amdManager.AMDRadeonChillMinFPS,
-                amdManager.AMDRadeonChillMaxFPS);
+                amdManager.AMDRadeonChillMaxFPS,
+                settingsManager.AutoStartRTSS);
 
             Logger.Info("Initialize callbacks.");
             systemManager.RunningGame.PropertyChanged += RunningGame_PropertyChanged;
