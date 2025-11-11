@@ -88,6 +88,8 @@ namespace XboxGamingBarHelper
 
             Logger.Info("Initialize properties.");
             onScreenDisplay = new OnScreenDisplayProperty(0, null, rtssManager);
+            //onScreenDisplay = new OnScreenDisplayProperty(0, null, amdManager);
+
             // Initialize properties.
             properties = new HelperProperties(
                 systemManager.RunningGame,
@@ -116,7 +118,8 @@ namespace XboxGamingBarHelper
                 amdManager.AMDRadeonChillSupported,
                 amdManager.AMDRadeonChillMinFPS,
                 amdManager.AMDRadeonChillMaxFPS,
-                settingsManager.AutoStartRTSS);
+                settingsManager.AutoStartRTSS,
+                settingsManager.OnScreenDisplayProvider);
 
             Logger.Info("Initialize callbacks.");
             systemManager.RunningGame.PropertyChanged += RunningGame_PropertyChanged;

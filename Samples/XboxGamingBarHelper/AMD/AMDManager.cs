@@ -1,12 +1,23 @@
-﻿using Windows.ApplicationModel.AppService;
+﻿using Microsoft.Win32;
+using System;
+using Windows.ApplicationModel.AppService;
 using XboxGamingBarHelper.AMD.Properties;
 using XboxGamingBarHelper.AMD.Settings;
-using XboxGamingBarHelper.Core;
+using XboxGamingBarHelper.OnScreenDisplay;
+//using XboxGamingBarHelper.Windows;
+using System.Windows.Forms;
 
 namespace XboxGamingBarHelper.AMD
 {
-    internal class AMDManager : Manager
+    internal class AMDManager : OnScreenDisplayManager
     {
+        // AMD Software stuff
+        // Computer\HKEY_CURRENT_USER\Software\AMD\CN\Performance
+        private static readonly RegistryKey AMD_PERFORMANCE_KEY_ROOT = Registry.CurrentUser;
+        private const string AMD_PERFORMANCE_KEY_PATH = @"Software\AMD\CN\Performance";
+        private const string AMD_PERFORMANCE_STATE_KEY_NAME = "MetricsOverlayState";
+        private const string AMD_PERFORMANCE_PROFILE_KEY_NAME = "MetricsProfile";
+
         // ADLX stuff
         private readonly ADLX_RESULT adlxInitializeResult;
         private readonly ADLXHelper adlxHelper;
@@ -362,6 +373,70 @@ namespace XboxGamingBarHelper.AMD
             base.Update();
 
 
+        }
+
+        public override void SetLevel(int level)
+        {
+            base.SetLevel(level);
+
+            var current = ReadCurrentMetricsProfile();
+            Logger.Info($"Set AMD Software: Adrenaline Edition performance overlay to {level}, current {current.Item1} - {current.Item2}");
+
+            //User32.SendKeyCombo(0x11, 0x10, 0x4F);
+            SendKeys.SendWait("^+o");
+        }
+
+        private static Tuple<int, int> ReadCurrentMetricsProfile()
+        {
+            try
+            {
+                using (RegistryKey subKey = AMD_PERFORMANCE_KEY_ROOT.OpenSubKey(AMD_PERFORMANCE_KEY_PATH))
+                {
+                    if (subKey != null)
+                    {
+                        object value = subKey.GetValue(AMD_PERFORMANCE_STATE_KEY_NAME);
+
+                        if (value != null)
+                        {
+                            Console.WriteLine($"Value of '{AMD_PERFORMANCE_STATE_KEY_NAME}' at '{AMD_PERFORMANCE_KEY_PATH}': {value}");
+                            var stateValue = (int)(uint)value;
+                            if (stateValue == 0)
+                            {
+                                return new Tuple<int, int>(0, 0);
+                            }
+                            else
+                            {
+                                value = subKey.GetValue(AMD_PERFORMANCE_PROFILE_KEY_NAME);
+                                if (value != null)
+                                {
+                                    Console.WriteLine($"Value of {AMD_PERFORMANCE_PROFILE_KEY_NAME} is {value}");
+                                    var profileValue = (int)(uint)value;
+                                    return new Tuple<int, int>(stateValue, profileValue);
+                                }
+                                else
+                                {
+                                    return new Tuple<int, int>(stateValue, 0);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Value '{AMD_PERFORMANCE_STATE_KEY_NAME}' not found in '{AMD_PERFORMANCE_KEY_PATH}'.");
+                            return new Tuple<int, int>(0, 0);
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Registry key '{AMD_PERFORMANCE_KEY_PATH}' not found.");
+                        return new Tuple<int, int>(0, 0);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                return new Tuple<int, int>(0, 0);
+            }
         }
     }
 }

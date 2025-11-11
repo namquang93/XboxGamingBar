@@ -23,7 +23,7 @@
                 <ToggleSwitch x:Name="AutoStartRTSSToggle" IsEnabled="False" OffContent="Disabled" OnContent="Enabled"
                     FlowDirection="RightToLeft" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Right" />
 
-                <controls:RadioButtons x:Name="OverlayMethodRadioButton" Header="Overlay Method" FontWeight="SemiBold" FontSize="18" Grid.Row="2">
+                <controls:RadioButtons x:Name="OnScreenDisplayProviderRadioButtons" Header="OSD Method" FontWeight="SemiBold" FontSize="18" Grid.Row="2">
                     <RadioButton Content="Rivatuner Statistics Server" IsChecked="True"/>
                     <RadioButton Content="AMD Software: Adrenaline Edition" IsChecked="False" />
                 </controls:RadioButtons>

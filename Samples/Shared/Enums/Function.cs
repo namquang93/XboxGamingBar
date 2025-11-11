@@ -31,5 +31,6 @@
         AMDRadeonChillMaxFPS,
 
         Settings_AutoStartRTSS,
+        Settings_OnScreenDisplayProvider,
     }
 }
