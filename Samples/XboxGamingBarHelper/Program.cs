@@ -33,8 +33,10 @@ namespace XboxGamingBarHelper
         private static AMDManager amdManager;
         private static SettingsManager settingsManager;
         private static List<IManager> Managers;
-        private static OnScreenDisplayProperty onScreenDisplay;
         private static AppServiceConnectionStatus appServiceConnectionStatus;
+
+        public static OnScreenDisplayProperty onScreenDisplay;
+        public static List<OnScreenDisplayManager> onScreenDisplayProviders;
 
         // Properties
         private static HelperProperties properties;
@@ -88,6 +90,7 @@ namespace XboxGamingBarHelper
 
             Logger.Info("Initialize properties.");
             onScreenDisplay = new OnScreenDisplayProperty(0, null, rtssManager);
+            onScreenDisplayProviders = new List<OnScreenDisplayManager>() { rtssManager, amdManager };
             //onScreenDisplay = new OnScreenDisplayProperty(0, null, amdManager);
 
             // Initialize properties.

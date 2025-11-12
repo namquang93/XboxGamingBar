@@ -16,7 +16,12 @@ namespace XboxGamingBar.Data
 
         private void RadioButtons_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            
+            //Logger.Info($"On-Screen Display changed to {(e.AddedItems.Count > 0 ? e.AddedItems[0].ToString() : "NO_ITEM")} index {UI.SelectedIndex}");
+            Logger.Info($"On-Screen Display changed to index {UI.SelectedIndex}");
+            if (Value != UI.SelectedIndex)
+            {
+                SetValue(UI.SelectedIndex);
+            }
         }
     }
 }
