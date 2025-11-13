@@ -102,6 +102,7 @@
     <Compile Include="Data\AMDRadeonSuperResolutionSharpnessProperty.cs" />
     <Compile Include="Data\AutoStartRTSSProperty.cs" />
     <Compile Include="Data\CPUBoostProperty.cs" />
+    <Compile Include="Data\IsForegroundProperty.cs" />
     <Compile Include="Data\LimitCPUClockProperty.cs" />
     <Compile Include="Data\CPUClockMaxProperty.cs" />
     <Compile Include="Data\CPUEPPProperty.cs" />

@@ -361,6 +361,7 @@
     <Compile Include="Core\Manager.cs" />
     <Compile Include="OnScreenDisplay\IOnScreenDisplayProvider.cs" />
     <Compile Include="OnScreenDisplay\OnScreenDisplayManager.cs" />
+    <Compile Include="Settings\IsForegroundProperty.cs" />
     <Compile Include="Settings\OnScreenDisplayProviderProperty.cs" />
     <Compile Include="Performance\HardwareSensor.cs" />
     <Compile Include="Performance\PerformanceManager.cs" />

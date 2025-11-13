@@ -107,6 +107,7 @@ namespace XboxGamingBarHelper
                 systemManager.RefreshRate,
                 systemManager.TrackedGame,
                 rtssManager.RTSSInstalled,
+                settingsManager.IsForeground,
                 amdManager.AMDRadeonSuperResolutionEnabled,
                 amdManager.AMDRadeonSuperResolutionSupported,
                 amdManager.AMDRadeonSuperResolutionSharpness,

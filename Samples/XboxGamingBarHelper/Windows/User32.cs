@@ -309,5 +309,15 @@ namespace XboxGamingBarHelper.Windows
 
             SendInput((uint)inputs.Length, inputs, Marshal.SizeOf(typeof(INPUT)));
         }
+
+        public const UInt32 WM_KEYDOWN = 0x0100;
+        public const int VK_CONTROL = 0x11;
+        public const int VK_SHIFT = 0x10;
+        public const int VK_O = 0x4F; // Virtual key code for 'O'
+
+        [DllImport("user32.dll")]
+        public static extern bool PostMessage(IntPtr hWnd, UInt32 Msg, int wParam, int lParam);
+
+
     }
 }

@@ -55,6 +55,7 @@ namespace XboxGamingBar
         private readonly RefreshRateProperty refreshRate;
         private readonly TrackedGameProperty trackedGame;
         private readonly RTSSInstalledProperty rtssInstalled;
+        private readonly IsForegroundProperty isForeground;
 
         // AMD properties
         private readonly AMDRadeonSuperResolutionEnabledProperty amdRadeonSuperResolutionEnabled;
@@ -92,6 +93,7 @@ namespace XboxGamingBar
             refreshRate = new RefreshRateProperty(RefreshRatesComboBox, this);
             trackedGame = new TrackedGameProperty(new TrackedGame());
             rtssInstalled = new RTSSInstalledProperty(PerformanceOverlaySlider, this);
+            isForeground = new IsForegroundProperty();
             amdRadeonSuperResolutionEnabled = new AMDRadeonSuperResolutionEnabledProperty(AMDRadeonSuperResolutionToggle, this);
             amdRadeonSuperResolutionSupported = new AMDRadeonSuperResolutionSupportedProperty(AMDRadeonSuperResolutionToggle, this);
             amdRadeonSuperResolutionSharpness = new AMDRadeonSuperResolutionSharpnessProperty(AMDRadeonSuperResolutionSharpnessSlider, this);
@@ -123,6 +125,7 @@ namespace XboxGamingBar
                 refreshRate,
                 trackedGame,
                 rtssInstalled,
+                isForeground,
                 amdRadeonSuperResolutionEnabled,
                 amdRadeonSuperResolutionSupported,
                 amdRadeonSuperResolutionSharpness,
@@ -195,11 +198,14 @@ namespace XboxGamingBar
             {
                 Logger.Info("GamingWidget LeavingBackground but not connected to the full trust process.");
             }
+
+            isForeground.SetValue(true);
         }
 
         public void GamingWidget_EnteredBackground(object sender, EnteredBackgroundEventArgs e)
         {
             Logger.Info("GamingWidget EnterBackground.");
+            isForeground.SetValue(false);
         }
 
         private void AppTargetTracker_TargetChanged(XboxGameBarAppTargetTracker sender, object args)

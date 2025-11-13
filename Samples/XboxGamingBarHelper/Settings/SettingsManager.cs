@@ -32,10 +32,17 @@ namespace XboxGamingBarHelper.Settings
             get { return onScreenDisplayProvider; }
         }
 
+        private readonly IsForegroundProperty isForeground;
+        public IsForegroundProperty IsForeground
+        {
+            get { return isForeground; }
+        }
+
         protected SettingsManager(AppServiceConnection connection) : base(connection)
         {
             autoStartRTSS = new AutoStartRTSSProperty(this);
             onScreenDisplayProvider = new OnScreenDisplayProviderProperty(this);
+            isForeground = new IsForegroundProperty(this);
         }
     }
 }

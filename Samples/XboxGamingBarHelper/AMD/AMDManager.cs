@@ -1,11 +1,14 @@
 ﻿using Microsoft.Win32;
 using System;
+using System.Diagnostics;
+//using XboxGamingBarHelper.Windows;
+using System.Windows.Forms;
 using Windows.ApplicationModel.AppService;
 using XboxGamingBarHelper.AMD.Properties;
 using XboxGamingBarHelper.AMD.Settings;
 using XboxGamingBarHelper.OnScreenDisplay;
-//using XboxGamingBarHelper.Windows;
-using System.Windows.Forms;
+using XboxGamingBarHelper.Settings;
+using XboxGamingBarHelper.Windows;
 
 namespace XboxGamingBarHelper.AMD
 {
@@ -372,7 +375,43 @@ namespace XboxGamingBarHelper.AMD
         {
             base.Update();
 
+            var (currentlyOn, currentLevel) = ReadCurrentMetricsProfile();
+            if (onScreenDisplayLevel == 0)
+            {
+                if (currentlyOn == 1)
+                {
+                    if (!SettingsManager.GetInstance().IsForeground)
+                    {
+                        Logger.Info("Widget enters background, turn OFF On-Screen Display now.");
+                        SendKeys.SendWait("^+o");
+                    }
+                    else
+                    {
+                        Logger.Info("On-Screen Display should be turned OFF but widget is still in foreground..");
+                    }
+                }
+                else
+                {
+                    Logger.Info("On-Screen Display is already turned OFF.");
+                }
+            }
+            else
+            {
+                if (currentlyOn == 0)
+                {
+                    if (!SettingsManager.GetInstance().IsForeground)
+                    {
+                        Logger.Info("Widget enters background, turn ON On-Screen Display now.");
+                        SendKeys.SendWait("^+o");
+                    }
+                    else
+                    {
+                        Logger.Info("On-Screen Display should be turned ON but widget is still in foreground..");
+                    }
+                }
 
+
+            }
         }
 
         public override void SetLevel(int level)
@@ -383,7 +422,19 @@ namespace XboxGamingBarHelper.AMD
             Logger.Info($"Set AMD Software: Adrenaline Edition performance overlay to {level}, current {current.Item1} - {current.Item2}");
 
             //User32.SendKeyCombo(0x11, 0x10, 0x4F);
-            SendKeys.SendWait("^+o");
+            //SendKeys.SendWait("^+o");
+
+            //var processes = Process.GetProcessesByName("RadeonSoftware");
+            //if (processes.Length == 0)
+            //{
+            //    Logger.Warn("AMD Software: Adrenaline Edition is not running.");
+            //    return;
+            //}
+            //var process = processes[0];
+
+            //User32.PostMessage(process.MainWindowHandle, User32.WM_KEYDOWN, User32.VK_CONTROL, 0);
+            //User32.PostMessage(process.MainWindowHandle, User32.WM_KEYDOWN, User32.VK_SHIFT, 0);
+            //User32.PostMessage(process.MainWindowHandle, User32.WM_KEYDOWN, User32.VK_O, 0);
         }
 
         private static Tuple<int, int> ReadCurrentMetricsProfile()
@@ -394,23 +445,23 @@ namespace XboxGamingBarHelper.AMD
                 {
                     if (subKey != null)
                     {
-                        object value = subKey.GetValue(AMD_PERFORMANCE_STATE_KEY_NAME);
+                        object stateObject = subKey.GetValue(AMD_PERFORMANCE_STATE_KEY_NAME);
 
-                        if (value != null)
+                        if (stateObject != null)
                         {
-                            Console.WriteLine($"Value of '{AMD_PERFORMANCE_STATE_KEY_NAME}' at '{AMD_PERFORMANCE_KEY_PATH}': {value}");
-                            var stateValue = (int)(uint)value;
+                            Logger.Info($"Value of '{AMD_PERFORMANCE_STATE_KEY_NAME}' at '{AMD_PERFORMANCE_KEY_PATH}': {stateObject} of type {stateObject.GetType().Name}");
+                            var stateValue = (int)stateObject;
                             if (stateValue == 0)
                             {
                                 return new Tuple<int, int>(0, 0);
                             }
                             else
                             {
-                                value = subKey.GetValue(AMD_PERFORMANCE_PROFILE_KEY_NAME);
-                                if (value != null)
+                                var profileObject = subKey.GetValue(AMD_PERFORMANCE_PROFILE_KEY_NAME);
+                                if (profileObject != null)
                                 {
-                                    Console.WriteLine($"Value of {AMD_PERFORMANCE_PROFILE_KEY_NAME} is {value}");
-                                    var profileValue = (int)(uint)value;
+                                    Logger.Info($"Value of {AMD_PERFORMANCE_PROFILE_KEY_NAME} is {profileObject} of type {profileObject.GetType().Name}");
+                                    var profileValue = (int)profileObject;
                                     return new Tuple<int, int>(stateValue, profileValue);
                                 }
                                 else
@@ -421,20 +472,20 @@ namespace XboxGamingBarHelper.AMD
                         }
                         else
                         {
-                            Console.WriteLine($"Value '{AMD_PERFORMANCE_STATE_KEY_NAME}' not found in '{AMD_PERFORMANCE_KEY_PATH}'.");
+                            Logger.Info($"Value '{AMD_PERFORMANCE_STATE_KEY_NAME}' not found in '{AMD_PERFORMANCE_KEY_PATH}'.");
                             return new Tuple<int, int>(0, 0);
                         }
                     }
                     else
                     {
-                        Console.WriteLine($"Registry key '{AMD_PERFORMANCE_KEY_PATH}' not found.");
+                        Logger.Info($"Registry key '{AMD_PERFORMANCE_KEY_PATH}' not found.");
                         return new Tuple<int, int>(0, 0);
                     }
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Logger.Info($"An error occurred: {ex.Message}");
                 return new Tuple<int, int>(0, 0);
             }
         }
