@@ -68,7 +68,7 @@ namespace XboxGamingBarHelper.RTSS
                     rtssOSD = null;
                 }
 
-                var rtssProcess = RTSSHelper.GetProcess();
+                /*var rtssProcess = RTSSHelper.GetProcess();
                 if (rtssProcess != null && SettingsManager.GetInstance().AutoStartRTSS)
                 {
                     try
@@ -81,7 +81,7 @@ namespace XboxGamingBarHelper.RTSS
                         Logger.Error(ex, "Failed to stop Rivatuner Statistics Server.");
                     }
                 }
-                rtssState = RivatunerStatisticsServerState.NotRunning;
+                rtssState = RivatunerStatisticsServerState.NotRunning;*/
 
                 return;
             }
