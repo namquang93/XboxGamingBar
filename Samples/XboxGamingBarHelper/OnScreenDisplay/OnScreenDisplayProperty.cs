@@ -33,8 +33,10 @@ namespace XboxGamingBarHelper.OnScreenDisplay
 
             // Before changing manager, set the previous manager's level to 0 to clean the old OSD.
             manager.SetLevel(0);
+            manager.IsInUsed = false;
             manager = inManager;
             manager.SetLevel(Value);
+            manager.IsInUsed = true;
         }
     }
 }

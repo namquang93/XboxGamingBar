@@ -432,7 +432,10 @@ namespace XboxGamingBarHelper.AMD
             }
             lastUpdate = now;
 
-            SetAMDValues();
+            if (IsInUsed)
+            {
+                SetAMDValues();
+            }
         }
 
         public override void SetLevel(int level)

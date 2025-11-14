@@ -12,6 +12,8 @@ namespace XboxGamingBarHelper.OnScreenDisplay
             onScreenDisplayLevel = 0;
         }
 
+        public bool IsInUsed { get ; set ; }
+
         public virtual void SetLevel(int level)
         {
             onScreenDisplayLevel = level;

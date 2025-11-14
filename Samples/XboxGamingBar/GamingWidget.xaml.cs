@@ -140,7 +140,7 @@ namespace XboxGamingBar
                 amdRadeonChillSupported,
                 amdRadeonChillMinFPSProperty,
                 amdRadeonChillMaxFPSProperty
-                );
+            );
         }
 
         private void AmdRadeonChillFPSChanged(object sender, PropertyChangedEventArgs e)
