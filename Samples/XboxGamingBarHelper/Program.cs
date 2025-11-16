@@ -137,7 +137,7 @@ namespace XboxGamingBarHelper
 
             await ConnectToWidget();
 
-            Logger.Info("Can't conncect to the widget.");
+            Logger.Info($"Widget connection status: {appServiceConnectionStatus}");
             while (appServiceConnectionStatus == AppServiceConnectionStatus.Success)
             {
                 await Task.Delay(500);
