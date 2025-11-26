@@ -97,6 +97,8 @@ namespace XboxGamingBarHelper
             properties = new HelperProperties(
                 systemManager.RunningGame,
                 onScreenDisplay,
+                hardwareManager.MinTDP,
+                hardwareManager.MaxTDP,
                 hardwareManager.TDP,
                 profileManager.PerGameProfile,
                 powerManager.CPUBoost,

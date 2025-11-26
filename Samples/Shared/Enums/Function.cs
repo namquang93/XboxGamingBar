@@ -4,6 +4,8 @@
     {
         None = 0,
         OSD,
+        MinTDP,
+        MaxTDP,
         TDP,
         RunningGame,
         PerGameProfile,

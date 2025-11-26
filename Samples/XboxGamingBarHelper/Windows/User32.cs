@@ -215,7 +215,7 @@ namespace XboxGamingBarHelper.Windows
                 }
                 else
                 {
-                    Logger.Info($"Skipping refresh rate {rate}Hz at resolution {devMode.dmPelsWidth}x{devMode.dmPelsHeight} because it's not compatible with current resolution {resolution.Item1}x{resolution.Item1}");
+                    Logger.Debug($"Skipping refresh rate {rate}Hz at resolution {devMode.dmPelsWidth}x{devMode.dmPelsHeight} because it's not compatible with current resolution {resolution.Item1}x{resolution.Item1}");
                 }
             }
 

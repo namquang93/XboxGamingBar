@@ -113,6 +113,18 @@ namespace XboxGamingBarHelper.Hardware
             get { return tdp; }
         }
 
+        private readonly MinTDPProperty minTDP;
+        public MinTDPProperty MinTDP
+        {
+            get { return minTDP; }
+        }
+
+        private readonly MaxTDPProperty maxTDP;
+        public MaxTDPProperty MaxTDP
+        {
+            get { return maxTDP; }
+        }
+
         internal HardwareManager(AppServiceConnection connection) : base(connection)
         {
             // Initialize the computer sensors
@@ -208,6 +220,8 @@ namespace XboxGamingBarHelper.Hardware
                 Logger.Info($"RyzenAdj initialized successfully at {initialTDP}W");
             }
 
+            minTDP = new MinTDPProperty(device.GetMinTDP(), this);
+            maxTDP = new MaxTDPProperty(device.GetMaxTDP(), this);
             tdp = new TDPProperty(initialTDP, null, this);
         }
 

@@ -44,6 +44,8 @@ namespace XboxGamingBar
 
         // Properties
         private readonly OSDProperty osd;
+        private readonly MinTDPProperty minTDP;
+        private readonly MaxTDPProperty maxTDP;
         private readonly TDPProperty tdp;
         private readonly RunningGameProperty runningGame;
         private readonly PerGameProfileProperty perGameProfile;
@@ -79,6 +81,8 @@ namespace XboxGamingBar
         public GamingWidget()
         {
             InitializeComponent();
+            minTDP = new MinTDPProperty(TDPSlider, this);
+            maxTDP = new MaxTDPProperty(TDPSlider, this);
             tdp = new TDPProperty(4, TDPSlider, this);
             osd = new OSDProperty(0, PerformanceOverlaySlider, this);
             runningGame = new RunningGameProperty(RunningGameText, PerGameProfileToggle, this);
@@ -110,6 +114,8 @@ namespace XboxGamingBar
 
             properties = new WidgetProperties(
                 osd,
+                minTDP,
+                maxTDP,
                 tdp,
                 runningGame,
                 perGameProfile,

@@ -368,6 +368,8 @@
     <Compile Include="Hardware\Devices\GenericDevice.cs" />
     <Compile Include="Hardware\Devices\Lenovo\Lenovo_Legion_GO_2.cs" />
     <Compile Include="Hardware\Devices\Onexplayer\Onexplayer_2_Pro.cs" />
+    <Compile Include="Hardware\MaxTDPProperty.cs" />
+    <Compile Include="Hardware\MinTDPProperty.cs" />
     <Compile Include="OnScreenDisplay\IOnScreenDisplayProvider.cs" />
     <Compile Include="OnScreenDisplay\OnScreenDisplayManager.cs" />
     <Compile Include="Hardware\CPUs\CPUFactory.cs" />
