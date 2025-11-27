@@ -44,6 +44,8 @@ namespace XboxGamingBar
 
         // Properties
         private readonly OSDProperty osd;
+        private readonly MinTDPProperty minTDP;
+        private readonly MaxTDPProperty maxTDP;
         private readonly TDPProperty tdp;
         private readonly RunningGameProperty runningGame;
         private readonly PerGameProfileProperty perGameProfile;
@@ -54,8 +56,9 @@ namespace XboxGamingBar
         private readonly RefreshRatesProperty refreshRates;
         private readonly RefreshRateProperty refreshRate;
         private readonly TrackedGameProperty trackedGame;
-        private readonly RTSSInstalledProperty rtssInstalled;
+        private readonly OnScreenDisplayProviderInstalledProperty onScreenDisplayProviderInstalled;
         private readonly IsForegroundProperty isForeground;
+        private readonly FocusingOnOSDSliderProperty focusingOnOSDSlider;
 
         // AMD properties
         private readonly AMDRadeonSuperResolutionEnabledProperty amdRadeonSuperResolutionEnabled;
@@ -78,6 +81,8 @@ namespace XboxGamingBar
         public GamingWidget()
         {
             InitializeComponent();
+            minTDP = new MinTDPProperty(TDPSlider, this);
+            maxTDP = new MaxTDPProperty(TDPSlider, this);
             tdp = new TDPProperty(4, TDPSlider, this);
             osd = new OSDProperty(0, PerformanceOverlaySlider, this);
             runningGame = new RunningGameProperty(RunningGameText, PerGameProfileToggle, this);
@@ -89,7 +94,7 @@ namespace XboxGamingBar
             refreshRates = new RefreshRatesProperty(RefreshRatesComboBox, this);
             refreshRate = new RefreshRateProperty(RefreshRatesComboBox, this);
             trackedGame = new TrackedGameProperty(new TrackedGame());
-            rtssInstalled = new RTSSInstalledProperty(PerformanceOverlaySlider, this);
+            onScreenDisplayProviderInstalled = new OnScreenDisplayProviderInstalledProperty(PerformanceOverlaySlider, this);
             isForeground = new IsForegroundProperty();
             amdRadeonSuperResolutionEnabled = new AMDRadeonSuperResolutionEnabledProperty(AMDRadeonSuperResolutionToggle, this);
             amdRadeonSuperResolutionSupported = new AMDRadeonSuperResolutionSupportedProperty(AMDRadeonSuperResolutionToggle, this);
@@ -105,9 +110,12 @@ namespace XboxGamingBar
             amdRadeonChillSupported = new AMDRadeonChillSupportedProperty(AMDRadeonChillToggle, this);
             amdRadeonChillMinFPSProperty = new AMDRadeonChillMinFPSProperty(AMDRadeonChillMinFPSSlider, this);
             amdRadeonChillMaxFPSProperty = new AMDRadeonChillMaxFPSProperty(AMDRadeonChillMaxFPSSlider, this);
+            focusingOnOSDSlider = new FocusingOnOSDSliderProperty(PerformanceOverlaySlider, this);
 
             properties = new WidgetProperties(
                 osd,
+                minTDP,
+                maxTDP,
                 tdp,
                 runningGame,
                 perGameProfile,
@@ -118,7 +126,7 @@ namespace XboxGamingBar
                 refreshRates,
                 refreshRate,
                 trackedGame,
-                rtssInstalled,
+                onScreenDisplayProviderInstalled,
                 isForeground,
                 amdRadeonSuperResolutionEnabled,
                 amdRadeonSuperResolutionSupported,
@@ -133,7 +141,8 @@ namespace XboxGamingBar
                 amdRadeonChillEnabled,
                 amdRadeonChillSupported,
                 amdRadeonChillMinFPSProperty,
-                amdRadeonChillMaxFPSProperty
+                amdRadeonChillMaxFPSProperty,
+                focusingOnOSDSlider
             );
         }
 
@@ -168,6 +177,18 @@ namespace XboxGamingBar
                 App.AppServiceConnected += GamingWidget_AppServiceConnected;
                 App.AppServiceDisconnected += GamingWidget_AppServiceDisconnected;
                 await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
+            }
+            else
+            {
+                Logger.Info($"App.Connection:{(App.Connection == null ? "NULL" : "NOT_NULL")} FullTrustAppContract:{(ApiInformation.IsApiContractPresent("Windows.ApplicationModel.FullTrustAppContract", 1, 0) ? "PRESENT" : "NOT_PRESENT")}");
+                if (App.Connection != null)
+                {
+                    App.AppServiceConnected -= GamingWidget_AppServiceConnected;
+                    App.AppServiceConnected += GamingWidget_AppServiceConnected;
+                    App.AppServiceDisconnected -= GamingWidget_AppServiceDisconnected;
+                    App.AppServiceDisconnected += GamingWidget_AppServiceDisconnected;
+                    GamingWidget_AppServiceConnected(null, null);
+                }
             }
         }
 
@@ -230,8 +251,9 @@ namespace XboxGamingBar
         /// <summary>
         /// When the desktop process is connected, get ready to send/receive requests
         /// </summary>
-        private async void GamingWidget_AppServiceConnected(object sender, AppServiceTriggerDetails e)
+        private async void GamingWidget_AppServiceConnected(object sender, AppServiceTriggerDetails _)
         {
+            Logger.Info("GamingWidget AppService connected.");
             if (widget != null)
             {
                 if (widgetActivity == null)
@@ -245,6 +267,10 @@ namespace XboxGamingBar
                     {
                         Logger.Warn($"Can't create widget acitvity: {argumentException}.");
                     }
+                }
+                else
+                {
+                    Logger.Info("Widget activity already created.");
                 }
 
                 if (appTargetTracker == null)
@@ -273,9 +299,16 @@ namespace XboxGamingBar
                         Logger.Info("Created new app target tracker but not enabled.");
                     }
                 }
+                else
+                {
+                    Logger.Info("App target tracker already created.");
+                }
+            }
+            else
+            {
+                Logger.Info("No widget found, probably running as an app instead of Xbox Game Bar widget.");
             }
 
-            App.Connection.RequestReceived += AppServiceConnection_RequestReceived;
             await properties.Sync();
         }
 
@@ -341,9 +374,9 @@ namespace XboxGamingBar
         /// Handle calculation request from desktop process
         /// (dummy scenario to show that connection is bi-directional)
         /// </summary>
-        private async void AppServiceConnection_RequestReceived(AppServiceConnection sender, AppServiceRequestReceivedEventArgs args)
+        public async Task RequestReceived(AppServiceConnection sender, AppServiceRequestReceivedEventArgs args)
         {
-            Logger.Info($"Widget received message {args.Request.Message.ToDebugString()} from helper.");
+            Logger.Info($"GamingWidget received message {args.Request.Message.ToDebugString()} from helper.");
             await properties.OnRequestReceived(args.Request);
         }
     }

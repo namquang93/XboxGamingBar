@@ -1,18 +1,22 @@
-﻿using RTSSSharedMemoryNET;
+﻿using System;
+using System.IO;
+using System.Diagnostics;
+using RTSSSharedMemoryNET;
 using Shared.Enums;
 using Shared.Utilities;
-using System;
-using System.Diagnostics;
 using Windows.ApplicationModel.AppService;
 using XboxGamingBarHelper.OnScreenDisplay;
-using XboxGamingBarHelper.Performance;
+using XboxGamingBarHelper.Hardware;
 using XboxGamingBarHelper.RTSS.OSDItems;
-using XboxGamingBarHelper.Settings;
 
 namespace XboxGamingBarHelper.RTSS
 {
     internal class RTSSManager : OnScreenDisplayManager
     {
+        // START IOnScreenDisplayProvider implementation
+        public override bool IsInstalled => RTSSHelper.IsInstalled(out _);
+        // END IOnScreenDisplayProvider implementation
+
         private const string OSDSeparator = " <C=6E006A>|<C> ";
         private const string OSDBackground = "<P=0,0><L0><C=80000000><B=0,0>\b<C>";
         private const string OSDAppName = "Xbox Gaming Bar OSD";
@@ -20,42 +24,35 @@ namespace XboxGamingBarHelper.RTSS
         private OSD rtssOSD;
         private readonly OSDItem[] osdItems;
 
-        private readonly RTSSInstalledProperty rtssInstalled;
-        public RTSSInstalledProperty RTSSInstalled
-        {
-            get { return rtssInstalled; }
-        }
-
-        private RivatunerStatisticsServerState rtssState;
-
-        public RTSSManager(PerformanceManager performanceManager, AppServiceConnection connection) : base(connection)
+        public RTSSManager(HardwareManager hardwareManager, AppServiceConnection connection) : base(connection)
         {
             
-            rtssInstalled = new RTSSInstalledProperty(this);
             osdItems = new OSDItem[]
             {
                 new OSDItemFPS(),
-                new OSDItemBattery(performanceManager.BatteryLevel, performanceManager.BatteryDischargeRate, performanceManager.BatteryChargeRate, performanceManager.BatteryRemainingTime),
-                new OSDItemMemory(performanceManager.MemoryUsage, performanceManager.MemoryUsed),
-                new OSDItemCPU(performanceManager.CPUUsage, performanceManager.CPUClock, performanceManager.CPUWattage, performanceManager.CPUTemperature),
-                new OSDItemGPU(performanceManager.GPUUsage, performanceManager.GPUClock, performanceManager.GPUWattage, performanceManager.GPUTemperature),
+                new OSDItemBattery(hardwareManager.BatteryLevel, hardwareManager.BatteryDischargeRate, hardwareManager.BatteryChargeRate, hardwareManager.BatteryRemainingTime),
+                new OSDItemMemory(hardwareManager.MemoryUsage, hardwareManager.MemoryUsed),
+                new OSDItemCPU(hardwareManager.CPUUsage, hardwareManager.CPUClock, hardwareManager.CPUWattage, hardwareManager.CPUTemperature),
+                new OSDItemGPU(hardwareManager.GPUUsage, hardwareManager.GPUClock, hardwareManager.GPUWattage, hardwareManager.GPUTemperature),
             };
-
-            rtssState = RivatunerStatisticsServerState.NotInstalled;
         }
 
         public override void Update()
         {
             base.Update();
-
-            var isRTSSInstalled = RTSSHelper.IsInstalled();
-            if (rtssInstalled.Value != isRTSSInstalled)
-                rtssInstalled.SetValue(isRTSSInstalled);
-
-            if (!isRTSSInstalled)
+            
+            if (!RTSSHelper.IsInstalled(out string installDir))
             {
                 Logger.Debug("Rivatuner Statistics Server is not installed.");
-                rtssState = RivatunerStatisticsServerState.NotInstalled;
+                return;
+            }
+
+            var isRunning = RTSSHelper.IsRunning();
+            string executablePath = Path.Combine(installDir, $"{RTSSHelper.RTSS_FILE_NAME}.exe");
+            if (!isRunning && !File.Exists(executablePath))
+            {
+                Logger.Debug("Rivatuner Statistics Server is installed but the exe file is not found.");
+                applicationState = ApplicationState.NotInstalled;
                 return;
             }
 
@@ -86,33 +83,30 @@ namespace XboxGamingBarHelper.RTSS
                 return;
             }
 
-            if (!RTSSHelper.IsRunning())
+            if (!isRunning)
             {
-                if (SettingsManager.GetInstance().AutoStartRTSS)
+                if (applicationState == ApplicationState.Starting)
                 {
-                    if (rtssState == RivatunerStatisticsServerState.Starting)
+                    Logger.Info("Starting Rivatuner Statistics Server..");
+                }
+                else
+                {
+                    applicationState = ApplicationState.Starting;
+                    try
                     {
-                        Logger.Info("Starting Rivatuner Statistics Server..");
+                        Logger.Info("Start Rivatuner Statistics Server.");
+                        Process.Start(executablePath);
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        rtssState = RivatunerStatisticsServerState.Starting;
-                        try
-                        {
-                            Logger.Info("Start Rivatuner Statistics Server.");
-                            Process.Start(RTSSHelper.ExecutablePath());
-                        }
-                        catch (Exception ex)
-                        {
-                            Logger.Error(ex, "Failed to start Rivatuner Statistics Server.");
-                            rtssState = RivatunerStatisticsServerState.NotRunning;
-                        }
+                        Logger.Error(ex, "Failed to start Rivatuner Statistics Server.");
+                        applicationState = ApplicationState.NotRunning;
                     }
                 }
                 return;
             }
 
-            rtssState = RivatunerStatisticsServerState.Running;
+            applicationState = ApplicationState.Running;
 
             if (rtssOSD == null)
             {

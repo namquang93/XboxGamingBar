@@ -345,6 +345,7 @@
     <Compile Include="AMD\AMDManager.cs" />
     <Compile Include="AMD\AMDSetting.cs" />
     <Compile Include="AMD\AMDUtilities.cs" />
+    <Compile Include="AMD\FocusingOnOSDSliderProperty.cs" />
     <Compile Include="AMD\Properties\AMDRadeonAntiLagProperties.cs" />
     <Compile Include="AMD\Properties\AMDFluidMotionFrameProperties.cs" />
     <Compile Include="AMD\Properties\AMDRadeonBoostProperties.cs" />
@@ -359,29 +360,51 @@
     <Compile Include="Core\HelperProperty.cs" />
     <Compile Include="Core\IManager.cs" />
     <Compile Include="Core\Manager.cs" />
+    <Compile Include="Hardware\Device.cs" />
+    <Compile Include="Hardware\Devices\ASUS\ASUS_Device.cs" />
+    <Compile Include="Hardware\Devices\ASUS\ASUS_ROG_Flow_Z13.cs" />
+    <Compile Include="Hardware\Devices\DeviceFactory.cs" />
+    <Compile Include="Hardware\Devices\DeviceIdAttribute.cs" />
+    <Compile Include="Hardware\Devices\GenericDevice.cs" />
+    <Compile Include="Hardware\Devices\Lenovo\Lenovo_Legion_GO_2.cs" />
+    <Compile Include="Hardware\Devices\Onexplayer\Onexplayer_2_Pro.cs" />
+    <Compile Include="Hardware\MaxTDPProperty.cs" />
+    <Compile Include="Hardware\MinTDPProperty.cs" />
     <Compile Include="OnScreenDisplay\IOnScreenDisplayProvider.cs" />
     <Compile Include="OnScreenDisplay\OnScreenDisplayManager.cs" />
+    <Compile Include="Hardware\CPUs\CPUFactory.cs" />
+    <Compile Include="Hardware\CPUs\CPUIdAttribute.cs" />
+    <Compile Include="Hardware\CPUs\AMD\AMD_CPU.cs" />
+    <Compile Include="Hardware\CPUs\AMD\AMD_Ryzen.cs" />
+    <Compile Include="Hardware\CPU.cs" />
+    <Compile Include="Hardware\CPUs\AMD\AMD_Ryzen_7_7840U.cs" />
+    <Compile Include="Hardware\CPUs\AMD\AMD_Ryzen_AI_Max_Plus_395.cs" />
+    <Compile Include="Hardware\CPUs\AMD\AMD_Ryzen_Z1.cs" />
+    <Compile Include="Hardware\CPUs\AMD\AMD_Ryzen_Z1_Extreme.cs" />
+    <Compile Include="Hardware\CPUs\AMD\AMD_Ryzen_Z2.cs" />
+    <Compile Include="Hardware\CPUs\AMD\AMD_Ryzen_Z2_Extreme.cs" />
+    <Compile Include="Hardware\CPUs\GenericCPU.cs" />
     <Compile Include="Settings\IsForegroundProperty.cs" />
     <Compile Include="Settings\OnScreenDisplayProviderProperty.cs" />
-    <Compile Include="Performance\HardwareSensor.cs" />
-    <Compile Include="Performance\PerformanceManager.cs" />
-    <Compile Include="Performance\RyzenAdj.cs" />
-    <Compile Include="Performance\Sensors\BatteryChargeRateSensor.cs" />
-    <Compile Include="Performance\Sensors\BatteryDischargeRateSensor.cs" />
-    <Compile Include="Performance\Sensors\BatteryLevelSensor.cs" />
-    <Compile Include="Performance\Sensors\BatteryRemainingTimeSensor.cs" />
-    <Compile Include="Performance\Sensors\CPUClockSensor.cs" />
-    <Compile Include="Performance\Sensors\CPUTemperatureSensor.cs" />
-    <Compile Include="Performance\Sensors\CPUUsageSensor.cs" />
-    <Compile Include="Performance\Sensors\CPUWattageSensor.cs" />
-    <Compile Include="Performance\Sensors\GPUClockSensor.cs" />
-    <Compile Include="Performance\Sensors\GPUTemperatureSensor.cs" />
-    <Compile Include="Performance\Sensors\GPUUsageSensor.cs" />
-    <Compile Include="Performance\Sensors\GPUWattageSensor.cs" />
-    <Compile Include="Performance\Sensors\MemoryUsageSensor.cs" />
-    <Compile Include="Performance\Sensors\MemoryUsedSensor.cs" />
-    <Compile Include="Performance\TDPProperty.cs" />
-    <Compile Include="Performance\UpdateVisitor.cs" />
+    <Compile Include="Hardware\HardwareSensor.cs" />
+    <Compile Include="Hardware\HardwareManager.cs" />
+    <Compile Include="Hardware\RyzenAdj.cs" />
+    <Compile Include="Hardware\Sensors\BatteryChargeRateSensor.cs" />
+    <Compile Include="Hardware\Sensors\BatteryDischargeRateSensor.cs" />
+    <Compile Include="Hardware\Sensors\BatteryLevelSensor.cs" />
+    <Compile Include="Hardware\Sensors\BatteryRemainingTimeSensor.cs" />
+    <Compile Include="Hardware\Sensors\CPUClockSensor.cs" />
+    <Compile Include="Hardware\Sensors\CPUTemperatureSensor.cs" />
+    <Compile Include="Hardware\Sensors\CPUUsageSensor.cs" />
+    <Compile Include="Hardware\Sensors\CPUWattageSensor.cs" />
+    <Compile Include="Hardware\Sensors\GPUClockSensor.cs" />
+    <Compile Include="Hardware\Sensors\GPUTemperatureSensor.cs" />
+    <Compile Include="Hardware\Sensors\GPUUsageSensor.cs" />
+    <Compile Include="Hardware\Sensors\GPUWattageSensor.cs" />
+    <Compile Include="Hardware\Sensors\MemoryUsageSensor.cs" />
+    <Compile Include="Hardware\Sensors\MemoryUsedSensor.cs" />
+    <Compile Include="Hardware\TDPProperty.cs" />
+    <Compile Include="Hardware\UpdateVisitor.cs" />
     <Compile Include="Power\CPUBoostProperty.cs" />
     <Compile Include="Power\LimitCPUClockProperty.cs" />
     <Compile Include="Power\CPUClockMaxProperty.cs" />
@@ -400,9 +423,8 @@
     <Compile Include="RTSS\OSDItems\OSDItemMemory.cs" />
     <Compile Include="RTSS\OSDItemValue.cs" />
     <Compile Include="OnScreenDisplay\OnScreenDisplayProperty.cs" />
-    <Compile Include="RTSS\RTSSInstalledProperty.cs" />
+    <Compile Include="Settings\OnScreenDisplayProviderInstalledProperty.cs" />
     <Compile Include="RTSS\RTSSManager.cs" />
-    <Compile Include="Settings\AutoStartRTSSProperty.cs" />
     <Compile Include="Settings\SettingsManager.cs" />
     <Compile Include="Systems\RefreshRateProperty.cs" />
     <Compile Include="Systems\RefreshRatesProperty.cs" />
@@ -470,5 +492,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

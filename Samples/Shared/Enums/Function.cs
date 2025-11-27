@@ -4,6 +4,8 @@
     {
         None = 0,
         OSD,
+        MinTDP,
+        MaxTDP,
         TDP,
         RunningGame,
         PerGameProfile,
@@ -14,7 +16,6 @@
         RefreshRates,
         RefreshRate,
         TrackedGame,
-        RTSSInstalled,
         AMDRadeonSuperResolutionSupported,
         AMDRadeonSuperResolutionEnabled,
         AMDRadeonSuperResolutionSharpness,
@@ -30,8 +31,9 @@
         AMDRadeonChillMinFPS,
         AMDRadeonChillMaxFPS,
         Foreground,
+        FocusingOnOSDSlider,
 
-        Settings_AutoStartRTSS,
         Settings_OnScreenDisplayProvider,
+        Settings_OnScreenDisplayProviderInstalled
     }
 }

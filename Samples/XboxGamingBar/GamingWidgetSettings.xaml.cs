@@ -1,5 +1,9 @@
 ﻿using Microsoft.Gaming.XboxGameBar;
+using NLog;
 using System;
+using System.Threading.Tasks;
+using Windows.ApplicationModel.AppService;
+using Shared.Data;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -16,9 +20,10 @@ namespace XboxGamingBar
     /// </summary>
     public sealed partial class GamingWidgetSettings : Page
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         private XboxGameBarWidget widget = null;
 
-        private readonly AutoStartRTSSProperty autoStartRTSS;
         private readonly OnScreenDisplayProviderProperty onScreenDisplayProvider;
 
         private readonly WidgetProperties properties;
@@ -30,9 +35,8 @@ namespace XboxGamingBar
         {
             this.InitializeComponent();
 
-            autoStartRTSS = new AutoStartRTSSProperty(AutoStartRTSSToggle, this);
             onScreenDisplayProvider = new OnScreenDisplayProviderProperty(OnScreenDisplayProviderRadioButtons, this);
-            properties = new WidgetProperties(autoStartRTSS);
+            properties = new WidgetProperties(onScreenDisplayProvider);
         }
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
@@ -60,6 +64,16 @@ namespace XboxGamingBar
         {
             this.RequestedTheme = widget.RequestedTheme;
             RootGrid.Background = (widget.RequestedTheme == ElementTheme.Dark) ? widgetDarkThemeBrush : widgetLightThemeBrush;
+        }
+
+        /// <summary>
+        /// Handle calculation request from desktop process
+        /// (dummy scenario to show that connection is bi-directional)
+        /// </summary>
+        public async Task RequestReceived(AppServiceConnection sender, AppServiceRequestReceivedEventArgs args)
+        {
+            Logger.Info($"GamingWidget received message {args.Request.Message.ToDebugString()} from helper.");
+            await properties.OnRequestReceived(args.Request);
         }
     }
 }

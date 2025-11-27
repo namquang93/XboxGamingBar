@@ -1,22 +1,27 @@
 ﻿using Microsoft.Win32;
+using Shared.Enums;
+using Shared.Utilities;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
-//using XboxGamingBarHelper.Windows;
-//using System.Windows.Forms;
+using System.IO;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.AppService;
+using Windows.System;
+using Windows.UI.Input.Preview.Injection;
 using XboxGamingBarHelper.AMD.Properties;
 using XboxGamingBarHelper.AMD.Settings;
 using XboxGamingBarHelper.OnScreenDisplay;
-//using XboxGamingBarHelper.Settings;
-using Windows.UI.Input.Preview.Injection;
-using Windows.System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using XboxGamingBarHelper.Windows;
 
 namespace XboxGamingBarHelper.AMD
 {
     internal class AMDManager : OnScreenDisplayManager
     {
+        // START IOnScreenDisplayProvider implementation
+        public override bool IsInstalled => AMDHelper.IsInstalled(out _);
+        // END IOnScreenDisplayProvider implementation
+
         // AMD Software stuff
         // Computer\HKEY_CURRENT_USER\Software\AMD\CN\Performance
         private static readonly RegistryKey AMD_PERFORMANCE_KEY_ROOT = Registry.CurrentUser;
@@ -158,7 +163,27 @@ namespace XboxGamingBarHelper.AMD
         private readonly List<Tuple<int, int>> amdOverlayLevelList;
         private readonly Dictionary<int, int> amdOverlayLevelMap;
 
-        private long lastUpdate;
+        private readonly FocusingOnOSDSliderProperty focusingOnOSDSlider;
+        public FocusingOnOSDSliderProperty FocusingOnOSDSlider
+        {
+            get { return focusingOnOSDSlider; }
+        }
+
+        private bool isInUsed;
+        public override bool IsInUsed {
+            get { return isInUsed; }
+            set {
+                isInUsed = value;
+                if (!isInUsed)
+                {
+                    // When not in use, turn off AMD OSD.
+                    SetLevel(0);
+                    SetAMDValues();
+                }
+            }
+        }
+
+        private string lastLog;
 
         public AMDManager(AppServiceConnection connection) : base(connection)
         {
@@ -331,7 +356,7 @@ namespace XboxGamingBarHelper.AMD
             {
                 amdOverlayLevelMap.Add(amdOverlayLevel.Item1, amdOverlayLevel.Item2);
             }
-            lastUpdate = 0;
+            focusingOnOSDSlider = new FocusingOnOSDSliderProperty(this);
         }
 
         private void AmdRadeonChillEnabled(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -429,98 +454,146 @@ namespace XboxGamingBarHelper.AMD
                 return;
             }
 
-            var now = DateTime.Now.Ticks;
-            if (now - lastUpdate < TimeSpan.TicksPerSecond * 2)
+            //var now = DateTime.Now.Ticks;
+            //if (now - lastUpdate < TimeSpan.TicksPerSecond * 2)
+            //{
+            //    return;
+            //}
+            //lastUpdate = now;
+
+            if (!AMDHelper.IsInstalled(out string amdInstallDir))
             {
+                Logger.Warn("AMD Software: Adrenaline Edition is not installed.");
+                applicationState = ApplicationState.NotInstalled;
                 return;
             }
-            lastUpdate = now;
 
+            var isRunning = AMDHelper.IsRunning(out var amdProcess);
+            var executablePath = Path.Combine(amdInstallDir, $"{AMDHelper.AMD_SOFTWARE_ADRENALINE_EDITION_FILE_NAME}.exe");
+            if (!isRunning && !File.Exists(executablePath))
+            {
+                Logger.Warn("AMD Software: Adrenaline Edition is installed but the executable file is not found.");
+                applicationState = ApplicationState.NotInstalled;
+                return;
+            }
+
+            if (applicationState == ApplicationState.Starting)
+            {
+                if (amdProcess != null)
+                {
+                    var mainWindowHandle = amdProcess.MainWindowHandle;
+                    if (mainWindowHandle != IntPtr.Zero)
+                    {
+                        Logger.Warn("Starting AMD Software: Adrenaline Edition: Found main window handle. Let's close it.");
+                        User32.PostMessage(mainWindowHandle, User32.WM_CLOSE, IntPtr.Zero, IntPtr.Zero);
+                    }
+                    else
+                    {
+                        Logger.Warn("Starting AMD Software: Adrenaline Edition: No main window handle.");
+                    }
+                }
+                else
+                {
+                    Logger.Warn("Starting AMD Software: Adrenaline Edition: Process not started.");
+                }
+            }
+
+            if (!isRunning)
+            {
+                if (applicationState == ApplicationState.Starting)
+                {
+                    Logger.Info("Starting AMD Software: Adrenaline Edition.");
+                }
+                else
+                {
+                    applicationState = ApplicationState.Starting;
+                    try
+                    {
+                        Logger.Info("Start AMD Software: Adrenaline Edition.");
+                        Process.Start(executablePath);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Error(ex, "Failed to start AMD Software: Adrenaline Edition.");
+                        applicationState = ApplicationState.NotRunning;
+                    }
+                }
+                
+                return;
+            }
+
+            applicationState = ApplicationState.Running;
             SetAMDValues();
-        }
-
-        public override void SetLevel(int level)
-        {
-            base.SetLevel(level);
-
-            // SetAMDValues();
         }
 
         private async void SetAMDValues()
         {
-            var (currentlyOn, currentLevel) = ReadCurrentMetricsProfile();
-            if (onScreenDisplayLevel == 0)
+            string amdOSDLog;
+            if (focusingOnOSDSlider)
             {
-                if (currentlyOn == 1)
-                {
-                    //if (!SettingsManager.GetInstance().IsForeground)
-                    //{
-                    //    Logger.Info("Widget enters background, turn OFF On-Screen Display now.");
-                    //    SendKeys.SendWait("^+o");
-                    //}
-                    //else
-                    //{
-                    //    Logger.Info("On-Screen Display should be turned OFF but widget is still in foreground..");
-                    //}
-
-                    Logger.Info("Turning OFF AMD On-Screen Display.");
-                    inputInjector.InjectKeyboardInput(turnAMDOverlayOnOffKeyboardCombo);
-                }
-                else
-                {
-                    Logger.Info("AMD On-Screen Display is already turned OFF.");
-                }
+                amdOSDLog = "Still changing Performance Overlay slider, wait until it's unfocused.";
             }
             else
             {
-                if (currentlyOn == 0)
+                var (currentlyOn, currentLevel) = ReadCurrentMetricsProfile();
+
+                if (onScreenDisplayLevel == 0)
                 {
-                    //if (!SettingsManager.GetInstance().IsForeground)
-                    //{
-                    //    Logger.Info("Widget enters background, turn ON On-Screen Display now.");
-                    //    SendKeys.SendWait("^+o");
-                    //}
-                    //else
-                    //{
-                    //    Logger.Info("On-Screen Display should be turned ON but widget is still in foreground..");
-                    //}
-
-                    // create once (cache for reuse)
-
-                    Logger.Info("Turning ON AMD On-Screen Display.");
-                    inputInjector.InjectKeyboardInput(turnAMDOverlayOnOffKeyboardCombo);
-                    await Task.Delay(100);
-                }
-
-                var targetLevel = amdOverlayLevelMap[onScreenDisplayLevel];
-                if (currentLevel != targetLevel)
-                {
-                    var currentLevelIndex = 0;
-                    var targetLevelIndex = 0;
-                    for (var i = 0; i < amdOverlayLevelList.Count; i++)
+                    if (currentlyOn == 1)
                     {
-                        if (amdOverlayLevelList[i].Item2 == currentLevel)
-                        {
-                            currentLevelIndex = i;
-                        }
-                        if (amdOverlayLevelList[i].Item2 == targetLevel)
-                        {
-                            targetLevelIndex = i;
-                        }
+                        amdOSDLog = "Turning OFF AMD On-Screen Display.";
+                        inputInjector.InjectKeyboardInput(turnAMDOverlayOnOffKeyboardCombo);
                     }
-
-                    var numberOfKeyPresses = Math.Abs(targetLevelIndex - currentLevelIndex);
-                    Logger.Info($"Current AMD On-Screen Display level is {currentLevel} at index {currentLevelIndex}, need to change to {targetLevel} at index {targetLevelIndex}, need to press {numberOfKeyPresses} times.");
-                    for (var i = 0; i < numberOfKeyPresses; i++)
+                    else
                     {
-                        inputInjector.InjectKeyboardInput(changeAMDOverlayLevelKeyboardCombo);
-                        await Task.Delay(100);
+                        amdOSDLog = "AMD On-Screen Display is already turned OFF.";
                     }
                 }
                 else
                 {
-                    Logger.Info($"Current AMD On-Screen Display level is {currentLevel} already matches {targetLevel}.");
+                    if (currentlyOn == 0)
+                    {
+                        Logger.Info("Turning ON AMD On-Screen Display.");
+                        inputInjector.InjectKeyboardInput(turnAMDOverlayOnOffKeyboardCombo);
+                        await Task.Delay(100);
+                    }
+
+                    var targetLevel = amdOverlayLevelMap[onScreenDisplayLevel];
+                    if (currentLevel != targetLevel)
+                    {
+                        var currentLevelIndex = 0;
+                        var targetLevelIndex = 0;
+                        for (var i = 0; i < amdOverlayLevelList.Count; i++)
+                        {
+                            if (amdOverlayLevelList[i].Item2 == currentLevel)
+                            {
+                                currentLevelIndex = i;
+                            }
+                            if (amdOverlayLevelList[i].Item2 == targetLevel)
+                            {
+                                targetLevelIndex = i;
+                            }
+                        }
+
+                        var numberOfKeyPresses = Math.Abs(targetLevelIndex - currentLevelIndex);
+                        amdOSDLog = $"Current AMD On-Screen Display level is {currentLevel} at index {currentLevelIndex}, need to change to {targetLevel} at index {targetLevelIndex}, need to press {numberOfKeyPresses} times.";
+                        for (var i = 0; i < numberOfKeyPresses; i++)
+                        {
+                            inputInjector.InjectKeyboardInput(changeAMDOverlayLevelKeyboardCombo);
+                            await Task.Delay(100);
+                        }
+                    }
+                    else
+                    {
+                        amdOSDLog = $"Current AMD On-Screen Display level is {currentLevel} already matches {targetLevel}.";
+                    }
                 }
+            }
+
+            if (amdOSDLog != lastLog)
+            {
+                Logger.Info(amdOSDLog);
+                lastLog = amdOSDLog;
             }
         }
 
@@ -574,33 +647,6 @@ namespace XboxGamingBarHelper.AMD
             {
                 Logger.Error($"An error occurred: {ex.Message}");
                 return new Tuple<int, int>(0, 0);
-            }
-        }
-
-        private static bool SetCurrentMetricsProfile(int metricOverlayState, int metricProfile)
-        {
-            try
-            {
-                using (RegistryKey subKey = AMD_PERFORMANCE_KEY_ROOT.OpenSubKey(AMD_PERFORMANCE_KEY_PATH))
-                {
-                    if (subKey != null)
-                    {
-                        subKey.SetValue(AMD_PERFORMANCE_STATE_KEY_NAME, metricOverlayState);
-                        subKey.SetValue(AMD_PERFORMANCE_PROFILE_KEY_NAME, metricProfile);
-                        Logger.Debug($"Set registry key '{AMD_PERFORMANCE_KEY_PATH}\\{AMD_PERFORMANCE_STATE_KEY_NAME}' to {metricOverlayState} and '{AMD_PERFORMANCE_KEY_PATH}\\{AMD_PERFORMANCE_PROFILE_KEY_NAME}' to {metricProfile}.");
-                        return true;
-                    }
-                    else
-                    {
-                        Logger.Warn($"Registry key '{AMD_PERFORMANCE_KEY_PATH}' not found.");
-                        return false;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Error($"An error occurred: {ex.Message}");
-                return false;
             }
         }
     }
