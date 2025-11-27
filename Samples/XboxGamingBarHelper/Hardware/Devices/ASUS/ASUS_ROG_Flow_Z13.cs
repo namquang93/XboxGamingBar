@@ -16,7 +16,7 @@
         public override int GetMinTDP()
         {
             //return base.GetMinTDP();
-            return 35;
+            return 8;
         }
     }
 }
