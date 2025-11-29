@@ -64,6 +64,9 @@ namespace XboxGamingBarHelper
             //}
 
             // Initialize managers.
+            Logger.Info("Initialize Settings Manager.");
+            settingsManager = SettingsManager.CreateInstance(connection);
+
             Logger.Info("Initialize Hardware Manager.");
             hardwareManager = new HardwareManager(connection);
             Logger.Info("Initialize RTSS Manager.");
@@ -76,7 +79,7 @@ namespace XboxGamingBarHelper
             powerManager = new PowerManager(connection);
             Logger.Info("Initialize AMD Manager.");
             amdManager = new AMDManager(connection);
-            settingsManager = SettingsManager.CreateInstance(connection);
+            
             Managers = new List<IManager>
             {
                 hardwareManager,
@@ -89,8 +92,9 @@ namespace XboxGamingBarHelper
             };
 
             Logger.Info("Initialize properties.");
-            onScreenDisplay = new OnScreenDisplayProperty(0, null, rtssManager);
             onScreenDisplayProviders = new List<OnScreenDisplayManager>() { rtssManager, amdManager };
+            onScreenDisplay = new OnScreenDisplayProperty(settingsManager.Setting.OnScreenDisplay, null, onScreenDisplayProviders[settingsManager.OnScreenDisplayProvider]);
+            settingsManager.SyncOnScreenDisplaySettings(onScreenDisplay);
             //onScreenDisplay = new OnScreenDisplayProperty(0, null, amdManager);
 
             // Initialize properties.
