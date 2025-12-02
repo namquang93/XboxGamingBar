@@ -205,17 +205,20 @@ namespace XboxGamingBarHelper.Windows
 
             int modeIndex = 0;
             Tuple<int, int> resolution = GetPhysicalMonitorResolution(Screen.PrimaryScreen);
+            float aspectRatio = (float)resolution.Item1 / resolution.Item2;
+            const float tolerance = 0.001f;
 
             while (EnumDisplaySettings(null, modeIndex++, ref devMode))
             {
                 int rate = devMode.dmDisplayFrequency;
-                if (rate > 0 && !refreshRates.Contains(rate) && devMode.dmPelsWidth == resolution.Item1 && devMode.dmPelsHeight == resolution.Item2)
+                float refreshRateAspectRatio = (float)devMode.dmPelsWidth / devMode.dmPelsHeight;
+                if (rate > 0 && !refreshRates.Contains(rate) && Math.Abs(aspectRatio - refreshRateAspectRatio) <= tolerance)
                 {
                     refreshRates.Add(rate);
                 }
                 else
                 {
-                    Logger.Debug($"Skipping refresh rate {rate}Hz at resolution {devMode.dmPelsWidth}x{devMode.dmPelsHeight} because it's not compatible with current resolution {resolution.Item1}x{resolution.Item1}");
+                    Logger.Info($"Skipping refresh rate {rate}Hz at resolution {devMode.dmPelsWidth}x{devMode.dmPelsHeight} because it's not compatible with current aspect ratio {refreshRateAspectRatio} !~ {aspectRatio}");
                 }
             }
 
