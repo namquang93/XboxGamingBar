@@ -52,11 +52,7 @@ namespace XboxGamingBarHelper
         private static async Task Initialize()
         {
             // Initialize app service connection.
-            connection = new AppServiceConnection();
-            connection.AppServiceName = "XboxGamingBarService";
-            connection.PackageFamilyName = Package.Current.Id.FamilyName;
-            connection.RequestReceived += Connection_RequestReceived;
-            connection.ServiceClosed += Connection_ServiceClosed;
+            InitializeConnection();
 
             //while (!System.Diagnostics.Debugger.IsAttached)
             //{
@@ -141,11 +137,17 @@ namespace XboxGamingBarHelper
             powerManager.CPUClockMax.PropertyChanged += CPUClock_PropertyChanged;
             profileManager.CurrentProfile.PropertyChanged += CurrentProfile_PropertyChanged;
 
-            await ConnectToWidget();
+            await ConnectToWidget(true);
 
             Logger.Info($"Widget connection status: {appServiceConnectionStatus}");
-            while (appServiceConnectionStatus == AppServiceConnectionStatus.Success)
+            while (true)
             {
+                if (appServiceConnectionStatus != AppServiceConnectionStatus.Success)
+                {
+                    Logger.Info("Try to reconnect to the widget.");
+                    await ConnectToWidget(false);
+                }
+
                 await Task.Delay(500);
 
                 foreach (var manager in Managers)
@@ -153,23 +155,57 @@ namespace XboxGamingBarHelper
                     manager.Update();
                 }
             }
-            Logger.Info("Helper close...");
         }
 
-        private static async Task ConnectToWidget()
+        private static void InitializeConnection()
         {
-            do
-            {
-                Logger.Info("Start connecting to the widget.");
-                appServiceConnectionStatus = await connection.OpenAsync();
-                if (appServiceConnectionStatus != AppServiceConnectionStatus.Success)
-                {
-                    Logger.Info("Can't conncect to the widget. Try again in 1 second...");
-                    await Task.Delay(1000);
-                }
-            } while (appServiceConnectionStatus != AppServiceConnectionStatus.Success);
+            connection = new AppServiceConnection();
+            connection.AppServiceName = "XboxGamingBarService";
+            connection.PackageFamilyName = Package.Current.Id.FamilyName;
+            connection.RequestReceived += Connection_RequestReceived;
+            connection.ServiceClosed += Connection_ServiceClosed;
+        }
 
-            Logger.Info("Connected to the widget.");
+        private static async Task ConnectToWidget(bool blocking)
+        {
+            if (blocking)
+            {
+                do
+                {
+                    Logger.Info("Start connecting to the widget.");
+                    try
+                    {
+                        appServiceConnectionStatus = await connection.OpenAsync();
+                    }
+                    catch (Exception exception)
+                    {
+                        Logger.Error($"Exception occurred when connecting to the widget: {exception}");
+                        appServiceConnectionStatus = AppServiceConnectionStatus.AppServiceUnavailable;
+                    }
+
+                    if (appServiceConnectionStatus != AppServiceConnectionStatus.Success)
+                    {
+                        Logger.Info("Can't conncect to the widget. Try again in 1 second...");
+                        await Task.Delay(1000);
+                    }
+                } while (appServiceConnectionStatus != AppServiceConnectionStatus.Success);
+                Logger.Info("Connected to the widget.");
+            }
+            else
+            {
+                Logger.Info("Start trying to connect to the widget.");
+                try
+                {
+                    appServiceConnectionStatus = await connection.OpenAsync();
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error(ex, "Exception occurred when trying to connect to the widget.");
+                    appServiceConnectionStatus = AppServiceConnectionStatus.AppServiceUnavailable;
+                }
+
+                Logger.Info($"Try to conncect to the widget {(appServiceConnectionStatus != AppServiceConnectionStatus.Success ? "failed" : "success")}.");
+            }
         }
 
         private static void CPUClock_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -280,8 +316,19 @@ namespace XboxGamingBarHelper
         /// </summary>
         private static void Connection_ServiceClosed(AppServiceConnection sender, AppServiceClosedEventArgs args)
         {
-            Logger.Info("Lost connection to the app.");
+            Logger.Info("Lost connection to the widget.");
             appServiceConnectionStatus = AppServiceConnectionStatus.AppServiceUnavailable;
+
+            Logger.Info("Prepare to re-connect to the widget.");
+            try
+            {
+                connection?.Dispose();
+            }
+            catch (Exception ex)
+            {
+                Logger.Error($"Exception occurred when disposing the connection: {ex}");
+            }
+            InitializeConnection();
         }
     }
 }
