@@ -204,7 +204,7 @@ namespace XboxGamingBarHelper
                     appServiceConnectionStatus = AppServiceConnectionStatus.AppServiceUnavailable;
                 }
 
-                Logger.Info($"Try to conncect to the widget {(appServiceConnectionStatus != AppServiceConnectionStatus.Success ? "failed" : "success")}.");
+                Logger.Info($"Try to conncect to the widget {appServiceConnectionStatus}.");
             }
         }
 

@@ -171,25 +171,39 @@ namespace XboxGamingBar
                 Logger.Info("XboxGameBarWidget not available, probably running as an app instead of widget.");
             }
 
-            if (App.Connection == null && ApiInformation.IsApiContractPresent("Windows.ApplicationModel.FullTrustAppContract", 1, 0))
+            Logger.Info($"App.Connection:{(App.Connection == null ? "NULL" : "NOT_NULL")} FullTrustAppContract:{(ApiInformation.IsApiContractPresent("Windows.ApplicationModel.FullTrustAppContract", 1, 0) ? "PRESENT" : "NOT_PRESENT")}");
+            if (App.Connection != null)
             {
-                Logger.Info("Launching a new full trust process.");
-                App.AppServiceConnected += GamingWidget_AppServiceConnected;
-                App.AppServiceDisconnected += GamingWidget_AppServiceDisconnected;
-                await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
+                ReconnectAppService();
             }
             else
             {
-                Logger.Info($"App.Connection:{(App.Connection == null ? "NULL" : "NOT_NULL")} FullTrustAppContract:{(ApiInformation.IsApiContractPresent("Windows.ApplicationModel.FullTrustAppContract", 1, 0) ? "PRESENT" : "NOT_PRESENT")}");
-                if (App.Connection != null)
+                Logger.Info("Wait 1 second for the helper to reconnect...");
+                await Task.Delay(1000);
+                Logger.Info($"After 1 second: App.Connection:{(App.Connection == null ? "NULL" : "NOT_NULL")} FullTrustAppContract:{(ApiInformation.IsApiContractPresent("Windows.ApplicationModel.FullTrustAppContract", 1, 0) ? "PRESENT" : "NOT_PRESENT")}");
+
+                if (App.Connection == null && ApiInformation.IsApiContractPresent("Windows.ApplicationModel.FullTrustAppContract", 1, 0))
                 {
-                    App.AppServiceConnected -= GamingWidget_AppServiceConnected;
+                    Logger.Info("Launching a new full trust process.");
                     App.AppServiceConnected += GamingWidget_AppServiceConnected;
-                    App.AppServiceDisconnected -= GamingWidget_AppServiceDisconnected;
                     App.AppServiceDisconnected += GamingWidget_AppServiceDisconnected;
-                    GamingWidget_AppServiceConnected(null, null);
+                    await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
+                }
+                else
+                {
+                    ReconnectAppService();
                 }
             }
+        }
+
+        private void ReconnectAppService()
+        {
+            Logger.Info("Reconnect to existing AppServiceConnection.");
+            App.AppServiceConnected -= GamingWidget_AppServiceConnected;
+            App.AppServiceConnected += GamingWidget_AppServiceConnected;
+            App.AppServiceDisconnected -= GamingWidget_AppServiceDisconnected;
+            App.AppServiceDisconnected += GamingWidget_AppServiceDisconnected;
+            GamingWidget_AppServiceConnected(null, null);
         }
 
         public async Task GamingWidget_LeavingBackground(object sender, LeavingBackgroundEventArgs e)
@@ -347,8 +361,15 @@ namespace XboxGamingBar
             //});
 
             var eventArgs = e as BackgroundTaskCancellationEventArgs;
-            Logger.Info($"AppService disconnected due to {eventArgs.Reason}, trying to relaunch.");
-            await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
+            if (eventArgs != null && eventArgs.Reason != BackgroundTaskCancellationReason.Terminating)
+            {
+                Logger.Info($"AppService disconnected due to {eventArgs.Reason}, trying to relaunch.");
+                await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
+            }
+            else
+            {
+                Logger.Info($"AppService disconnected due to {eventArgs.Reason}, not relaunching.");
+            }
         }
 
         private async void GamingWidget_RequestedThemeChanged(XboxGameBarWidget sender, object args)
