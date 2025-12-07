@@ -55,6 +55,8 @@ namespace XboxGamingBar
         private readonly CPUClockMaxProperty cpuClockMax;
         private readonly RefreshRatesProperty refreshRates;
         private readonly RefreshRateProperty refreshRate;
+        private readonly ResolutionProperty resolution;
+        private readonly ResolutionsProperty resolutions;
         private readonly TrackedGameProperty trackedGame;
         private readonly OnScreenDisplayProviderInstalledProperty onScreenDisplayProviderInstalled;
         private readonly IsForegroundProperty isForeground;
@@ -93,6 +95,8 @@ namespace XboxGamingBar
             cpuClockMax = new CPUClockMaxProperty(CPUClockMaxSlider, this);
             refreshRates = new RefreshRatesProperty(RefreshRatesComboBox, this);
             refreshRate = new RefreshRateProperty(RefreshRatesComboBox, this);
+            resolutions = new ResolutionsProperty(ResolutionsComboBox, this);
+            resolution = new ResolutionProperty(ResolutionsComboBox, this);
             trackedGame = new TrackedGameProperty(new TrackedGame());
             onScreenDisplayProviderInstalled = new OnScreenDisplayProviderInstalledProperty(PerformanceOverlaySlider, this);
             isForeground = new IsForegroundProperty();
@@ -125,6 +129,8 @@ namespace XboxGamingBar
                 cpuClockMax,
                 refreshRates,
                 refreshRate,
+                resolutions,
+                resolution,
                 trackedGame,
                 onScreenDisplayProviderInstalled,
                 isForeground,

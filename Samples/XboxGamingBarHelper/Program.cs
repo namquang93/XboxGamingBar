@@ -107,6 +107,8 @@ namespace XboxGamingBarHelper
                 powerManager.CPUClockMax,
                 systemManager.RefreshRates,
                 systemManager.RefreshRate,
+                systemManager.Resolutions,
+                systemManager.Resolution,
                 systemManager.TrackedGame,
                 settingsManager.OnScreenDisplayProviderInstalled,
                 settingsManager.IsForeground,

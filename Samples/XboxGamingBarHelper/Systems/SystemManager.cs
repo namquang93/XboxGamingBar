@@ -70,6 +70,18 @@ namespace XboxGamingBarHelper.Systems
             get { return refreshRate; }
         }
 
+        private readonly ResolutionProperty resolution;
+        public ResolutionProperty Resolution
+        {
+            get { return resolution; }
+        }
+
+        private readonly ResolutionsProperty resolutions;
+        public ResolutionsProperty Resolutions
+        {
+            get { return resolutions; }
+        }
+
         private readonly TrackedGameProperty trackedGame;
         public TrackedGameProperty TrackedGame
         {
@@ -98,6 +110,14 @@ namespace XboxGamingBarHelper.Systems
             refreshRates = new RefreshRatesProperty(User32.GetSupportedRefreshRates(), this);
             Logger.Info("Check current refresh rate.");
             refreshRate = new RefreshRateProperty(User32.GetCurrentRefreshRate(), this);
+
+            resolution = new ResolutionProperty(new Resolution(User32.GetCurrentResolution()), this);
+            var resolutionList = User32.GetSupportedNativeResolutions().Select(res => new Resolution(res.width, res.height)).ToList();
+            resolutions = new ResolutionsProperty(new Resolutions(resolutionList), this);
+            foreach (var res in resolutions.Value.AvailableResolutions)
+            {
+                Logger.Info($"Supported native resolution: {res.Width}x{res.Height} vs {resolution.Width}x{resolution.Height}");
+            }
         }
 
         private RunningGame GetRunningGame()

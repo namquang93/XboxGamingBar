@@ -169,22 +169,6 @@ namespace XboxGamingBarHelper.Windows
         private const int DISP_CHANGE_SUCCESSFUL = 0;
         private const int DM_DISPLAYFREQUENCY = 0x400000;
 
-        public static Tuple<int, int> GetPhysicalMonitorResolution(Screen screen)
-        {
-            DEVMODE dm = new DEVMODE();
-            dm.dmSize = (short)Marshal.SizeOf(typeof(DEVMODE));
-
-            if (EnumDisplaySettings(screen.DeviceName, ENUM_CURRENT_SETTINGS, ref dm))
-            {
-                return new Tuple<int, int>(dm.dmPelsWidth, dm.dmPelsHeight);
-            }
-            else
-            {
-                // Handle error or return default/scaled resolution if API call fails
-                return new Tuple<int, int>(screen.Bounds.Width, screen.Bounds.Height);
-            }
-        }
-
         public static int GetCurrentRefreshRate()
         {
             DEVMODE vDevMode = new DEVMODE();
@@ -204,8 +188,8 @@ namespace XboxGamingBarHelper.Windows
             devMode.dmSize = (short)Marshal.SizeOf(typeof(DEVMODE));
 
             int modeIndex = 0;
-            Tuple<int, int> resolution = GetPhysicalMonitorResolution(Screen.PrimaryScreen);
-            float aspectRatio = (float)resolution.Item1 / resolution.Item2;
+            (int nativeWidth, int nativeHeight) = GetNativeResolution();
+            float aspectRatio = (float)nativeWidth / nativeHeight;
             const float tolerance = 0.001f;
 
             while (EnumDisplaySettings(null, modeIndex++, ref devMode))
@@ -233,7 +217,7 @@ namespace XboxGamingBarHelper.Windows
         /// <summary>
         /// Set monitor refresh rate to a supported value.
         /// </summary>
-        public static bool SetRefreshRateTo(int targetRate)
+        public static bool SetRefreshRate(int targetRate)
         {
             /*var supported = GetSupportedRefreshRates();
             if (!supported.Contains(targetRate))
@@ -272,6 +256,116 @@ namespace XboxGamingBarHelper.Windows
             {
                 Console.WriteLine($"Failed to apply {targetRate}Hz (error code {result}).");
                 return false;
+            }
+        }
+
+        static (int width, int height) GetNativeResolution()
+        {
+            // Current mode = ENUM_CURRENT_SETTINGS (-1)
+            DEVMODE dm = new DEVMODE();
+            dm.dmSize = (short)Marshal.SizeOf(typeof(DEVMODE));
+
+            EnumDisplaySettings(null, -1, ref dm);
+
+            return (dm.dmPelsWidth, dm.dmPelsHeight);
+        }
+
+        public static List<(int width, int height)> GetSupportedResolutions()
+        {
+            var modes = new List<(int width, int height)>();
+            int modeNum = 0;
+            DEVMODE dm = new DEVMODE();
+            dm.dmSize = (short)Marshal.SizeOf(typeof(DEVMODE));
+
+            while (EnumDisplaySettings(null, modeNum, ref dm))
+            {
+                modes.Add((dm.dmPelsWidth, dm.dmPelsHeight));
+                modeNum++;
+            }
+            return modes;
+        }
+
+        public static List<(int width, int height)> GetSupportedNativeResolutions()
+        {
+            var allModes = GetSupportedResolutions();
+            var native = GetNativeResolution();
+
+            double nativeRatio = (double)native.width / native.height;
+
+            var filtered = new List<(int width, int height)>();
+            var seen = new HashSet<string>();
+
+            foreach (var m in allModes)
+            {
+                double ratio = (double)m.width / m.height;
+
+                // Accept resolutions very close to the same aspect ratio
+                if (Math.Abs(ratio - nativeRatio) < 0.0001)
+                {
+                    string key = $"{m.width}x{m.height}";
+                    if (!seen.Contains(key))
+                    {
+                        filtered.Add(m);
+                        seen.Add(key);
+                    }
+                }
+            }
+
+            return filtered;
+        }
+
+        public static (int width, int height) GetCurrentResolution()
+        {
+            const int ENUM_CURRENT_SETTINGS = -1;
+
+            DEVMODE dm = new DEVMODE();
+            dm.dmSize = (short)Marshal.SizeOf(typeof(DEVMODE));
+
+            if (EnumDisplaySettings(null, ENUM_CURRENT_SETTINGS, ref dm))
+            {
+                return ((int)dm.dmPelsWidth, (int)dm.dmPelsHeight);
+            }
+
+            return (0, 0); // fallback
+        }
+
+        public static void SetResolution(int width, int height)
+        {
+            Console.WriteLine($"Attempting to set {width}x{height}...");
+
+            DEVMODE dm = new DEVMODE();
+            dm.dmSize = (short)Marshal.SizeOf(typeof(DEVMODE));
+
+            // Get current settings as base
+            if (!EnumDisplaySettings(null, ENUM_CURRENT_SETTINGS, ref dm))
+            {
+                Console.WriteLine("Unable to get current DEVMODE.");
+                return;
+            }
+
+            // Apply new resolution
+            dm.dmPelsWidth = (int)width;
+            dm.dmPelsHeight = (int)height;
+            dm.dmFields = 0x00080000 | 0x00100000; // DM_PELSWIDTH | DM_PELSHEIGHT
+
+            // Optional test first
+            int testResult = ChangeDisplaySettings(ref dm, CDS_TEST);
+            if (testResult != DISP_CHANGE_SUCCESSFUL)
+            {
+                Console.WriteLine("Resolution not supported.");
+                return;
+            }
+
+            // Apply permanently
+            int result = ChangeDisplaySettings(ref dm, CDS_UPDATEREGISTRY);
+
+            if (result == DISP_CHANGE_SUCCESSFUL)
+            {
+                Console.WriteLine("Resolution changed successfully.");
+            }
+            else
+            {
+                Console.WriteLine($"Failed to change resolution, error code: {result}");
             }
         }
 
