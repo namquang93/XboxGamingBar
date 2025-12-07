@@ -203,7 +203,7 @@ namespace Shared.Data
                 }
             }
 
-            Logger.Debug($"Value of {Function} is changing from {value} to {newValue}");
+            Logger.Info($"Value of {Function} is changing from {value} to {newValue}");
             lastUpdatedTime = updatedTime;
             value = newValue;
             NotifyPropertyChanged(nameof(value));
@@ -266,15 +266,17 @@ namespace Shared.Data
             if (TypeHelper.IsStruct<ValueType>() && newValue is string structStringValue)
             {
                 myTypeValue = XmlHelper.FromXMLString<ValueType>(structStringValue);
+                Logger.Debug($"SetValue string \"{structStringValue}\" to struct {myTypeValue}.");
             }
             else if (typeof(ValueType) == typeof(List<int>) && newValue is string listIntStringValue)
             {
                 myTypeValue = (ValueType)(object)listIntStringValue.Split(StringConstants.COMMA.ToCharArray()).Select(int.Parse).ToList();
-                Logger.Debug($"SetValue string {listIntStringValue} to list {myTypeValue}");
+                Logger.Debug($"SetValue string \"{listIntStringValue}\" to list {myTypeValue}.");
             }
             else if (newValue is ValueType correctValueType)
             {
                 myTypeValue = correctValueType;
+                Logger.Debug($"SetValue correct value {myTypeValue}.");
             }
             else
             {

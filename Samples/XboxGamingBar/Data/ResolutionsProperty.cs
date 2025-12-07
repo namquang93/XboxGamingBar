@@ -8,7 +8,7 @@ namespace XboxGamingBar.Data
 {
     internal class ResolutionsProperty : WidgetControlProperty<Resolutions, ComboBox>
     {
-        public ResolutionsProperty(ComboBox inUI, Page inOwner) : base(new Resolutions(), Function.Resolutions, inUI, inOwner)
+        public ResolutionsProperty(ComboBox inUI, Page inOwner) : base(new Resolutions((1920, 1080)), Function.Resolutions, inUI, inOwner)
         {
         }
 

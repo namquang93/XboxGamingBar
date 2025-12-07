@@ -1,6 +1,7 @@
 ﻿using Shared.Data;
 using Shared.Enums;
 using XboxGamingBarHelper.Core;
+using XboxGamingBarHelper.Windows;
 
 namespace XboxGamingBarHelper.Systems
 {
