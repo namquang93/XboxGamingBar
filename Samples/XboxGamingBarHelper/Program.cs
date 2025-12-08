@@ -331,6 +331,10 @@ namespace XboxGamingBarHelper
                 Logger.Error($"Exception occurred when disposing the connection: {ex}");
             }
             InitializeConnection();
+            foreach (var manager in Managers)
+            {
+                manager.Connection = connection;
+            }
         }
     }
 }

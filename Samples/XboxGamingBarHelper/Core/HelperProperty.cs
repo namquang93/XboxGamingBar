@@ -57,7 +57,14 @@ namespace XboxGamingBarHelper.Core
             }
             catch (Exception ex)
             {
-                Logger.Error($"Failed to send message to widget. Exception: {ex}");
+                if (ex is ObjectDisposedException)
+                {
+                    Logger.Info("The AppServiceConnection was disposed, trying to re-establish a connection.");
+                }
+                else
+                {
+                    Logger.Error($"Failed to send message to widget. Exception: {ex}");
+                }
                 return null;
             }
         }
