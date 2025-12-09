@@ -33,9 +33,23 @@ namespace Shared.Data
             function = inFunction;
         }
 
+        // Some properties may not need to send notify message when changed.
+        // For example, TrackedGame should only be updated by the widget, not the helper.
+        // Or Foreground property, only widget knows when it turns into foreground.
+        protected virtual bool ShouldSendNotifyMessage()
+        {
+            return true;
+        }
+
         protected override async void NotifyPropertyChanged(string propertyName = "")
         {
             base.NotifyPropertyChanged(propertyName);
+
+            if (!ShouldSendNotifyMessage())
+            {
+                Logger.Debug($"Property {function} shouldn't send notify message.");
+                return;
+            }
 
             var request = new ValueSet
             {

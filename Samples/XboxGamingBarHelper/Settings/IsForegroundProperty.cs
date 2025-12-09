@@ -8,5 +8,11 @@ namespace XboxGamingBarHelper.Settings
         public IsForegroundProperty(SettingsManager inManager) : base(true, null, Function.Foreground, inManager)
         {
         }
+
+        protected override bool ShouldSendNotifyMessage()
+        {
+            //return base.ShouldSendNotifyMessage();
+            return false;
+        }
     }
 }
