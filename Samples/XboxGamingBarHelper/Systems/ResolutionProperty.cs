@@ -18,7 +18,7 @@ namespace XboxGamingBarHelper.Systems
         {
             base.NotifyPropertyChanged(propertyName);
 
-            Logger.Info($"Property changed to {Value}");
+            Logger.Debug($"Resolution changed to {Value}");
 
             User32.SetResolution(Value.Width, Value.Height);
         }

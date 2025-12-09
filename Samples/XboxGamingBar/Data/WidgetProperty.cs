@@ -21,6 +21,7 @@ namespace XboxGamingBar.Data
                 return null;
             }
 
+            Logger.Info($"Sending message for widget property {function}: {request.ToDebugString()}.");
             return App.Connection.SendMessageAsync(request).AsTask();
         }
     }

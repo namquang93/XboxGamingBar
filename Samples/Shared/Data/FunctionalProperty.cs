@@ -88,7 +88,9 @@ namespace Shared.Data
                 return;
             }
 
+            Logger.Info($"Waiting for sending message Get {function}.");
             var response = await sentMessage;
+            Logger.Info($"Finished wait for sending message Get {function}.");
             if (response != null)
             {
                 if (response.Message.TryGetValue(nameof(Content), out object responseValue))
