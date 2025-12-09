@@ -9,9 +9,12 @@ using XboxGamingBarHelper.Core;
 using Windows.ApplicationModel.AppService;
 using System.Collections.Generic;
 using Shared.Utilities;
+using Microsoft.Win32;
 
 namespace XboxGamingBarHelper.Systems
 {
+    public delegate void ResumeFromSleepEventHandler(object sender);
+
     internal class SystemManager : Manager
     {
         private static readonly string[] IgnoredProcesses =
@@ -94,6 +97,8 @@ namespace XboxGamingBarHelper.Systems
         private Dictionary<int, ProcessWindow> ProcessWindows { get; }
         private Dictionary<int, AppEntry> AppEntries { get; }
 
+        public event ResumeFromSleepEventHandler ResumeFromSleep;
+
         public SystemManager(AppServiceConnection connection, IReadOnlyDictionary<GameId, GameProfile> profiles) : base(connection)
         {
             Logger.Info("Create process windows.");
@@ -118,6 +123,8 @@ namespace XboxGamingBarHelper.Systems
             {
                 Logger.Info($"Supported native resolution: {res.Width}x{res.Height} vs {resolution.Width}x{resolution.Height}");
             }
+
+            SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
         }
 
         private RunningGame GetRunningGame()
@@ -256,6 +263,25 @@ namespace XboxGamingBarHelper.Systems
                     Logger.Info($"Running game {RunningGame.Value.GameId.Name} stopped.");
                 }
                 RunningGame.SetValue(currentRunningGame);
+            }
+        }
+
+        private void SystemEvents_PowerModeChanged(object sender, PowerModeChangedEventArgs e)
+        {
+            switch (e.Mode)
+            {
+                case PowerModes.Resume:
+                    Logger.Info($"System resumed from sleep/hibernate at: {DateTime.Now}");
+                    // Add your custom logic here to execute on wake-up
+                    ResumeFromSleep?.Invoke(this);
+                    break;
+                case PowerModes.Suspend:
+                    Logger.Info($"System is going to sleep/hibernate at: {DateTime.Now}");
+                    // Add your custom logic here to execute before sleep
+                    break;
+                case PowerModes.StatusChange:
+                    Logger.Info($"Power mode status change detected: {DateTime.Now}");
+                    break;
             }
         }
     }

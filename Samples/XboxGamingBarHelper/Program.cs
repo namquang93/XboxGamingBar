@@ -131,6 +131,7 @@ namespace XboxGamingBarHelper
 
             Logger.Info("Initialize callbacks.");
             systemManager.RunningGame.PropertyChanged += RunningGame_PropertyChanged;
+            systemManager.ResumeFromSleep += SystemManager_ResumeFromSleep;
             profileManager.PerGameProfile.PropertyChanged += PerGameProfile_PropertyChanged;
             hardwareManager.TDP.PropertyChanged += TDP_PropertyChanged;
             powerManager.CPUBoost.PropertyChanged += CPUBoost_PropertyChanged;
@@ -157,6 +158,13 @@ namespace XboxGamingBarHelper
                     manager.Update();
                 }
             }
+        }
+
+        private static void SystemManager_ResumeFromSleep(object sender)
+        {
+            Logger.Info("System resumed from sleep, re-apply current profile settings.");
+            // Re-apply current profile settings.
+            CurrentProfile_PropertyChanged(sender, null);
         }
 
         private static void InitializeConnection()
