@@ -59,9 +59,9 @@ namespace Shared.Data
                     Logger.Error($"Can't process command {command}");
                     break;
             }
-            Logger.Debug($"Start sending response {function} {response.ToDebugString()}");
+            Logger.Info($"Start sending response {function} {response.ToDebugString()}");
             var sendResponseResult = await SendResponse(request, response);
-            Logger.Debug($"Sent response {function} {sendResponseResult}.");
+            Logger.Info($"Sent response {function} {sendResponseResult}.");
         }
 
         protected abstract Task<AppServiceResponseStatus> SendResponse(AppServiceRequest request, ValueSet response);

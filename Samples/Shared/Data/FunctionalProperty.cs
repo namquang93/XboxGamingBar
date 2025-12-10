@@ -71,13 +71,17 @@ namespace Shared.Data
             {
                 if (response.Message.TryGetValue(nameof(Content), out object responseValue))
                 {
-                    Logger.Debug($"Notify property {function} changed {responseValue}.");
+                    Logger.Info($"Notified property {function} changed {responseValue}.");
                 }
                 else
                 {
                     if (function != Function.None)
                     {
                         Logger.Warn($"Got empty response when notifying property {function}.");
+                    }
+                    else
+                    {
+                        Logger.Info("Notified property NONE changed.");
                     }
                 }
             }
@@ -87,8 +91,19 @@ namespace Shared.Data
             }
         }
 
+        public virtual bool ShouldSync()
+        {
+            return true;
+        }
+
         public override async Task Sync()
         {
+            if (!ShouldSync())
+            {
+                Logger.Debug($"Property {function} shouldn't sync.");
+                return;
+            }
+
             var request = new ValueSet
             {
                 { nameof(Command), (int)Command.Get },
