@@ -31,7 +31,7 @@ namespace XboxGamingBarHelper.Hardware
                     continue;
                 }
 
-                if (cpuName.Contains(cpuIdAttribute.Id))
+                if (cpuName.ToLower() == cpuIdAttribute.Id.ToLower())
                 {
                     return (CPU)Activator.CreateInstance(cpuType);
                 }

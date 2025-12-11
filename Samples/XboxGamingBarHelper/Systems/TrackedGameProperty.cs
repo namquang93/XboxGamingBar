@@ -34,5 +34,11 @@ namespace XboxGamingBarHelper.Systems
         public TrackedGameProperty(SystemManager inManager) : base(new TrackedGame(), null, Function.TrackedGame, inManager)
         {
         }
+
+        protected override bool ShouldSendNotifyMessage()
+        {
+            //return base.ShouldSendNotifyMessage();
+            return false;
+        }
     }
 }

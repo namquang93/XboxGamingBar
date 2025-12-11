@@ -50,7 +50,23 @@ namespace XboxGamingBarHelper.Core
                 return null;
             }
 
-            return Manager.Connection.SendMessageAsync(request).AsTask();
+            Logger.Info($"Send message {request.ToDebugString()} to widget.");
+            try
+            {
+                return Manager.Connection.SendMessageAsync(request).AsTask();
+            }
+            catch (Exception ex)
+            {
+                if (ex is ObjectDisposedException)
+                {
+                    Logger.Info("The AppServiceConnection was disposed, trying to re-establish a connection.");
+                }
+                else
+                {
+                    Logger.Error($"Failed to send message to widget. Exception: {ex}");
+                }
+                return null;
+            }
         }
     }
 }

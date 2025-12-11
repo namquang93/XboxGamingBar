@@ -30,5 +30,12 @@ namespace XboxGamingBar.Data
                 });
             }
         }
+
+        // Running game is only changed by the helper, not the widget.
+        protected override bool ShouldSendNotifyMessage()
+        {
+            //return base.ShouldSendNotifyMessage();
+            return false;
+        }
     }
 }

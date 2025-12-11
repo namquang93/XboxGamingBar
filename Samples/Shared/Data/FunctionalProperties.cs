@@ -34,6 +34,7 @@ namespace Shared.Data
             var function = (Function)request.Message[nameof(Function)];
             if (function == Function.None)
             {
+                Logger.Error("Invalid function.");
                 return;
             }
 
@@ -52,14 +53,15 @@ namespace Shared.Data
                     break;
                 case Command.Set:
                     property.SetValue(request.Message[nameof(Content)], (long)request.Message[nameof(UpdatedTime)]);
-                    response.Add(nameof(Content), "Success");
+                    response.Add(nameof(Content), "Set Success");
                     break;
                 default:
                     Logger.Error($"Can't process command {command}");
                     break;
             }
+            Logger.Info($"Start sending response {function} {response.ToDebugString()}");
             var sendResponseResult = await SendResponse(request, response);
-            Logger.Debug($"Sent response {function} {sendResponseResult}.");
+            Logger.Info($"Sent response {function} {sendResponseResult}.");
         }
 
         protected abstract Task<AppServiceResponseStatus> SendResponse(AppServiceRequest request, ValueSet response);

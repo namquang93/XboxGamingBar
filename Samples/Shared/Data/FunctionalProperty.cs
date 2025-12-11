@@ -33,9 +33,23 @@ namespace Shared.Data
             function = inFunction;
         }
 
+        // Some properties may not need to send notify message when changed.
+        // For example, TrackedGame should only be updated by the widget, not the helper.
+        // Or Foreground property, only widget knows when it turns into foreground.
+        protected virtual bool ShouldSendNotifyMessage()
+        {
+            return true;
+        }
+
         protected override async void NotifyPropertyChanged(string propertyName = "")
         {
             base.NotifyPropertyChanged(propertyName);
+
+            if (!ShouldSendNotifyMessage())
+            {
+                Logger.Debug($"Property {function} shouldn't send notify message.");
+                return;
+            }
 
             var request = new ValueSet
             {
@@ -57,13 +71,17 @@ namespace Shared.Data
             {
                 if (response.Message.TryGetValue(nameof(Content), out object responseValue))
                 {
-                    Logger.Debug($"Notify property {function} changed {responseValue}.");
+                    Logger.Info($"Notified property {function} changed {responseValue}.");
                 }
                 else
                 {
                     if (function != Function.None)
                     {
                         Logger.Warn($"Got empty response when notifying property {function}.");
+                    }
+                    else
+                    {
+                        Logger.Info("Notified property NONE changed.");
                     }
                 }
             }
@@ -73,8 +91,19 @@ namespace Shared.Data
             }
         }
 
+        public virtual bool ShouldSync()
+        {
+            return true;
+        }
+
         public override async Task Sync()
         {
+            if (!ShouldSync())
+            {
+                Logger.Debug($"Property {function} shouldn't sync.");
+                return;
+            }
+
             var request = new ValueSet
             {
                 { nameof(Command), (int)Command.Get },
@@ -88,7 +117,9 @@ namespace Shared.Data
                 return;
             }
 
+            Logger.Info($"Waiting for sending message Get {function}.");
             var response = await sentMessage;
+            Logger.Info($"Finished wait for sending message Get {function}.");
             if (response != null)
             {
                 if (response.Message.TryGetValue(nameof(Content), out object responseValue))

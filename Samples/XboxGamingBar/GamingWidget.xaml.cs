@@ -55,6 +55,8 @@ namespace XboxGamingBar
         private readonly CPUClockMaxProperty cpuClockMax;
         private readonly RefreshRatesProperty refreshRates;
         private readonly RefreshRateProperty refreshRate;
+        private readonly ResolutionProperty resolution;
+        private readonly ResolutionsProperty resolutions;
         private readonly TrackedGameProperty trackedGame;
         private readonly OnScreenDisplayProviderInstalledProperty onScreenDisplayProviderInstalled;
         private readonly IsForegroundProperty isForeground;
@@ -93,6 +95,8 @@ namespace XboxGamingBar
             cpuClockMax = new CPUClockMaxProperty(CPUClockMaxSlider, this);
             refreshRates = new RefreshRatesProperty(RefreshRatesComboBox, this);
             refreshRate = new RefreshRateProperty(RefreshRatesComboBox, this);
+            resolutions = new ResolutionsProperty(ResolutionsComboBox, this);
+            resolution = new ResolutionProperty(ResolutionsComboBox, this);
             trackedGame = new TrackedGameProperty(new TrackedGame());
             onScreenDisplayProviderInstalled = new OnScreenDisplayProviderInstalledProperty(PerformanceOverlaySlider, this);
             isForeground = new IsForegroundProperty();
@@ -125,6 +129,8 @@ namespace XboxGamingBar
                 cpuClockMax,
                 refreshRates,
                 refreshRate,
+                resolutions,
+                resolution,
                 trackedGame,
                 onScreenDisplayProviderInstalled,
                 isForeground,
@@ -171,25 +177,39 @@ namespace XboxGamingBar
                 Logger.Info("XboxGameBarWidget not available, probably running as an app instead of widget.");
             }
 
-            if (App.Connection == null && ApiInformation.IsApiContractPresent("Windows.ApplicationModel.FullTrustAppContract", 1, 0))
+            Logger.Info($"App.Connection:{(App.Connection == null ? "NULL" : "NOT_NULL")} FullTrustAppContract:{(ApiInformation.IsApiContractPresent("Windows.ApplicationModel.FullTrustAppContract", 1, 0) ? "PRESENT" : "NOT_PRESENT")}");
+            if (App.Connection != null)
             {
-                Logger.Info("Launching a new full trust process.");
-                App.AppServiceConnected += GamingWidget_AppServiceConnected;
-                App.AppServiceDisconnected += GamingWidget_AppServiceDisconnected;
-                await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
+                ReconnectAppService();
             }
             else
             {
-                Logger.Info($"App.Connection:{(App.Connection == null ? "NULL" : "NOT_NULL")} FullTrustAppContract:{(ApiInformation.IsApiContractPresent("Windows.ApplicationModel.FullTrustAppContract", 1, 0) ? "PRESENT" : "NOT_PRESENT")}");
-                if (App.Connection != null)
+                Logger.Info("Wait 1 second for the helper to reconnect...");
+                await Task.Delay(1000);
+                Logger.Info($"After 1 second: App.Connection:{(App.Connection == null ? "NULL" : "NOT_NULL")} FullTrustAppContract:{(ApiInformation.IsApiContractPresent("Windows.ApplicationModel.FullTrustAppContract", 1, 0) ? "PRESENT" : "NOT_PRESENT")}");
+
+                if (App.Connection == null && ApiInformation.IsApiContractPresent("Windows.ApplicationModel.FullTrustAppContract", 1, 0))
                 {
-                    App.AppServiceConnected -= GamingWidget_AppServiceConnected;
+                    Logger.Info("Launching a new full trust process.");
                     App.AppServiceConnected += GamingWidget_AppServiceConnected;
-                    App.AppServiceDisconnected -= GamingWidget_AppServiceDisconnected;
                     App.AppServiceDisconnected += GamingWidget_AppServiceDisconnected;
-                    GamingWidget_AppServiceConnected(null, null);
+                    await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
+                }
+                else
+                {
+                    ReconnectAppService();
                 }
             }
+        }
+
+        private void ReconnectAppService()
+        {
+            Logger.Info("Reconnect to existing AppServiceConnection.");
+            App.AppServiceConnected -= GamingWidget_AppServiceConnected;
+            App.AppServiceConnected += GamingWidget_AppServiceConnected;
+            App.AppServiceDisconnected -= GamingWidget_AppServiceDisconnected;
+            App.AppServiceDisconnected += GamingWidget_AppServiceDisconnected;
+            GamingWidget_AppServiceConnected(null, null);
         }
 
         public async Task GamingWidget_LeavingBackground(object sender, LeavingBackgroundEventArgs e)
@@ -230,19 +250,19 @@ namespace XboxGamingBar
 
             if (target == null)
             {
-                Logger.Info("Found no target.");
+                Logger.Debug("Found no target.");
                 trackedGame.SetValue(new TrackedGame());
             }
             else
             {
                 if (target.IsGame && !BlackListAppTrackerNames.Contains(target.DisplayName))
                 {
-                    Logger.Info($"Tracked game DisplayName={target.DisplayName} AumId={target.AumId} TitleId={target.TitleId} IsFullscreen={target.IsFullscreen}");
+                    Logger.Debug($"Tracked game DisplayName={target.DisplayName} AumId={target.AumId} TitleId={target.TitleId} IsFullscreen={target.IsFullscreen}");
                     trackedGame.SetValue(new TrackedGame(target.AumId, target.DisplayName, StringHelper.CleanStringForSerialization(target.TitleId), target.IsFullscreen));
                 }
                 else
                 {
-                    Logger.Info($"Tracked non-game DisplayName={target.DisplayName} AumId={target.AumId} TitleId={target.TitleId} IsFullscreen={target.IsFullscreen}");
+                    Logger.Debug($"Tracked non-game DisplayName={target.DisplayName} AumId={target.AumId} TitleId={target.TitleId} IsFullscreen={target.IsFullscreen}");
                     trackedGame.SetValue(new TrackedGame());
                 }
             }
@@ -347,8 +367,15 @@ namespace XboxGamingBar
             //});
 
             var eventArgs = e as BackgroundTaskCancellationEventArgs;
-            Logger.Info($"AppService disconnected due to {eventArgs.Reason}, trying to relaunch.");
-            await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
+            if (eventArgs != null && eventArgs.Reason != BackgroundTaskCancellationReason.Terminating)
+            {
+                Logger.Info($"AppService disconnected due to {eventArgs.Reason}, trying to relaunch.");
+                await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
+            }
+            else
+            {
+                Logger.Info($"AppService disconnected due to {eventArgs.Reason}, not relaunching.");
+            }
         }
 
         private async void GamingWidget_RequestedThemeChanged(XboxGameBarWidget sender, object args)

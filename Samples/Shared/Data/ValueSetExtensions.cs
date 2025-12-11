@@ -6,7 +6,7 @@ namespace Shared.Data
 {
     public static class ValueSetExtensions
     {
-        private const string QUOTE = "\"";
+        private const string QUOTE = "'";
         private const string SPACE = " ";
         public static string ToDebugString(this ValueSet valueSet)
         {
@@ -23,15 +23,20 @@ namespace Shared.Data
                 debugString.Append((Command)valueSet[nameof(Command)]);
             }
 
+            var hasFunction = false;
             if (valueSet.ContainsKey(nameof(Function)))
             {
+                hasFunction = true;
                 debugString.Append(SPACE);
                 debugString.Append((Function)valueSet[nameof(Function)]);
             }
 
             if (valueSet.ContainsKey(nameof(Content)))
             {
-                debugString.Append(" to ");
+                if (hasFunction)
+                {
+                    debugString.Append(" to ");
+                }
                 debugString.Append(valueSet[nameof(Content)]);
             }
 

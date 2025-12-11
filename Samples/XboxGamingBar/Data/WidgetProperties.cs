@@ -12,6 +12,7 @@ namespace XboxGamingBar.Data
 
         protected override Task<AppServiceResponseStatus> SendResponse(AppServiceRequest request, ValueSet response)
         {
+            Logger.Info($"Sending response request {request.Message.ToDebugString()}: {response.ToDebugString()}.");
             return request.SendResponseAsync(response).AsTask();
         }
 

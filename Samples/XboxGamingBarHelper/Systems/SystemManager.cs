@@ -9,9 +9,12 @@ using XboxGamingBarHelper.Core;
 using Windows.ApplicationModel.AppService;
 using System.Collections.Generic;
 using Shared.Utilities;
+using Microsoft.Win32;
 
 namespace XboxGamingBarHelper.Systems
 {
+    public delegate void ResumeFromSleepEventHandler(object sender);
+
     internal class SystemManager : Manager
     {
         private static readonly string[] IgnoredProcesses =
@@ -70,6 +73,18 @@ namespace XboxGamingBarHelper.Systems
             get { return refreshRate; }
         }
 
+        private readonly ResolutionProperty resolution;
+        public ResolutionProperty Resolution
+        {
+            get { return resolution; }
+        }
+
+        private readonly ResolutionsProperty resolutions;
+        public ResolutionsProperty Resolutions
+        {
+            get { return resolutions; }
+        }
+
         private readonly TrackedGameProperty trackedGame;
         public TrackedGameProperty TrackedGame
         {
@@ -81,6 +96,8 @@ namespace XboxGamingBarHelper.Systems
         // Keep track to current opening windows to determine currently running game.
         private Dictionary<int, ProcessWindow> ProcessWindows { get; }
         private Dictionary<int, AppEntry> AppEntries { get; }
+
+        public event ResumeFromSleepEventHandler ResumeFromSleep;
 
         public SystemManager(AppServiceConnection connection, IReadOnlyDictionary<GameId, GameProfile> profiles) : base(connection)
         {
@@ -98,6 +115,16 @@ namespace XboxGamingBarHelper.Systems
             refreshRates = new RefreshRatesProperty(User32.GetSupportedRefreshRates(), this);
             Logger.Info("Check current refresh rate.");
             refreshRate = new RefreshRateProperty(User32.GetCurrentRefreshRate(), this);
+
+            resolution = new ResolutionProperty(new Resolution(User32.GetCurrentResolution()), this);
+            var resolutionList = User32.GetSupportedNativeResolutions().Select(res => new Resolution(res.width, res.height)).ToList();
+            resolutions = new ResolutionsProperty(new Resolutions(resolutionList), this);
+            foreach (var res in resolutions.Value.AvailableResolutions)
+            {
+                Logger.Info($"Supported native resolution: {res.Width}x{res.Height} vs {resolution.Width}x{resolution.Height}");
+            }
+
+            SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
         }
 
         private RunningGame GetRunningGame()
@@ -236,6 +263,25 @@ namespace XboxGamingBarHelper.Systems
                     Logger.Info($"Running game {RunningGame.Value.GameId.Name} stopped.");
                 }
                 RunningGame.SetValue(currentRunningGame);
+            }
+        }
+
+        private void SystemEvents_PowerModeChanged(object sender, PowerModeChangedEventArgs e)
+        {
+            switch (e.Mode)
+            {
+                case PowerModes.Resume:
+                    Logger.Info($"System resumed from sleep/hibernate at: {DateTime.Now}");
+                    // Add your custom logic here to execute on wake-up
+                    ResumeFromSleep?.Invoke(this);
+                    break;
+                case PowerModes.Suspend:
+                    Logger.Info($"System is going to sleep/hibernate at: {DateTime.Now}");
+                    // Add your custom logic here to execute before sleep
+                    break;
+                case PowerModes.StatusChange:
+                    Logger.Info($"Power mode status change detected: {DateTime.Now}");
+                    break;
             }
         }
     }

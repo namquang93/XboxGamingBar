@@ -5,7 +5,7 @@ namespace XboxGamingBarHelper.Settings
 {
     internal class OnScreenDisplayProviderProperty : HelperProperty<int, SettingsManager>
     {
-        public OnScreenDisplayProviderProperty(SettingsManager inManager) : base(0, null, Function.Settings_OnScreenDisplayProvider, inManager)
+        public OnScreenDisplayProviderProperty(int inValue, SettingsManager inManager) : base(inValue, null, Function.Settings_OnScreenDisplayProvider, inManager)
         {
         }
 

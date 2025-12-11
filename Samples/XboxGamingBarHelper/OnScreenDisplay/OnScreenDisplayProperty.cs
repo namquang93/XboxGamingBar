@@ -8,6 +8,11 @@ namespace XboxGamingBarHelper.OnScreenDisplay
     {
         public OnScreenDisplayProperty(int inValue, IProperty inParentProperty, OnScreenDisplayManager inManager) : base(inValue, inParentProperty, Function.OSD, inManager)
         {
+            if (manager != null)
+            {
+                manager.SetLevel(inValue);
+                manager.IsInUsed = true;
+            }
         }
 
         protected override void NotifyPropertyChanged(string propertyName = "")

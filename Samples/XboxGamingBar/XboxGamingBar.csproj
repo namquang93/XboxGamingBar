@@ -117,8 +117,11 @@
     <Compile Include="Data\RefreshRateProperty.cs" />
     <Compile Include="Data\RefreshRatesProperty.cs" />
     <Compile Include="Data\OnScreenDisplayProviderInstalledProperty.cs" />
+    <Compile Include="Data\ResolutionProperty.cs" />
+    <Compile Include="Data\ResolutionsProperty.cs" />
     <Compile Include="Data\RunningGameProperty.cs" />
     <Compile Include="Data\TrackedGameProperty.cs" />
+    <Compile Include="Data\WidgetComboBoxSelectionProperty.cs" />
     <Compile Include="Data\WidgetControlEnabledProperty.cs" />
     <Compile Include="Data\WidgetControlFocusProperty.cs" />
     <Compile Include="Data\WidgetSliderProperty.cs" />

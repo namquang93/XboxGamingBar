@@ -15,6 +15,8 @@
         CPUClockMax,
         RefreshRates,
         RefreshRate,
+        Resolutions,
+        Resolution,
         TrackedGame,
         AMDRadeonSuperResolutionSupported,
         AMDRadeonSuperResolutionEnabled,
