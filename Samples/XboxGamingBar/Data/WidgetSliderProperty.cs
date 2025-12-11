@@ -12,7 +12,7 @@ namespace XboxGamingBar.Data
         {
             if (UI != null)
             {
-                //UI.ValueChanged += Slider_ValueChanged;
+                UI.ValueChanged += Slider_ValueChanged;
                 //UI.FocusDisengaged += Slider_FocusDisengaged;
                 //UI.FocusEngaged += Slider_FocusEngaged;
                 //UI.GettingFocus += Slider_GettingFocus;

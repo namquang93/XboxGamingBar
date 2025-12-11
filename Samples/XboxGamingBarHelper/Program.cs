@@ -169,6 +169,7 @@ namespace XboxGamingBarHelper
 
         private static void InitializeConnection()
         {
+            Logger.Info("Initialize connection...");
             connection = new AppServiceConnection();
             connection.AppServiceName = "XboxGamingBarService";
             connection.PackageFamilyName = Package.Current.Id.FamilyName;
