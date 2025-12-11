@@ -281,7 +281,7 @@ namespace XboxGamingBarHelper.Hardware
             }
 
             RyzenAdj.refresh_table(ryzenAdjHandle);
-            return (int)RyzenAdj.get_fast_limit(ryzenAdjHandle);
+            return (int)RyzenAdj.get_stapm_limit(ryzenAdjHandle);
         }
 
         public void SetTDP(int tdp)
@@ -292,8 +292,8 @@ namespace XboxGamingBarHelper.Hardware
                 return;
             }
             //RyzenAdj.refresh_table(ryzenAdjHandle);
-            RyzenAdj.set_fast_limit(ryzenAdjHandle, (uint)(tdp * 1000));
-            RyzenAdj.set_slow_limit(ryzenAdjHandle, (uint)(tdp * 1000));
+            RyzenAdj.set_fast_limit(ryzenAdjHandle, (uint)((tdp + 10) * 1000));
+            RyzenAdj.set_slow_limit(ryzenAdjHandle, (uint)((tdp + 5) * 1000));
             RyzenAdj.set_stapm_limit(ryzenAdjHandle, (uint)(tdp * 1000));
 #if DEBUG
             RyzenAdj.refresh_table(ryzenAdjHandle);
