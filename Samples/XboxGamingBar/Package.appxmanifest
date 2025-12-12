@@ -133,8 +133,8 @@
   </Extensions>
   
   <Capabilities>
-    <Capability Name="internetClient" />
-	<rescap:Capability Name="appDiagnostics" />
+    <!--<Capability Name="internetClient" />
+	<rescap:Capability Name="appDiagnostics" />-->
 	<rescap:Capability Name="broadFileSystemAccess" />
   </Capabilities>
 </Package>
