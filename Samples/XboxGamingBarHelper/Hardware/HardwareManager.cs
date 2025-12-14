@@ -171,14 +171,14 @@ namespace XboxGamingBarHelper.Hardware
             var initialTDP = 25;
             if (ryzenAdjHandle == IntPtr.Zero)
             {
-                Logger.Error("Failed to initialize RyzenAdj");
+                Logger.Error("RyzenAdj initialized failed.");
             }
             else
             {
                 RyzenAdj.refresh_table(ryzenAdjHandle);
                 // RyzenAdj.set_fast_limit(ryzenAdjHandle, 30000);
                 initialTDP = (int)RyzenAdj.get_fast_limit(ryzenAdjHandle);
-                Logger.Info($"RyzenAdj initialized successfully at {initialTDP}W");
+                Logger.Info($"RyzenAdj initialized successfully at {initialTDP}W.");
             }
 
             minTDP = new MinTDPProperty(device.GetMinTDP(), this);

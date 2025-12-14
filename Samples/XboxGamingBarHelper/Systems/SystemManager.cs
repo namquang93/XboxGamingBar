@@ -135,7 +135,7 @@ namespace XboxGamingBarHelper.Systems
             }
             catch (Exception e)
             {
-                Logger.Error($"Can't get open windows: {e}");
+                Logger.Error($"Can't get open windows: {e.Message}");
                 return new RunningGame();
             }
             if (ProcessWindows.Count == 0)
