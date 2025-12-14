@@ -1,7 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Diagnostics;
+#if NO_MICROSOFT_STORE_RESTRICTIONS
 using RTSSSharedMemoryNET;
+#endif
 using Shared.Enums;
 using Shared.Utilities;
 using Windows.ApplicationModel.AppService;
@@ -21,7 +23,9 @@ namespace XboxGamingBarHelper.RTSS
         private const string OSDBackground = "<P=0,0><L0><C=80000000><B=0,0>\b<C>";
         private const string OSDAppName = "Xbox Gaming Bar OSD";
 
+#if NO_MICROSOFT_STORE_RESTRICTIONS
         private OSD rtssOSD;
+#endif
         private readonly OSDItem[] osdItems;
 
         public RTSSManager(HardwareManager hardwareManager, AppServiceConnection connection) : base(connection)
@@ -58,12 +62,14 @@ namespace XboxGamingBarHelper.RTSS
 
             if (onScreenDisplayLevel == 0)
             {
+#if NO_MICROSOFT_STORE_RESTRICTIONS
                 if (rtssOSD != null)
                 {
                     rtssOSD.Update(string.Empty);
                     rtssOSD.Dispose();
                     rtssOSD = null;
                 }
+#endif
 
                 /*var rtssProcess = RTSSHelper.GetProcess();
                 if (rtssProcess != null && SettingsManager.GetInstance().AutoStartRTSS)
@@ -110,10 +116,12 @@ namespace XboxGamingBarHelper.RTSS
 
             applicationState = ApplicationState.Running;
 
+#if NO_MICROSOFT_STORE_RESTRICTIONS
             if (rtssOSD == null)
             {
                 rtssOSD = new OSD(OSDAppName);
             }
+#endif
 
             string osdString = OSDBackground;
             for (int i = 0; i < osdItems.Length; i++)
@@ -132,7 +140,9 @@ namespace XboxGamingBarHelper.RTSS
                 }
             }
 
+#if NO_MICROSOFT_STORE_RESTRICTIONS
             rtssOSD.Update(osdString);
+#endif
         }
     }
 }
