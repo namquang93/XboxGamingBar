@@ -1,11 +1,4 @@
-﻿using LibreHardwareMonitor.Hardware;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace XboxGamingBarHelper.Hardware.Sensors
+﻿namespace XboxGamingBarHelper.Hardware.Sensors
 {
     internal class CPUTemperatureSensor : HardwareSensor
     {

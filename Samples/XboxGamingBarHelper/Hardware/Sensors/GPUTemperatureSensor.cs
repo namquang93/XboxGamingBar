@@ -1,6 +1,4 @@
-﻿using LibreHardwareMonitor.Hardware;
-
-namespace XboxGamingBarHelper.Hardware.Sensors
+﻿namespace XboxGamingBarHelper.Hardware.Sensors
 {
     internal class GPUTemperatureSensor : HardwareSensor
     {

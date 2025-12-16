@@ -1,5 +1,4 @@
-﻿using LibreHardwareMonitor.Hardware;
-using NLog;
+﻿using NLog;
 using System;
 //using System.Collections;
 using System.Collections.Generic;
@@ -83,8 +82,6 @@ namespace XboxGamingBarHelper.Hardware
         private readonly CPU cpu;
         private readonly Device device;
 
-        private readonly Computer computer;
-        private readonly IVisitor updateVisitor;
         private readonly IntPtr ryzenAdjHandle;
 
         public CPUUsageSensor CPUUsage { get; }
@@ -128,46 +125,10 @@ namespace XboxGamingBarHelper.Hardware
         internal HardwareManager(AppServiceConnection connection) : base(connection)
         {
             // Initialize the computer sensors
-            computer = new Computer
-            {
-                IsCpuEnabled = true,
-                IsGpuEnabled = true,
-                IsMemoryEnabled = true,
-                IsMotherboardEnabled = true,
-                IsControllerEnabled = true,
-                IsNetworkEnabled = true,
-                IsStorageEnabled = true,
-                IsBatteryEnabled = true,
-            };
-            updateVisitor = new UpdateVisitor();
-            computer.Open();
-            computer.Accept(updateVisitor);
-
+            
             var cpuId = string.Empty;
             var mainboardId = string.Empty;
-            foreach (IHardware hardware in computer.Hardware)
-            {
-                var properties = string.Empty;
-                if (hardware.Properties.Count > 0)
-                {
-                    foreach (var property in hardware.Properties)
-                    {
-                        properties = properties.Length == 0 ? $"{property.Key}:{property.Value}" : $"{properties}, {property.Key}:{property.Value}";
-                    }
-                }
-
-                Logger.Info($"Found hardware {hardware.HardwareType}: Name={hardware.Name}, Type={hardware.HardwareType}, Id={hardware.Identifier}, Properties={properties}");
-                if (hardware.HardwareType == HardwareType.Cpu)
-                {
-                    cpuId = hardware.Name;
-                }
-
-                if (hardware.HardwareType == HardwareType.Motherboard)
-                {
-                    mainboardId = hardware.Name;
-                }
-            }
-
+            
             cpu = CPUFactory.Create(cpuId);
             Logger.Info($"Initialized CPU: {cpu.Name} (\"{cpuId}\")");
             device = DeviceFactory.Create(mainboardId, cpu);
@@ -243,32 +204,6 @@ namespace XboxGamingBarHelper.Hardware
             foreach (var hardwareSensor in hardwareSensors)
             {
                 hardwareSensor.Value = -1.0f;
-            }
-
-            if (computer == null)
-                return;
-
-            computer.Accept(updateVisitor);
-            foreach (IHardware hardware in computer.Hardware)
-            {
-                foreach (ISensor sensor in hardware.Sensors)
-                {
-                    //Logger.Info("[2] Hardware {3} Sensor: {0}, value: {1}, type: {2}", sensor.Name, sensor.Value, sensor.SensorType.ToString(), hardware.Name);
-
-                    HardwareSensor hardwareSensorFound = null;
-                    foreach (var hardwareSensor in hardwareSensors)
-                    {
-                        if (hardwareSensor.HardwareType == hardware.HardwareType && hardwareSensor.SensorType == sensor.SensorType && hardwareSensor.SensorName == sensor.Name)
-                        {
-                            hardwareSensorFound = hardwareSensor;
-                            break;
-                        }
-                    }
-                    if (hardwareSensorFound != null)
-                    {
-                        hardwareSensorFound.Value = sensor.Value ?? -1;
-                    }
-                }
             }
         }
 
