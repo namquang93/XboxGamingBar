@@ -167,8 +167,9 @@ namespace XboxGamingBarHelper.Hardware
                 BatteryChargeRate,
             };
 
-            ryzenAdjHandle = RyzenAdj.init_ryzenadj();
             var initialTDP = 25;
+#if NO_MICROSOFT_STORE_RESTRICTIONS
+            ryzenAdjHandle = RyzenAdj.init_ryzenadj();
             if (ryzenAdjHandle == IntPtr.Zero)
             {
                 Logger.Error("RyzenAdj initialized failed.");
@@ -180,6 +181,9 @@ namespace XboxGamingBarHelper.Hardware
                 initialTDP = (int)RyzenAdj.get_fast_limit(ryzenAdjHandle);
                 Logger.Info($"RyzenAdj initialized successfully at {initialTDP}W.");
             }
+#else
+            Logger.Info("RyzenAdj is disabled due to Microsoft Store restrictions.");
+#endif
 
             minTDP = new MinTDPProperty(device.GetMinTDP(), this);
             maxTDP = new MaxTDPProperty(device.GetMaxTDP(), this);
@@ -226,6 +230,7 @@ namespace XboxGamingBarHelper.Hardware
                 Logger.Info("RyzenAdj not initialized");
                 return;
             }
+
             //RyzenAdj.refresh_table(ryzenAdjHandle);
             RyzenAdj.set_fast_limit(ryzenAdjHandle, (uint)((tdp + 10) * 1000));
             RyzenAdj.set_slow_limit(ryzenAdjHandle, (uint)((tdp + 5) * 1000));
