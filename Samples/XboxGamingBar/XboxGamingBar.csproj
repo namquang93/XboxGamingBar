@@ -102,6 +102,7 @@
     <Compile Include="Data\AMDRadeonChillSupportedProperty.cs" />
     <Compile Include="Data\AMDRadeonSuperResolutionEnabledProperty.cs" />
     <Compile Include="Data\AMDRadeonSuperResolutionSharpnessProperty.cs" />
+    <Compile Include="Data\AMDSettingsSupportedProperty.cs" />
     <Compile Include="Data\CPUBoostProperty.cs" />
     <Compile Include="Data\FocusingOnOSDSliderProperty.cs" />
     <Compile Include="Data\IsForegroundProperty.cs" />
@@ -124,6 +125,7 @@
     <Compile Include="Data\WidgetComboBoxSelectionProperty.cs" />
     <Compile Include="Data\WidgetControlEnabledProperty.cs" />
     <Compile Include="Data\WidgetControlFocusProperty.cs" />
+    <Compile Include="Data\WidgetControlVisibleProperty.cs" />
     <Compile Include="Data\WidgetSliderProperty.cs" />
     <Compile Include="Data\TDPProperty.cs" />
     <Compile Include="Data\WidgetControlProperty.cs" />

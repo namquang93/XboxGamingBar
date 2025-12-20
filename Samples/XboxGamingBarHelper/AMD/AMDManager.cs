@@ -185,24 +185,66 @@ namespace XboxGamingBarHelper.AMD
 
         private string lastLog;
 
+        private AMDSettingsSupportedProperty amdSettingsSupported;
+        public AMDSettingsSupportedProperty AMDSettingsSupported
+        {
+            get { return amdSettingsSupported; }
+        }
+
         public AMDManager(AppServiceConnection connection) : base(connection)
         {
+            inputInjector = InputInjector.TryCreate();
+            turnAMDOverlayOnOffKeyboardCombo = new InjectedInputKeyboardInfo[]
+            {
+                new InjectedInputKeyboardInfo { VirtualKey = (ushort)VirtualKey.LeftControl, KeyOptions = InjectedInputKeyOptions.None },
+                new InjectedInputKeyboardInfo { VirtualKey = (ushort)VirtualKey.LeftShift, KeyOptions = InjectedInputKeyOptions.None },
+                new InjectedInputKeyboardInfo { VirtualKey = (ushort)VirtualKey.O, KeyOptions = InjectedInputKeyOptions.None },
+                new InjectedInputKeyboardInfo { VirtualKey = (ushort)VirtualKey.LeftControl, KeyOptions = InjectedInputKeyOptions.KeyUp },
+                new InjectedInputKeyboardInfo { VirtualKey = (ushort)VirtualKey.LeftShift, KeyOptions = InjectedInputKeyOptions.KeyUp },
+                new InjectedInputKeyboardInfo { VirtualKey = (ushort)VirtualKey.O, KeyOptions = InjectedInputKeyOptions.KeyUp },
+            };
+            changeAMDOverlayLevelKeyboardCombo = new InjectedInputKeyboardInfo[]
+            {
+                new InjectedInputKeyboardInfo { VirtualKey = (ushort)VirtualKey.LeftControl, KeyOptions = InjectedInputKeyOptions.None },
+                new InjectedInputKeyboardInfo { VirtualKey = (ushort)VirtualKey.LeftShift, KeyOptions = InjectedInputKeyOptions.None },
+                new InjectedInputKeyboardInfo { VirtualKey = (ushort)VirtualKey.X, KeyOptions = InjectedInputKeyOptions.None },
+                new InjectedInputKeyboardInfo { VirtualKey = (ushort)VirtualKey.LeftControl, KeyOptions = InjectedInputKeyOptions.KeyUp },
+                new InjectedInputKeyboardInfo { VirtualKey = (ushort)VirtualKey.LeftShift, KeyOptions = InjectedInputKeyOptions.KeyUp },
+                new InjectedInputKeyboardInfo { VirtualKey = (ushort)VirtualKey.X, KeyOptions = InjectedInputKeyOptions.KeyUp }
+            };
+            // In AMD Software: Adrenaline Edition:
+            // Level 3 is basic (FPS only)                      => Our level 1 (FPS)
+            // Level 1 is intermediate (FPS + Usage + Wattage)  => Our level 2 (BATTERY)
+            // Level 2 is advanced (many elements)              => Our level 3 (DETAILED)
+            // Level 0 is custom (user seletectable)            => Our level 4 (FULL)
+            amdOverlayLevelList = new List<Tuple<int, int>>()
+            {
+                new Tuple<int, int>(1, 3),
+                new Tuple<int, int>(2, 1),
+                new Tuple<int, int>(3, 2),
+                new Tuple<int, int>(4, 0),
+            };
+            amdOverlayLevelMap = new Dictionary<int, int>();
+            foreach (var amdOverlayLevel in amdOverlayLevelList)
+            {
+                amdOverlayLevelMap.Add(amdOverlayLevel.Item1, amdOverlayLevel.Item2);
+            }
+            focusingOnOSDSlider = new FocusingOnOSDSliderProperty(this);
+
             // Initialize ADLX with ADLXHelper
             adlxHelper = new ADLXHelper();
             adlxInitializeResult = adlxHelper.Initialize();
 
             if (adlxInitializeResult != ADLX_RESULT.ADLX_OK)
             {
+                amdSettingsSupported = new AMDSettingsSupportedProperty(false, this);
                 Logger.Error("AMD Manager initialize failed.");
                 return;
             }
 
+            amdSettingsSupported = new AMDSettingsSupportedProperty(true, this);
+            Logger.Info("Get AMD system services.");
             adlxSystemSevices = adlxHelper.GetSystemServices();
-            if (adlxSystemSevices == null)
-            {
-                Logger.Error("Can't get AMD system service.");
-                return;
-            }
 
             Logger.Info("Get AMD display services.");
             // Get display services
@@ -319,44 +361,6 @@ namespace XboxGamingBarHelper.AMD
             var threeDSettingsChangedHandling = ADLX.threeDSettingsChangedHandlingP_Ptr_value(threeDSettingsChangedHandlingPointer);
             amd3DSettingsChangedListener = new AMD3DSettingsChangedListener(this);
             threeDSettingsChangedHandling.Add3DSettingsEventListener(amd3DSettingsChangedListener);
-
-            inputInjector = InputInjector.TryCreate();
-            turnAMDOverlayOnOffKeyboardCombo = new InjectedInputKeyboardInfo[]
-            {
-                new InjectedInputKeyboardInfo { VirtualKey = (ushort)VirtualKey.LeftControl, KeyOptions = InjectedInputKeyOptions.None },
-                new InjectedInputKeyboardInfo { VirtualKey = (ushort)VirtualKey.LeftShift, KeyOptions = InjectedInputKeyOptions.None },
-                new InjectedInputKeyboardInfo { VirtualKey = (ushort)VirtualKey.O, KeyOptions = InjectedInputKeyOptions.None },
-                new InjectedInputKeyboardInfo { VirtualKey = (ushort)VirtualKey.LeftControl, KeyOptions = InjectedInputKeyOptions.KeyUp },
-                new InjectedInputKeyboardInfo { VirtualKey = (ushort)VirtualKey.LeftShift, KeyOptions = InjectedInputKeyOptions.KeyUp },
-                new InjectedInputKeyboardInfo { VirtualKey = (ushort)VirtualKey.O, KeyOptions = InjectedInputKeyOptions.KeyUp },
-            };
-            changeAMDOverlayLevelKeyboardCombo = new InjectedInputKeyboardInfo[]
-            {
-                new InjectedInputKeyboardInfo { VirtualKey = (ushort)VirtualKey.LeftControl, KeyOptions = InjectedInputKeyOptions.None },
-                new InjectedInputKeyboardInfo { VirtualKey = (ushort)VirtualKey.LeftShift, KeyOptions = InjectedInputKeyOptions.None },
-                new InjectedInputKeyboardInfo { VirtualKey = (ushort)VirtualKey.X, KeyOptions = InjectedInputKeyOptions.None },
-                new InjectedInputKeyboardInfo { VirtualKey = (ushort)VirtualKey.LeftControl, KeyOptions = InjectedInputKeyOptions.KeyUp },
-                new InjectedInputKeyboardInfo { VirtualKey = (ushort)VirtualKey.LeftShift, KeyOptions = InjectedInputKeyOptions.KeyUp },
-                new InjectedInputKeyboardInfo { VirtualKey = (ushort)VirtualKey.X, KeyOptions = InjectedInputKeyOptions.KeyUp }
-            };
-            // In AMD Software: Adrenaline Edition:
-            // Level 3 is basic (FPS only)                      => Our level 1 (FPS)
-            // Level 1 is intermediate (FPS + Usage + Wattage)  => Our level 2 (BATTERY)
-            // Level 2 is advanced (many elements)              => Our level 3 (DETAILED)
-            // Level 0 is custom (user seletectable)            => Our level 4 (FULL)
-            amdOverlayLevelList = new List<Tuple<int, int>>()
-            {
-                new Tuple<int, int>(1, 3),
-                new Tuple<int, int>(2, 1),
-                new Tuple<int, int>(3, 2),
-                new Tuple<int, int>(4, 0),
-            };
-            amdOverlayLevelMap = new Dictionary<int, int>();
-            foreach (var amdOverlayLevel in amdOverlayLevelList)
-            {
-                amdOverlayLevelMap.Add(amdOverlayLevel.Item1, amdOverlayLevel.Item2);
-            }
-            focusingOnOSDSlider = new FocusingOnOSDSliderProperty(this);
         }
 
         private void AmdRadeonChillEnabled(object sender, System.ComponentModel.PropertyChangedEventArgs e)

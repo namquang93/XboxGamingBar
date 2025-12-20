@@ -36,6 +36,10 @@
         FocusingOnOSDSlider,
 
         Settings_OnScreenDisplayProvider,
-        Settings_OnScreenDisplayProviderInstalled
+        Settings_OnScreenDisplayProviderInstalled,
+
+        Support_TDPFunction,
+        Support_PerformanceOverlay,
+        Support_AMDSettings,
     }
 }

@@ -144,7 +144,7 @@
                 </ComboBox>
 
                 <TextBlock x:Name="AMDText" Text="AMD Settings" Margin="0,0,0,0" FontWeight="Bold" FontSize="26" Grid.Row="21"/>
-                <Line X1="0" Y1="0" X2="100000" Y2="0" Stroke="DarkGray" StrokeThickness="1.5" Grid.Row="22" VerticalAlignment="Bottom"/>
+                <Line x:Name="AMDTextLine" X1="0" Y1="0" X2="100000" Y2="0" Stroke="DarkGray" StrokeThickness="1.5" Grid.Row="22" VerticalAlignment="Bottom"/>
 
                 <TextBlock x:Name="AMDRadeonSuperResolutionText" Text="Radeon Super Resolution" FontWeight="SemiBold" FontSize="18" Grid.Row="23"
                     TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" Width="250" HorizontalAlignment="Left" VerticalAlignment="Center"/>

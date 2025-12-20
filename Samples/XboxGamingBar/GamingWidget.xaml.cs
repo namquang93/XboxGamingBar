@@ -63,6 +63,7 @@ namespace XboxGamingBar
         private readonly FocusingOnOSDSliderProperty focusingOnOSDSlider;
 
         // AMD properties
+        private readonly AMDSettingsSupportedProperty amdSettingsSupported;
         private readonly AMDRadeonSuperResolutionEnabledProperty amdRadeonSuperResolutionEnabled;
         private readonly AMDRadeonSuperResolutionSupportedProperty amdRadeonSuperResolutionSupported;
         private readonly AMDRadeonSuperResolutionSharpnessProperty amdRadeonSuperResolutionSharpness;
@@ -100,6 +101,9 @@ namespace XboxGamingBar
             trackedGame = new TrackedGameProperty(new TrackedGame());
             onScreenDisplayProviderInstalled = new OnScreenDisplayProviderInstalledProperty(PerformanceOverlaySlider, this);
             isForeground = new IsForegroundProperty();
+            amdSettingsSupported = new AMDSettingsSupportedProperty(true, AMDText, this, AMDTextLine, AMDRadeonSuperResolutionToggle,
+                AMDRadeonSuperResolutionText, AMDFluidMotionFrameToggle, AMDFluidMotionFrameText, AMDRadeonAntiLagToggle, AMDRadeonAntiLagText,
+                AMDRadeonBoostToggle, AMDRadeonBoostText, AMDRadeonChillToggle, AMDRadeonChillText);
             amdRadeonSuperResolutionEnabled = new AMDRadeonSuperResolutionEnabledProperty(AMDRadeonSuperResolutionToggle, this);
             amdRadeonSuperResolutionSupported = new AMDRadeonSuperResolutionSupportedProperty(AMDRadeonSuperResolutionToggle, this);
             amdRadeonSuperResolutionSharpness = new AMDRadeonSuperResolutionSharpnessProperty(AMDRadeonSuperResolutionSharpnessSlider, this);
@@ -134,6 +138,7 @@ namespace XboxGamingBar
                 trackedGame,
                 onScreenDisplayProviderInstalled,
                 isForeground,
+                amdSettingsSupported,
                 amdRadeonSuperResolutionEnabled,
                 amdRadeonSuperResolutionSupported,
                 amdRadeonSuperResolutionSharpness,

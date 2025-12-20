@@ -347,6 +347,7 @@
     <Compile Include="AMD\Settings\AMDRadeonBoostSetting.cs" />
     <Compile Include="AMD\Settings\AMDRadeonChillSetting.cs" />
     <Compile Include="AMD\Settings\AMDRadeonSuperResolutionSetting.cs" />
+    <Compile Include="AMD\AMDSettingsSupportedProperty.cs" />
     <Compile Include="Core\HelperProperties.cs" />
     <Compile Include="Core\HelperProperty.cs" />
     <Compile Include="Core\IManager.cs" />
