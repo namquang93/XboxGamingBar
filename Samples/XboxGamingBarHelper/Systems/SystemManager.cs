@@ -141,13 +141,12 @@ namespace XboxGamingBarHelper.Systems
             }
             catch (Exception e)
             {
-                Logger.Error($"Can't get open windows: {e.Message}");
-                return new RunningGame();
+                Logger.Warn($"Can't get open windows: {e.Message}, {ProcessWindows.Count} found.");
             }
+
             if (ProcessWindows.Count == 0)
             {
                 Logger.Debug("There is not any opening window, so no game detected");
-                return new RunningGame();
             }
 
 #if NO_MICROSOFT_STORE_RESTRICTIONS
@@ -191,13 +190,13 @@ namespace XboxGamingBarHelper.Systems
                     if (trackedGame.IsValid() && trackedGame.DisplayName == processWindow.Value.Title)
                     {
                         Logger.Debug($"Found window \"{processWindow.Value.Title}\" running {(processWindow.Value.IsForeground ? "foreground" : "background")} process id {processWindow.Key} at path \"{processWindow.Value.Path}\" named \"{processWindow.Value.ProcessName}\" matches the xbox game bar widget app tracker target.");
-                        possibleGames.Add(new RunningGame(processWindow.Value.ProcessId, processWindow.Value.Title, processWindow.Value.Path, 0, processWindow.Value.IsForeground));
+                        possibleGames.Add(new RunningGame(processWindow.Value.ProcessId, processWindow.Value.Title, processWindow.Value.Path, trackedGame.AumId, 0, processWindow.Value.IsForeground));
                     }
 
                     if (Profiles.ContainsKey(new GameId(processWindow.Value.Title, processWindow.Value.Path)))
                     {
                         Logger.Debug($"Found window \"{processWindow.Value.Title}\" running {(processWindow.Value.IsForeground ? "foreground" : "background")} process id {processWindow.Key} at path \"{processWindow.Value.Path}\" named \"{processWindow.Value.ProcessName}\" has profile, use it.");
-                        possibleGames.Add(new RunningGame(processWindow.Value.ProcessId, processWindow.Value.Title, processWindow.Value.Path, 0, processWindow.Value.IsForeground));
+                        possibleGames.Add(new RunningGame(processWindow.Value.ProcessId, processWindow.Value.Title, processWindow.Value.Path, string.Empty, 0, processWindow.Value.IsForeground));
                         continue;
                     }
 
@@ -205,7 +204,7 @@ namespace XboxGamingBarHelper.Systems
                     if (AppEntries.TryGetValue(processWindow.Value.ProcessId, out var appEntry) && appEntry.InstantaneousFrames > 0)
                     {
                         Logger.Debug($"Found window \"{processWindow.Value.Title}\" running {(processWindow.Value.IsForeground ? "foreground" : "background")} process id {processWindow.Key} at path \"{processWindow.Value.Path}\" named \"{processWindow.Value.ProcessName}\" has {appEntry.InstantaneousFrames} FPS, use it.");
-                        possibleGames.Add(new RunningGame(processWindow.Value.ProcessId, processWindow.Value.Title, processWindow.Value.Path, appEntry.InstantaneousFrames, processWindow.Value.IsForeground));
+                        possibleGames.Add(new RunningGame(processWindow.Value.ProcessId, processWindow.Value.Title, processWindow.Value.Path, string.Empty, appEntry.InstantaneousFrames, processWindow.Value.IsForeground));
                         continue;
                     }
 #endif
@@ -213,13 +212,18 @@ namespace XboxGamingBarHelper.Systems
                     if (GameProcesses.Contains(processExecutable))
                     {
                         Logger.Debug($"Found window \"{processWindow.Value.Title}\" running {(processWindow.Value.IsForeground ? "foreground" : "background")} process id {processWindow.Key} at path \"{processPath}\" named \"{processWindow.Value.ProcessName}\" in pre-defined list.");
-                        possibleGames.Add(new RunningGame(processWindow.Value.ProcessId, processWindow.Value.Title, processPath, 0, processWindow.Value.IsForeground));
+                        possibleGames.Add(new RunningGame(processWindow.Value.ProcessId, processWindow.Value.Title, processPath, string.Empty, 0, processWindow.Value.IsForeground));
                         continue;
                     }
 
                     Logger.Debug($"Window \"{processWindow.Value.Title}\" at path {processWindow.Value.Path} doesn't have profile nor FPS.");
                 }
             }
+            
+            //if (possibleGames.Count == 0 && trackedGame.IsValid())
+            //{
+            //    possibleGames.Add(new RunningGame(-1, trackedGame.DisplayName, string.Empty, trackedGame.AumId, 0, true));
+            //}
 
             if (possibleGames.Count == 0)
             {

@@ -144,10 +144,17 @@ namespace XboxGamingBarHelper.Windows
             EnumWindows(delegate (IntPtr hWnd, int lParam)
             {
                 // Exclude the shell window itself
-                if (hWnd == shellWindow) return true;
+                if (hWnd == shellWindow)
+                {
+                    Logger.Debug("Skip window because it's the shell window.");
+                    return true;
+                }
 
                 // Exclude invisible windows
-                if (!IsWindowVisible(hWnd)) return true;
+                if (!IsWindowVisible(hWnd))
+                {
+                    return true;
+                }
 
                 var processId = GetWindowProcessId(hWnd);
                 var windowTitle = GetWindowTitle(hWnd);
@@ -158,7 +165,16 @@ namespace XboxGamingBarHelper.Windows
                 }
 
                 var process = Process.GetProcessById(processId);
-                windows[processId] = new ProcessWindow(processId, hWnd, windowTitle, process.ProcessName, process.MainModule.FileName, processId == foregroundWindowProcessId);
+                var fileName = string.Empty;
+                try
+                {
+                    fileName = process.MainModule.FileName;
+                }
+                catch (Exception e)
+                {
+                    Logger.Warn($"Can't get file name {e.Message} of process {process.ProcessName}.");
+                }
+                windows[processId] = new ProcessWindow(processId, hWnd, windowTitle, process.ProcessName, fileName, processId == foregroundWindowProcessId);
                 return true; // Continue enumeration
             }, 0);
         }

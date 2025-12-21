@@ -234,6 +234,7 @@ namespace XboxGamingBarHelper.AMD
             // Initialize ADLX with ADLXHelper
             adlxHelper = new ADLXHelper();
             adlxInitializeResult = adlxHelper.Initialize();
+            adlxInitializeResult = ADLX_RESULT.ADLX_FAIL;
 
             if (adlxInitializeResult != ADLX_RESULT.ADLX_OK)
             {
