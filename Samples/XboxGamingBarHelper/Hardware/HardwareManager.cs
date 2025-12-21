@@ -6,6 +6,7 @@ using Windows.ApplicationModel.AppService;
 using XboxGamingBarHelper.Core;
 using XboxGamingBarHelper.Hardware.Devices;
 using XboxGamingBarHelper.Hardware.Sensors;
+using System.Windows.Forms;
 
 namespace XboxGamingBarHelper.Hardware
 {
@@ -217,6 +218,11 @@ namespace XboxGamingBarHelper.Hardware
             {
                 hardwareSensor.Value = -1.0f;
             }
+
+            var powerStatus = SystemInformation.PowerStatus;
+
+            BatteryLevel.Value = powerStatus.BatteryLifePercent * 100;
+            BatteryRemainingTime.Value = powerStatus.BatteryLifeRemaining;
         }
 
         public int GetTDP()
