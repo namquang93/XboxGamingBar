@@ -122,6 +122,12 @@ namespace XboxGamingBarHelper.Hardware
             get { return maxTDP; }
         }
 
+        private readonly TDPControlSupportProperty tdpControlSupport;
+        public TDPControlSupportProperty TDPControlSupport
+        {
+            get { return tdpControlSupport; }
+        }
+
         internal HardwareManager(AppServiceConnection connection) : base(connection)
         {
             // Initialize the computer sensors
@@ -173,6 +179,7 @@ namespace XboxGamingBarHelper.Hardware
             if (ryzenAdjHandle == IntPtr.Zero)
             {
                 Logger.Error("RyzenAdj initialized failed.");
+                tdpControlSupport = new TDPControlSupportProperty(false, this);
             }
             else
             {
@@ -180,11 +187,12 @@ namespace XboxGamingBarHelper.Hardware
                 // RyzenAdj.set_fast_limit(ryzenAdjHandle, 30000);
                 initialTDP = (int)RyzenAdj.get_fast_limit(ryzenAdjHandle);
                 Logger.Info($"RyzenAdj initialized successfully at {initialTDP}W.");
+                tdpControlSupport = new TDPControlSupportProperty(true, this);
             }
 #else
             Logger.Info("RyzenAdj is disabled due to Microsoft Store restrictions.");
+            tdpControlSupport = new TDPControlSupportProperty(false, this);
 #endif
-
             minTDP = new MinTDPProperty(device.GetMinTDP(), this);
             maxTDP = new MaxTDPProperty(device.GetMaxTDP(), this);
             tdp = new TDPProperty(initialTDP, null, this);

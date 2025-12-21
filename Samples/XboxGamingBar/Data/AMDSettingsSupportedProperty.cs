@@ -6,7 +6,7 @@ namespace XboxGamingBar.Data
 {
     internal class AMDSettingsSupportedProperty : WidgetControlVisibleProperty<UIElement>
     {
-        public AMDSettingsSupportedProperty(bool inValue, UIElement inUI, Page inOwner, params UIElement[] inAdditionalUIs) : base(inValue, Function.Support_AMDSettings, inUI, inOwner, inAdditionalUIs)
+        public AMDSettingsSupportedProperty(UIElement inUI, Page inOwner, params UIElement[] inAdditionalUIs) : base(false, Function.Support_AMDSettings, inUI, inOwner, inAdditionalUIs)
         {
         }
     }

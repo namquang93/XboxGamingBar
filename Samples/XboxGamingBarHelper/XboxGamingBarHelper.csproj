@@ -362,6 +362,7 @@
     <Compile Include="Hardware\Devices\Onexplayer\Onexplayer_2_Pro.cs" />
     <Compile Include="Hardware\MaxTDPProperty.cs" />
     <Compile Include="Hardware\MinTDPProperty.cs" />
+    <Compile Include="Hardware\TDPControlSupportProperty.cs" />
     <Compile Include="OnScreenDisplay\IOnScreenDisplayProvider.cs" />
     <Compile Include="OnScreenDisplay\OnScreenDisplayManager.cs" />
     <Compile Include="Hardware\CPUs\CPUFactory.cs" />

@@ -38,7 +38,7 @@
         Settings_OnScreenDisplayProvider,
         Settings_OnScreenDisplayProviderInstalled,
 
-        Support_TDPFunction,
+        Support_TDPControl,
         Support_PerformanceOverlay,
         Support_AMDSettings,
     }

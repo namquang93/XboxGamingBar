@@ -121,6 +121,7 @@
     <Compile Include="Data\ResolutionProperty.cs" />
     <Compile Include="Data\ResolutionsProperty.cs" />
     <Compile Include="Data\RunningGameProperty.cs" />
+    <Compile Include="Data\TDPControlSupportProperty.cs" />
     <Compile Include="Data\TrackedGameProperty.cs" />
     <Compile Include="Data\WidgetComboBoxSelectionProperty.cs" />
     <Compile Include="Data\WidgetControlEnabledProperty.cs" />

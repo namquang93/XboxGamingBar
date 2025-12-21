@@ -99,6 +99,7 @@ namespace XboxGamingBarHelper
                 onScreenDisplay,
                 hardwareManager.MinTDP,
                 hardwareManager.MaxTDP,
+                hardwareManager.TDPControlSupport,
                 hardwareManager.TDP,
                 profileManager.PerGameProfile,
                 powerManager.CPUBoost,
