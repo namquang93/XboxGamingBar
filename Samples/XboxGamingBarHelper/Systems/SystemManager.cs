@@ -1,7 +1,5 @@
 ﻿using NLog;
-#if NO_MICROSOFT_STORE_RESTRICTIONS
 using RTSSSharedMemoryNET;
-#endif
 using System;
 using System.IO;
 using System.Linq;
@@ -97,9 +95,7 @@ namespace XboxGamingBarHelper.Systems
 
         // Keep track to current opening windows to determine currently running game.
         private Dictionary<int, ProcessWindow> ProcessWindows { get; }
-#if NO_MICROSOFT_STORE_RESTRICTIONS
         private Dictionary<int, AppEntry> AppEntries { get; }
-#endif
 
         public event ResumeFromSleepEventHandler ResumeFromSleep;
 
@@ -107,10 +103,8 @@ namespace XboxGamingBarHelper.Systems
         {
             Logger.Info("Create process windows.");
             ProcessWindows = new Dictionary<int, ProcessWindow>();
-#if NO_MICROSOFT_STORE_RESTRICTIONS
             Logger.Info("Create app entries.");
             AppEntries = new Dictionary<int, AppEntry>();
-#endif
             Logger.Info("Save profiles for detecting games.");
             Profiles = profiles;
 
@@ -149,7 +143,6 @@ namespace XboxGamingBarHelper.Systems
                 Logger.Debug("There is not any opening window, so no game detected");
             }
 
-#if NO_MICROSOFT_STORE_RESTRICTIONS
             AppEntries.Clear();
             AppEntry[] appEntries = Array.Empty<AppEntry>();
             if (RTSSHelper.IsRunning())
@@ -172,7 +165,6 @@ namespace XboxGamingBarHelper.Systems
             {
                 AppEntries[appEntry.ProcessId] = appEntry;
             }
-#endif
 
             var possibleGames = new List<RunningGame>();
             if (ProcessWindows.Count > 0)
@@ -200,14 +192,12 @@ namespace XboxGamingBarHelper.Systems
                         continue;
                     }
 
-#if NO_MICROSOFT_STORE_RESTRICTIONS
                     if (AppEntries.TryGetValue(processWindow.Value.ProcessId, out var appEntry) && appEntry.InstantaneousFrames > 0)
                     {
                         Logger.Debug($"Found window \"{processWindow.Value.Title}\" running {(processWindow.Value.IsForeground ? "foreground" : "background")} process id {processWindow.Key} at path \"{processWindow.Value.Path}\" named \"{processWindow.Value.ProcessName}\" has {appEntry.InstantaneousFrames} FPS, use it.");
                         possibleGames.Add(new RunningGame(processWindow.Value.ProcessId, processWindow.Value.Title, processWindow.Value.Path, string.Empty, appEntry.InstantaneousFrames, processWindow.Value.IsForeground));
                         continue;
                     }
-#endif
 
                     if (GameProcesses.Contains(processExecutable))
                     {
