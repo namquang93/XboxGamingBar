@@ -2,11 +2,13 @@
 using System;
 //using System.Collections;
 using System.Collections.Generic;
+using System.Windows.Forms;
 using Windows.ApplicationModel.AppService;
 using XboxGamingBarHelper.Core;
 using XboxGamingBarHelper.Hardware.Devices;
 using XboxGamingBarHelper.Hardware.Sensors;
-using System.Windows.Forms;
+using XboxGamingBarHelper.Power;
+using XboxGamingBarHelper.Windows;
 
 namespace XboxGamingBarHelper.Hardware
 {
@@ -223,6 +225,29 @@ namespace XboxGamingBarHelper.Hardware
 
             BatteryLevel.Value = powerStatus.BatteryLifePercent * 100;
             BatteryRemainingTime.Value = powerStatus.BatteryLifeRemaining;
+
+            if (PowerManager.TryGetBatteryState(out var battery))
+            {
+                if (battery.Rate > 0)
+                {
+                    BatteryDischargeRate.Value = -1.0f;
+                    BatteryChargeRate.Value = battery.Rate / 1000.0f;
+                }
+                else if (battery.Rate < 0)
+                {
+                    BatteryDischargeRate.Value = -battery.Rate / 1000.0f;
+                    BatteryChargeRate.Value = -1.0f;
+                }
+                else
+                {
+                    BatteryDischargeRate.Value = -1.0f;
+                    BatteryChargeRate.Value = -1.0f;
+                }
+            }
+            else
+            {
+                Logger.Warn("Can't get battery charge/discharge rate.");
+            }
         }
 
         public int GetTDP()

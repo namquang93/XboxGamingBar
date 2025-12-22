@@ -192,5 +192,37 @@ namespace XboxGamingBarHelper.Power
             Logger.Info($"Set CPU Clock limit {(isAC ? "AC" : "DC")} {(isSecondary ? "secondary" : "primary")} to {mhzValue}MHz");
             PowrProf.PowerSetActiveScheme(IntPtr.Zero, ref scheme);
         }
+
+        internal static bool TryGetBatteryState(out SYSTEM_BATTERY_STATE state)
+        {
+            // Legacy struct is 52 bytes; Windows may want more
+            const int BUFFER_SIZE = 128;
+
+            IntPtr buffer = Marshal.AllocHGlobal(BUFFER_SIZE);
+            try
+            {
+                uint status = PowrProf.CallNtPowerInformation(
+                    5,              // SystemBatteryState
+                    IntPtr.Zero,
+                    0,
+                    buffer,
+                    BUFFER_SIZE);
+
+                Logger.Info("Called CallNtPowerInformation for SystemBatteryState, status: " + status);
+
+                if (status != 0)
+                {
+                    state = default;
+                    return false;
+                }
+
+                state = Marshal.PtrToStructure<SYSTEM_BATTERY_STATE>(buffer);
+                return state.BatteryPresent;
+            }
+            finally
+            {
+                Marshal.FreeHGlobal(buffer);
+            }
+        }
     }
 }
