@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NLog;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 
@@ -6,6 +7,8 @@ namespace XboxGamingBarHelper.RTSS
 {
     internal abstract class OSDItem
     {
+        protected static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         protected string name;
 
         protected string colorCode;

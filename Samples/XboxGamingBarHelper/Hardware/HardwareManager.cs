@@ -8,7 +8,6 @@ using XboxGamingBarHelper.Core;
 using XboxGamingBarHelper.Hardware.Devices;
 using XboxGamingBarHelper.Hardware.Sensors;
 using XboxGamingBarHelper.Power;
-using XboxGamingBarHelper.Windows;
 
 namespace XboxGamingBarHelper.Hardware
 {
@@ -228,19 +227,14 @@ namespace XboxGamingBarHelper.Hardware
 
             if (PowerManager.TryGetBatteryState(out var battery))
             {
-                if (battery.Rate > 0)
+                if (battery.Charging)
                 {
                     BatteryDischargeRate.Value = -1.0f;
                     BatteryChargeRate.Value = battery.Rate / 1000.0f;
                 }
-                else if (battery.Rate < 0)
-                {
-                    BatteryDischargeRate.Value = -battery.Rate / 1000.0f;
-                    BatteryChargeRate.Value = -1.0f;
-                }
                 else
                 {
-                    BatteryDischargeRate.Value = -1.0f;
+                    BatteryDischargeRate.Value = battery.Rate / 1000.0f;
                     BatteryChargeRate.Value = -1.0f;
                 }
             }
