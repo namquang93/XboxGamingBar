@@ -208,8 +208,6 @@ namespace XboxGamingBarHelper.Power
                     buffer,
                     BUFFER_SIZE);
 
-                Logger.Info("Called CallNtPowerInformation for SystemBatteryState, status: " + status);
-
                 if (status != 0)
                 {
                     state = default;
