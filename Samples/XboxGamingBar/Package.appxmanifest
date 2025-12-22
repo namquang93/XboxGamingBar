@@ -16,7 +16,7 @@
   <mp:PhoneIdentity PhoneProductId="c2dd2cd0-7156-428e-b305-d3dd3505b10d" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>Xbox Gaming Bar</DisplayName>
+    <DisplayName>Gaming Bar</DisplayName>
     <PublisherDisplayName>Play and Build</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
@@ -34,7 +34,7 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="XboxGamingBar.App">
       <uap:VisualElements
-        DisplayName="Xbox Gaming Bar"
+        DisplayName="Gaming Bar"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png"
         Description="Xbox Game Bar widget for changing system settings during game sessions with gamepad."
@@ -77,7 +77,7 @@
 			<uap3:AppExtension Name="microsoft.gameBarUIExtension"
 							Id="GamingWidgetSettings"
 							DisplayName="Gaming Settings"
-							Description="Xbox Gaming Bar settings."
+							Description="Gaming Bar settings."
 							PublicFolder="Assets">
 				<uap3:Properties>
 					<GameBarWidget Type="Settings">
