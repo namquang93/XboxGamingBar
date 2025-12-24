@@ -1,4 +1,6 @@
-﻿using LibreHardwareMonitor.Hardware;
+﻿#if !STORE
+using LibreHardwareMonitor.Hardware;
+#endif
 
 namespace XboxGamingBarHelper.Hardware.Sensors
 {

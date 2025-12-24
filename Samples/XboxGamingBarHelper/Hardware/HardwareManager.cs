@@ -1,4 +1,6 @@
-﻿using LibreHardwareMonitor.Hardware;
+﻿#if !STORE
+using LibreHardwareMonitor.Hardware;
+#endif
 using NLog;
 using System;
 //using System.Collections;
@@ -85,8 +87,10 @@ namespace XboxGamingBarHelper.Hardware
         private readonly CPU cpu;
         private readonly Device device;
 
+#if !STORE
         private readonly Computer computer;
         private readonly IVisitor updateVisitor;
+#endif
         private readonly IntPtr ryzenAdjHandle;
 
         public CPUUsageSensor CPUUsage { get; }
@@ -135,6 +139,7 @@ namespace XboxGamingBarHelper.Hardware
 
         internal HardwareManager(AppServiceConnection connection) : base(connection)
         {
+#if !STORE
             // Initialize the computer sensors
             computer = new Computer
             {
@@ -150,9 +155,12 @@ namespace XboxGamingBarHelper.Hardware
             updateVisitor = new UpdateVisitor();
             computer.Open();
             computer.Accept(updateVisitor);
+#endif
 
             var cpuId = string.Empty;
             var mainboardId = string.Empty;
+
+#if !STORE
             foreach (IHardware hardware in computer.Hardware)
             {
                 var properties = string.Empty;
@@ -175,6 +183,7 @@ namespace XboxGamingBarHelper.Hardware
                     mainboardId = hardware.Name;
                 }
             }
+#endif
 
             cpu = CPUFactory.Create(cpuId);
             Logger.Info($"Initialized CPU: {cpu.Name} (\"{cpuId}\")");
@@ -259,29 +268,30 @@ namespace XboxGamingBarHelper.Hardware
                 hardwareSensor.Value = -1.0f;
             }
 
-            //var powerStatus = System.Windows.Forms.SystemInformation.PowerStatus;
+#if STORE
+            var powerStatus = System.Windows.Forms.SystemInformation.PowerStatus;
 
-            //BatteryLevel.Value = powerStatus.BatteryLifePercent * 100;
-            //BatteryRemainingTime.Value = powerStatus.BatteryLifeRemaining;
+            BatteryLevel.Value = powerStatus.BatteryLifePercent * 100;
+            BatteryRemainingTime.Value = powerStatus.BatteryLifeRemaining;
 
-            //if (PowerManager.TryGetBatteryState(out var battery))
-            //{
-            //    if (battery.Charging)
-            //    {
-            //        BatteryDischargeRate.Value = -1.0f;
-            //        BatteryChargeRate.Value = battery.Rate / 1000.0f;
-            //    }
-            //    else
-            //    {
-            //        BatteryDischargeRate.Value = battery.Rate / 1000.0f;
-            //        BatteryChargeRate.Value = -1.0f;
-            //    }
-            //}
-            //else
-            //{
-            //    Logger.Warn("Can't get battery charge/discharge rate.");
-            //}
-
+            if (PowerManager.TryGetBatteryState(out var battery))
+            {
+                if (battery.Charging)
+                {
+                    BatteryDischargeRate.Value = -1.0f;
+                    BatteryChargeRate.Value = battery.Rate / 1000.0f;
+                }
+                else
+                {
+                    BatteryDischargeRate.Value = battery.Rate / 1000.0f;
+                    BatteryChargeRate.Value = -1.0f;
+                }
+            }
+            else
+            {
+                Logger.Warn("Can't get battery charge/discharge rate.");
+            }
+#else
             if (computer == null)
                 return;
 
@@ -307,6 +317,7 @@ namespace XboxGamingBarHelper.Hardware
                     }
                 }
             }
+#endif
         }
 
         public int GetTDP()
