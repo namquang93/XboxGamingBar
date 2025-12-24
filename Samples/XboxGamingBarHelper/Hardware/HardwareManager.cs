@@ -176,7 +176,7 @@ namespace XboxGamingBarHelper.Hardware
             };
 
             var initialTDP = 25;
-#if NO_MICROSOFT_STORE_RESTRICTIONS
+#if !STORE
             ryzenAdjHandle = RyzenAdj.init_ryzenadj();
             if (ryzenAdjHandle == IntPtr.Zero)
             {

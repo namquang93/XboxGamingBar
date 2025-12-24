@@ -548,7 +548,7 @@ namespace XboxGamingBarHelper.AMD
 
             if (!isRunning)
             {
-#if NO_MICROSOFT_STORE_RESTRICTIONS
+#if !STORE
                 if (applicationState == ApplicationState.Starting)
                 {
                     Logger.Info("Starting AMD Software: Adrenaline Edition.");

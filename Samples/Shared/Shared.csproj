@@ -5,6 +5,10 @@
     <Configurations>Debug;Release;Store</Configurations>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)' == 'Store'">
+    <DefineConstants>TRACE;STORE</DefineConstants>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
     <PackageReference Include="NLog" Version="6.0.4" />

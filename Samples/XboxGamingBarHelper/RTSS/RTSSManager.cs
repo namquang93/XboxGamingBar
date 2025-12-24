@@ -85,7 +85,7 @@ namespace XboxGamingBarHelper.RTSS
 
             if (!isRunning)
             {
-#if NO_MICROSOFT_STORE_RESTRICTIONS
+#if !STORE
                 if (applicationState == ApplicationState.Starting)
                 {
                     Logger.Info("Starting Rivatuner Statistics Server..");
