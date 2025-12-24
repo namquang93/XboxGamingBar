@@ -234,7 +234,6 @@ namespace XboxGamingBarHelper.AMD
             // Initialize ADLX with ADLXHelper
             adlxHelper = new ADLXHelper();
             adlxInitializeResult = adlxHelper.Initialize();
-            adlxInitializeResult = ADLX_RESULT.ADLX_FAIL;
 
             if (adlxInitializeResult != ADLX_RESULT.ADLX_OK)
             {
@@ -298,6 +297,50 @@ namespace XboxGamingBarHelper.AMD
                     }
                 }
             }
+
+            Logger.Info("Get AMD Performance Monitoring Services.");
+            var performanceMonitoringServicesPointer = ADLX.new_performanceMonitoringSerP_Ptr();
+            adlxSystemSevices.GetPerformanceMonitoringServices(performanceMonitoringServicesPointer);
+            var adlxPerformanceMonitoringServices = ADLX.performanceMonitoringSerP_Ptr_value(performanceMonitoringServicesPointer);
+
+            var allMetricsPointer = ADLX.new_allMetricsP_Ptr();
+            adlxPerformanceMonitoringServices.GetCurrentAllMetrics(allMetricsPointer);
+            var allMetrics = ADLX.allMetricsP_Ptr_value(allMetricsPointer);
+
+            var fpsPointer = ADLX.new_fpsP_Ptr();
+            allMetrics.GetFPS(fpsPointer);
+            var fps = ADLX.fpsP_Ptr_value(fpsPointer);
+            var fpsValuePointer = ADLX.new_intP();
+            fps.FPS(fpsValuePointer);
+            var fpsValue = ADLX.intP_value(fpsValuePointer);
+
+            var systemMetricsPointer = ADLX.new_systemMetricsP_Ptr();
+            allMetrics.GetSystemMetrics(systemMetricsPointer);
+            var systemMetrics = ADLX.systemMetricsP_Ptr_value(systemMetricsPointer);
+
+            var cpuUsagePointer = ADLX.new_doubleP();
+            systemMetrics.CPUUsage(cpuUsagePointer);
+            var cpuUsage = ADLX.doubleP_value(cpuUsagePointer);
+
+            Logger.Info($"Got all metrics FPS: {fpsValue}, CPU Usage: {cpuUsage}.");
+
+            var gpuMetricsPointer = ADLX.new_gpuMetricsP_Ptr();
+            adlxPerformanceMonitoringServices.GetCurrentGPUMetrics(adlxInternalGPU, gpuMetricsPointer);
+            var gpuMetrics = ADLX.gpuMetricsP_Ptr_value(gpuMetricsPointer);
+
+            var gpuPowerPointer = ADLX.new_doubleP();
+            gpuMetrics.GPUPower(gpuPowerPointer);
+            var gpuPower = ADLX.doubleP_value(gpuPowerPointer);
+
+            var totalBoardPowerPointer = ADLX.new_doubleP();
+            gpuMetrics.GPUTotalBoardPower(totalBoardPowerPointer);
+            var totalBoardPower = ADLX.doubleP_value(totalBoardPowerPointer);
+
+            var gpuTemperaturePointer = ADLX.new_doubleP();
+            gpuMetrics.GPUTemperature(gpuTemperaturePointer);
+            var gpuTemperature = ADLX.doubleP_value(gpuTemperaturePointer);
+
+            Logger.Info($"Got GPU metrics Power: {gpuPower}W, Total Board Power: {totalBoardPower}W, GPU Temperature: {gpuTemperature}C.");
 
             Logger.Info("Get AMD 3D Settings Services.");
             var threeDSettingsServicesPointer = ADLX.new_threeDSettingsSerP_Ptr();
