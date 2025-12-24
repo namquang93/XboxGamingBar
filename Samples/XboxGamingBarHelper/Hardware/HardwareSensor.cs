@@ -1,30 +1,6 @@
 ﻿namespace XboxGamingBarHelper.Hardware
 {
-    enum HardwareType
-    {
-        Cpu,
-        Gpu,
-        GpuAmd,
-        Memory,
-        Disk,
-        Network,
-        Battery
-    }
-
-    enum SensorType
-    {
-        Temperature,
-        Load,
-        Clock,
-        Voltage,
-        FanSpeed,
-        Power,
-        DataRate,
-        Usage,
-        Level,
-        Data,
-        TimeSpan
-    }
+    using LibreHardwareMonitor.Hardware;
 
     internal abstract class HardwareSensor
     {

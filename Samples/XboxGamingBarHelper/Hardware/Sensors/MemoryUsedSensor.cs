@@ -1,4 +1,6 @@
-﻿namespace XboxGamingBarHelper.Hardware.Sensors
+﻿using LibreHardwareMonitor.Hardware;
+
+namespace XboxGamingBarHelper.Hardware.Sensors
 {
     internal class MemoryUsedSensor : HardwareSensor
     {
