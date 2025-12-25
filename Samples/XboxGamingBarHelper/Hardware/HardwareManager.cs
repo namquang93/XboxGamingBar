@@ -1,6 +1,4 @@
-﻿#if !STORE
-using LibreHardwareMonitor.Hardware;
-#endif
+﻿
 using NLog;
 using System;
 //using System.Collections;
@@ -87,10 +85,7 @@ namespace XboxGamingBarHelper.Hardware
         private readonly CPU cpu;
         private readonly Device device;
 
-#if !STORE
-        private readonly Computer computer;
-        private readonly IVisitor updateVisitor;
-#endif
+        private readonly IHardwareProvider hardwareProvider;
         private readonly IntPtr ryzenAdjHandle;
 
         public CPUUsageSensor CPUUsage { get; }
@@ -139,51 +134,14 @@ namespace XboxGamingBarHelper.Hardware
 
         internal HardwareManager(AppServiceConnection connection) : base(connection)
         {
-#if !STORE
-            // Initialize the computer sensors
-            computer = new Computer
-            {
-                IsCpuEnabled = true,
-                IsGpuEnabled = true,
-                IsMemoryEnabled = true,
-                IsMotherboardEnabled = true,
-                IsControllerEnabled = true,
-                IsNetworkEnabled = true,
-                IsStorageEnabled = true,
-                IsBatteryEnabled = true,
-            };
-            updateVisitor = new UpdateVisitor();
-            computer.Open();
-            computer.Accept(updateVisitor);
+#if STORE
+            hardwareProvider = new WindowsHardwareSensor();
+#else
+            hardwareProvider = new LibreHardwareProvider();
 #endif
 
-            var cpuId = string.Empty;
-            var mainboardId = string.Empty;
-
-#if !STORE
-            foreach (IHardware hardware in computer.Hardware)
-            {
-                var properties = string.Empty;
-                if (hardware.Properties.Count > 0)
-                {
-                    foreach (var property in hardware.Properties)
-                    {
-                        properties = properties.Length == 0 ? $"{property.Key}:{property.Value}" : $"{properties}, {property.Key}:{property.Value}";
-                    }
-                }
-
-                Logger.Info($"Found hardware {hardware.HardwareType}: Name={hardware.Name}, Type={hardware.HardwareType}, Id={hardware.Identifier}, Properties={properties}");
-                if (hardware.HardwareType == HardwareType.Cpu)
-                {
-                    cpuId = hardware.Name;
-                }
-
-                if (hardware.HardwareType == HardwareType.Motherboard)
-                {
-                    mainboardId = hardware.Name;
-                }
-            }
-#endif
+            var cpuId = hardwareProvider.GetCpuName();
+            var mainboardId = hardwareProvider.GetMotherboardName();
 
             cpu = CPUFactory.Create(cpuId);
             Logger.Info($"Initialized CPU: {cpu.Name} (\"{cpuId}\")");
@@ -263,61 +221,25 @@ namespace XboxGamingBarHelper.Hardware
                 Logger.Info($"set_max={setMaxResult} set_min={setMinResult} set={"123"}");
             }*/
 
-            foreach (var hardwareSensor in hardwareSensors)
-            {
-                hardwareSensor.Value = -1.0f;
-            }
+            hardwareProvider.Update();
 
-#if STORE
-            var powerStatus = System.Windows.Forms.SystemInformation.PowerStatus;
+            CPUClock.Value = hardwareProvider.GetCpuClock();
+            CPUUsage.Value = hardwareProvider.GetCpuUsage();
+            CPUWattage.Value = hardwareProvider.GetCpuWattage();
+            CPUTemperature.Value = hardwareProvider.GetCpuTemperature();
 
-            BatteryLevel.Value = powerStatus.BatteryLifePercent * 100;
-            BatteryRemainingTime.Value = powerStatus.BatteryLifeRemaining;
+            GPUClock.Value = hardwareProvider.GetGpuClock();
+            GPUUsage.Value = hardwareProvider.GetGpuUsage();
+            GPUWattage.Value = hardwareProvider.GetGpuWattage();
+            GPUTemperature.Value = hardwareProvider.GetGpuTemperature();
 
-            if (PowerManager.TryGetBatteryState(out var battery))
-            {
-                if (battery.Charging)
-                {
-                    BatteryDischargeRate.Value = -1.0f;
-                    BatteryChargeRate.Value = battery.Rate / 1000.0f;
-                }
-                else
-                {
-                    BatteryDischargeRate.Value = battery.Rate / 1000.0f;
-                    BatteryChargeRate.Value = -1.0f;
-                }
-            }
-            else
-            {
-                Logger.Warn("Can't get battery charge/discharge rate.");
-            }
-#else
-            if (computer == null)
-                return;
+            MemoryUsage.Value = hardwareProvider.GetMemoryUsage();
+            MemoryUsed.Value = hardwareProvider.GetMemoryUsed();
 
-            computer.Accept(updateVisitor);
-            foreach (IHardware hardware in computer.Hardware)
-            {
-                foreach (ISensor sensor in hardware.Sensors)
-                {
-                    //Logger.Info("[2] Hardware {3} Sensor: {0}, value: {1}, type: {2}", sensor.Name, sensor.Value, sensor.SensorType.ToString(), hardware.Name);
-
-                    HardwareSensor hardwareSensorFound = null;
-                    foreach (var hardwareSensor in hardwareSensors)
-                    {
-                        if (hardwareSensor.HardwareType == hardware.HardwareType && hardwareSensor.SensorType == sensor.SensorType && hardwareSensor.SensorName == sensor.Name)
-                        {
-                            hardwareSensorFound = hardwareSensor;
-                            break;
-                        }
-                    }
-                    if (hardwareSensorFound != null)
-                    {
-                        hardwareSensorFound.Value = sensor.Value ?? -1;
-                    }
-                }
-            }
-#endif
+            BatteryLevel.Value = hardwareProvider.GetBatteryLevel();
+            BatteryRemainingTime.Value = hardwareProvider.GetBatteryRemainingTime();
+            BatteryDischargeRate.Value = hardwareProvider.GetBatteryDischargeRate();
+            BatteryChargeRate.Value = hardwareProvider.GetBatteryChargeRate();
         }
 
         public int GetTDP()
