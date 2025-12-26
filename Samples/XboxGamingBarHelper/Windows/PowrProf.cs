@@ -5,7 +5,8 @@ namespace XboxGamingBarHelper.Windows
 {
     internal enum POWER_INFORMATION_LEVEL
     {
-        SystemBatteryState = 5
+        SystemBatteryState = 5,
+        ProcessorInformation = 11
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -22,6 +23,17 @@ namespace XboxGamingBarHelper.Windows
         public uint EstimatedTime;
         public uint DefaultAlert1;
         public uint DefaultAlert2;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct PROCESSOR_POWER_INFORMATION
+    {
+        public uint Number;
+        public uint MaxMhz;
+        public uint CurrentMhz;
+        public uint MhzLimit;
+        public uint MaxIdleState;
+        public uint CurrentIdleState;
     }
 
     internal static class PowrProf
