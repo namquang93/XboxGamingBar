@@ -3,12 +3,10 @@ using NLog;
 using System;
 //using System.Collections;
 using System.Collections.Generic;
-using System.Windows.Forms;
 using Windows.ApplicationModel.AppService;
 using XboxGamingBarHelper.Core;
 using XboxGamingBarHelper.Hardware.Devices;
 using XboxGamingBarHelper.Hardware.Sensors;
-using XboxGamingBarHelper.Power;
 
 namespace XboxGamingBarHelper.Hardware
 {
@@ -135,7 +133,7 @@ namespace XboxGamingBarHelper.Hardware
         internal HardwareManager(AppServiceConnection connection) : base(connection)
         {
 #if STORE
-            hardwareProvider = new WindowsHardwareSensor();
+            hardwareProvider = new WindowsHardwareProvider();
 #else
             hardwareProvider = new LibreHardwareProvider();
 #endif
