@@ -470,7 +470,7 @@
     <None Include="NLog.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="WinRing0x64.sys">
+    <None Include="WinRing0x64.sys" Condition="'$(Configuration)' != 'Store'">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
@@ -482,15 +482,15 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="inpoutx64.dll">
+    <None Include="inpoutx64.dll" Condition="'$(Configuration)' != 'Store'">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="libryzenadj.dll">
+    <None Include="libryzenadj.dll" Condition="'$(Configuration)' != 'Store'">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="WinRing0x64.dll">
+    <None Include="WinRing0x64.dll" Condition="'$(Configuration)' != 'Store'">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
