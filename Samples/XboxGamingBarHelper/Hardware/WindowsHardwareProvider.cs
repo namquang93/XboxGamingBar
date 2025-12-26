@@ -1,4 +1,5 @@
 using NLog;
+using System;
 using System.Windows.Forms;
 using XboxGamingBarHelper.Core;
 using XboxGamingBarHelper.Power;
@@ -148,8 +149,128 @@ namespace XboxGamingBarHelper.Hardware
 
         public float GetCpuClock() => cpuClock;
         public float GetCpuUsage() => cpuUsage;
-        public float GetCpuWattage() => -1.0f;
-        public float GetCpuTemperature() => -1.0f;
+        public float GetCpuWattage() => -1.0f; // Not possible without Kernel Driver (Store unsafe)
+
+        public float GetCpuTemperature()
+        {
+            return -1.0f;
+
+            //float temp = GetTempFromMSAcpi();
+            //if (temp > 0) return temp;
+
+            //temp = GetTempFromPerfCounters();
+            //if (temp > 0) return temp;
+
+            //temp = GetTempFromWin32Probe();
+            //if (temp > 0) return temp;
+
+            //Logger.Debug("All WMI temperature queries failed or returned invalid data.");
+            //return -1.0f;
+        }
+
+        //private float GetTempFromMSAcpi()
+        //{
+        //    try
+        //    {
+        //        using (var searcher = new System.Management.ManagementObjectSearcher(@"root\WMI", "SELECT * FROM MSAcpi_ThermalZoneTemperature"))
+        //        using (var collection = searcher.Get())
+        //        {
+        //            if (collection.Count > 0)
+        //            {
+        //                foreach (var obj in collection)
+        //                {
+        //                    try
+        //                    {
+        //                        float tempKelvin = System.Convert.ToSingle(obj["CurrentTemperature"]);
+        //                        float tempCelsius = (tempKelvin - 2732) / 10.0f;
+
+        //                        Logger.Info($"MSAcpi Temp: {tempCelsius} C");
+        //                        if (tempCelsius > 0) return tempCelsius;
+        //                    }
+        //                    catch (Exception ex1)
+        //                    {
+        //                        Logger.Debug("MSAcpi temperature read failed.");
+        //                    }
+        //                }
+        //            }
+        //            else
+        //            {
+        //                Logger.Debug("MSAcpi_ThermalZoneTemperature returned no results.");
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex) { Logger.Debug(ex, "MSAcpi query failed"); }
+        //    return -1.0f;
+        //}
+
+        //private float GetTempFromPerfCounters()
+        //{
+        //    try
+        //    {
+        //        using (var searcher = new System.Management.ManagementObjectSearcher(@"root\CIMV2", "SELECT * FROM Win32_PerfFormattedData_Counters_ThermalZoneInformation"))
+        //        using (var collection = searcher.Get())
+        //        {
+        //            if (collection.Count > 0)
+        //            {
+        //                foreach (var obj in collection)
+        //                {
+        //                    try
+        //                    {
+        //                        // Usually in Kelvin 
+        //                        float tempKelvin = System.Convert.ToSingle(obj["Temperature"]);
+        //                        float tempCelsius = tempKelvin - 273.15f;
+
+        //                        Logger.Debug($"PerfCounter Temp: {tempCelsius} C");
+        //                        if (tempCelsius > 0) return tempCelsius;
+        //                    }
+        //                    catch (Exception ex1) { Logger.Debug("PerfCounter read temperature failed."); }
+        //                }
+        //            }
+        //            else
+        //            {
+        //                Logger.Debug("Win32_PerfFormattedData_Counters_ThermalZoneInformation returned no results.");
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex) { Logger.Debug("PerfCounter query failed"); }
+        //    return -1.0f;
+        //}
+
+        //private float GetTempFromWin32Probe()
+        //{
+        //    try
+        //    {
+        //        using (var searcher = new System.Management.ManagementObjectSearcher(@"root\CIMV2", "SELECT * FROM Win32_TemperatureProbe"))
+        //        using (var collection = searcher.Get())
+        //        {
+        //            if (collection.Count > 0)
+        //            {
+        //                foreach (var obj in collection)
+        //                {
+        //                    try
+        //                    {
+        //                        // Usually in 10ths of degrees Celsius or Kelvin. 
+        //                        // Win32_TemperatureProbe.CurrentReading is mostly "Current Reading" in deci-degrees Celsius? 
+        //                        // Documentation is vague, often 10ths of degrees C.
+        //                        float tempRaw = System.Convert.ToSingle(obj["CurrentReading"]);
+        //                        // Assuming standard 10ths of degrees C if > 100, otherwise raw C
+        //                        float tempCelsius = (tempRaw > 100) ? tempRaw / 10.0f : tempRaw;
+
+        //                        Logger.Debug($"Win32Probe Temp: {tempCelsius} C");
+        //                        if (tempCelsius > 0) return tempCelsius;
+        //                    }
+        //                    catch (Exception ex1) { Logger.Debug("Win32Probe temperature read failed"); }
+        //                }
+        //            }
+        //            else
+        //            {
+        //                Logger.Debug("Win32_TemperatureProbe returned no results.");
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex) { Logger.Debug("Win32Probe query failed"); }
+        //    return -1.0f;
+        //}
 
         public float GetGpuClock() => -1.0f;
         public float GetGpuUsage() => -1.0f;
