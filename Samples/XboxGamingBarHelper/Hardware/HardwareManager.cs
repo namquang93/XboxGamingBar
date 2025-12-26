@@ -201,6 +201,7 @@ namespace XboxGamingBarHelper.Hardware
             Logger.Info("RyzenAdj is disabled due to Microsoft Store restrictions.");
             tdpControlSupport = new TDPControlSupportProperty(false, this);
 #endif
+
             minTDP = new MinTDPProperty(device.GetMinTDP(), this);
             maxTDP = new MaxTDPProperty(device.GetMaxTDP(), this);
             tdp = new TDPProperty(initialTDP, null, this);
@@ -261,7 +262,6 @@ namespace XboxGamingBarHelper.Hardware
                 Logger.Info("RyzenAdj not initialized");
                 return;
             }
-
             //RyzenAdj.refresh_table(ryzenAdjHandle);
             RyzenAdj.set_fast_limit(ryzenAdjHandle, (uint)((tdp + 10) * 1000));
             RyzenAdj.set_slow_limit(ryzenAdjHandle, (uint)((tdp + 5) * 1000));
