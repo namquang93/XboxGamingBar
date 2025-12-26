@@ -36,17 +36,17 @@ namespace XboxGamingBarHelper.RTSS
 
             var osdString = $"{GetNameString()} <C=FFFFFF>";
             
-            if (osdValues == null || osdValues.Count == 0)
-            {
-                return osdString + " N/A";
-            }
+            //if (osdValues == null || osdValues.Count == 0)
+            //{
+            //    return osdString + " N/A";
+            //}
 
             for (int i = 0; i < osdValues.Count; i++)
             {
                 var osdValue = osdValues[i];
                 if (osdValue.Value < 0)
                 {
-                    osdString += "N/A";
+                    //osdString += "N/A";
                 }
                 else
                 {

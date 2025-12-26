@@ -15,8 +15,10 @@ namespace XboxGamingBarHelper.Hardware
         private float batteryChargeRate = -1.0f;
 
         private System.Diagnostics.PerformanceCounter cpuCounter;
+        private System.Diagnostics.PerformanceCounter cpuFreqCounter;
         private float cpuUsage = -1.0f;
         private float cpuClock = -1.0f;
+        private float maxCpuMhz = 0f;
 
         public WindowsHardwareProvider()
         {
@@ -27,7 +29,17 @@ namespace XboxGamingBarHelper.Hardware
             }
             catch (System.Exception ex)
             {
-                Logger.Error(ex, "Failed to initialize CPU counter");
+                Logger.Error(ex, "Failed to initialize CPU usage counter");
+            }
+
+            try
+            {
+                cpuFreqCounter = new System.Diagnostics.PerformanceCounter("Processor Information", "% of Maximum Frequency", "_Total");
+                cpuFreqCounter.NextValue();
+            }
+            catch (System.Exception ex)
+            {
+                Logger.Error(ex, "Failed to initialize CPU frequency counter");
             }
         }
 
@@ -67,10 +79,31 @@ namespace XboxGamingBarHelper.Hardware
             }
 
             // Update CPU Clock
-            cpuClock = GetCurrentCpuFrequency();
+            if (maxCpuMhz <= 0)
+            {
+                maxCpuMhz = GetMaxCpuFrequency();
+            }
+
+            if (maxCpuMhz > 0 && cpuFreqCounter != null)
+            {
+                try
+                {
+                     float percent = cpuFreqCounter.NextValue();
+                     cpuClock = maxCpuMhz * (percent / 100.0f);
+                }
+                catch 
+                {
+                    cpuClock = -1.0f;       
+                }
+            }
+            else
+            {
+                // Fallback or just keep 0 if failed
+                cpuClock = maxCpuMhz;
+            }
         }
 
-        private float GetCurrentCpuFrequency()
+        private float GetMaxCpuFrequency()
         {
             try
             {
@@ -95,7 +128,7 @@ namespace XboxGamingBarHelper.Hardware
                         {
                             System.IntPtr ptr = (System.IntPtr)((long)buffer + (i * stride));
                             var info = (XboxGamingBarHelper.Windows.PROCESSOR_POWER_INFORMATION)System.Runtime.InteropServices.Marshal.PtrToStructure(ptr, typeof(XboxGamingBarHelper.Windows.PROCESSOR_POWER_INFORMATION));
-                            if (info.CurrentMhz > maxMhz) maxMhz = info.CurrentMhz;
+                            if (info.MaxMhz > maxMhz) maxMhz = info.MaxMhz;
                         }
                         return maxMhz;
                     }
