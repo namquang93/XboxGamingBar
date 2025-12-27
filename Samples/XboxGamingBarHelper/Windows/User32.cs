@@ -54,7 +54,7 @@ namespace XboxGamingBarHelper.Windows
 
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-        private static readonly List<string> IgnoredProcesses = new List<string>() { "parsecd", "Taskmgr" };
+        private static readonly List<string> ProtectedProcesses = new List<string>() { "parsecd", "Taskmgr" };
 
         [DllImport("user32.dll")]
         private static extern IntPtr GetForegroundWindow();
@@ -165,9 +165,9 @@ namespace XboxGamingBarHelper.Windows
                 }
 
                 var process = Process.GetProcessById(processId);
-                if (IgnoredProcesses.Contains(process.ProcessName))
+                if (ProtectedProcesses.Contains(process.ProcessName))
                 {
-                    Logger.Debug($"Ignore process {process.ProcessName}");
+                    Logger.Debug($"Ignore protected process {process.ProcessName}");
                     return true;
                 }
 
