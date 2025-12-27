@@ -458,6 +458,7 @@
     <Compile Include="Systems\ResolutionsProperty.cs" />
     <Compile Include="Systems\RunningGameProperty.cs" />
     <Compile Include="Systems\TrackedGameProperty.cs" />
+    <Compile Include="Windows\Kernel32.cs" />
     <Compile Include="Windows\PowerGuids.cs" />
     <Compile Include="Windows\PowrProf.cs" />
     <Compile Include="Windows\ProcessWindow.cs" />

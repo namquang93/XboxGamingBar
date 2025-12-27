@@ -50,7 +50,14 @@ namespace XboxGamingBarHelper.RTSS
                 }
                 else
                 {
-                    osdString += $"{osdValue.Prefix}{Math.Floor(osdValue.Value)}<S=50> {osdValue.Unit}<S>";
+                    if (osdValue.ShouldFloorToInt)
+                    {
+                        osdString += $"{osdValue.Prefix}{Math.Floor(osdValue.Value)}<S=50> {osdValue.Unit}<S>";
+                    }
+                    else
+                    {
+                        osdString += $"{osdValue.Prefix}{osdValue.Value:F1}<S=50> {osdValue.Unit}<S>";
+                    }
                 }
                 if (i < osdValues.Count - 1)
                 {

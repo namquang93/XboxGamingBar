@@ -3,6 +3,7 @@ using System;
 using System.Windows.Forms;
 using XboxGamingBarHelper.Core;
 using XboxGamingBarHelper.Power;
+using XboxGamingBarHelper.Windows;
 
 namespace XboxGamingBarHelper.Hardware
 {
@@ -43,6 +44,9 @@ namespace XboxGamingBarHelper.Hardware
                 Logger.Error(ex, "Failed to initialize CPU frequency counter");
             }
         }
+
+        private float memoryUsage = -1.0f;
+        private float memoryUsed = -1.0f;
 
         public void Update()
         {
@@ -101,6 +105,23 @@ namespace XboxGamingBarHelper.Hardware
             {
                 // Fallback or just keep 0 if failed
                 cpuClock = maxCpuMhz;
+            }
+
+            // Update Memory
+            try
+            {
+                var memStatus = new Kernel32.MEMORYSTATUSEX();
+                if (Kernel32.GlobalMemoryStatusEx(memStatus))
+                {
+                    memoryUsage = memStatus.dwMemoryLoad;
+                    // convert bytes to GB with double precision to ensure float result
+                    double usedBytes = (double)(memStatus.ullTotalPhys - memStatus.ullAvailPhys);
+                    memoryUsed = (float)(usedBytes / (1024.0 * 1024.0 * 1024.0)); 
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Logger.Error(ex, "Failed to get memory status");
             }
         }
 
@@ -277,8 +298,8 @@ namespace XboxGamingBarHelper.Hardware
         public float GetGpuWattage() => -1.0f;
         public float GetGpuTemperature() => -1.0f;
 
-        public float GetMemoryUsage() => -1.0f;
-        public float GetMemoryUsed() => -1.0f;
+        public float GetMemoryUsage() => memoryUsage;
+        public float GetMemoryUsed() => memoryUsed;
 
         public float GetBatteryLevel() => batteryLevel;
         public float GetBatteryRemainingTime() => batteryRemainingTime;
