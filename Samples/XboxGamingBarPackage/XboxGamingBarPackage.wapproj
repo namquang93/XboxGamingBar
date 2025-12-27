@@ -70,7 +70,10 @@
     <AppxBundle>Always</AppxBundle>
   </PropertyGroup>
   <ItemGroup>
-    <AppxManifest Include="Package.appxmanifest">
+    <AppxManifest Include="Package.appxmanifest" Condition="'$(Configuration)' != 'Store'">
+      <SubType>Designer</SubType>
+    </AppxManifest>
+    <AppxManifest Include="Package.Store.appxmanifest" Condition="'$(Configuration)' == 'Store'">
       <SubType>Designer</SubType>
     </AppxManifest>
   </ItemGroup>
