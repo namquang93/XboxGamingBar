@@ -93,8 +93,8 @@ namespace XboxGamingBarHelper.Hardware
             {
                 try
                 {
-                     float percent = cpuFreqCounter.NextValue();
-                     cpuClock = maxCpuMhz * (percent / 100.0f);
+                    float percent = cpuFreqCounter.NextValue();
+                    cpuClock = maxCpuMhz * (percent / 100.0f);
                 }
                 catch 
                 {
@@ -293,10 +293,25 @@ namespace XboxGamingBarHelper.Hardware
         //    return -1.0f;
         //}
 
-        public float GetGpuClock() => -1.0f;
-        public float GetGpuUsage() => -1.0f;
-        public float GetGpuWattage() => -1.0f;
-        public float GetGpuTemperature() => -1.0f;
+        public float GetGpuClock()
+        {
+            return (float)(XboxGamingBarHelper.AMD.AMDManager.Instance?.GetGPUClock() ?? -1.0);
+        }
+
+        public float GetGpuUsage()
+        {
+             return (float)(XboxGamingBarHelper.AMD.AMDManager.Instance?.GetGPUUsage() ?? -1.0);
+        }
+
+        public float GetGpuWattage()
+        {
+             return (float)(XboxGamingBarHelper.AMD.AMDManager.Instance?.GetGPUWattage() ?? -1.0);
+        }
+
+        public float GetGpuTemperature()
+        {
+             return (float)(XboxGamingBarHelper.AMD.AMDManager.Instance?.GetGPUTemperature() ?? -1.0);
+        }
 
         public float GetMemoryUsage() => memoryUsage;
         public float GetMemoryUsed() => memoryUsed;
