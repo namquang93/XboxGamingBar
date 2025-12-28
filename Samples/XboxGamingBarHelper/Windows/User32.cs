@@ -360,49 +360,80 @@ namespace XboxGamingBarHelper.Windows
 
         public static void SetResolution(int width, int height)
         {
-            Console.WriteLine($"Attempting to set {width}x{height}...");
+            Logger.Info($"Attempting to set resolution to {width}x{height}...");
 
-            DEVMODE dm = new DEVMODE();
-            dm.dmSize = (short)Marshal.SizeOf(typeof(DEVMODE));
+            DEVMODE currentMode = new DEVMODE { dmSize = (short)Marshal.SizeOf(typeof(DEVMODE)) };
+            bool hasCurrent = EnumDisplaySettings(null, ENUM_CURRENT_SETTINGS, ref currentMode);
+            int currentFrequency = hasCurrent ? currentMode.dmDisplayFrequency : 0;
+            int currentOrientation = hasCurrent ? currentMode.dmDisplayOrientation : 0;
 
-            // Get current settings as base
-            if (!EnumDisplaySettings(null, ENUM_CURRENT_SETTINGS, ref dm))
+            DEVMODE targetMode = new DEVMODE { dmSize = (short)Marshal.SizeOf(typeof(DEVMODE)) };
+            bool found = false;
+            int modeNum = 0;
+            
+            DEVMODE bestMatch = new DEVMODE { dmSize = (short)Marshal.SizeOf(typeof(DEVMODE)) };
+            int bestFrequency = -1;
+
+            while (EnumDisplaySettings(null, modeNum++, ref targetMode))
             {
-                Console.WriteLine("Unable to get current DEVMODE.");
+                if (targetMode.dmPelsWidth == width && targetMode.dmPelsHeight == height)
+                {
+                    // If we find a mode with matching frequency, that's perfect.
+                    if (targetMode.dmDisplayFrequency == currentFrequency)
+                    {
+                        bestMatch = targetMode;
+                        found = true;
+                        break;
+                    }
+                    
+                    // Otherwise, keep track of the one with highest frequency as a fallback.
+                    if (targetMode.dmDisplayFrequency > bestFrequency)
+                    {
+                        bestFrequency = targetMode.dmDisplayFrequency;
+                        bestMatch = targetMode;
+                        found = true;
+                    }
+                }
+            }
+
+            if (!found)
+            {
+                Logger.Error($"Could not find a supported mode for {width}x{height}.");
                 return;
             }
 
-            // Apply new resolution
-            dm.dmPelsWidth = (int)width;
-            dm.dmPelsHeight = (int)height;
-            dm.dmFields |= DM_PELSWIDTH | DM_PELSHEIGHT;
+            // Important: We want to preserve the current orientation.
+            // Many handhelds have internal panels that are physically portrait but used as landscape.
+            if (hasCurrent)
+            {
+                bestMatch.dmDisplayOrientation = currentOrientation;
+                bestMatch.dmFields |= DM_DISPLAYORIENTATION;
+            }
 
-            // Optional test first
-            int testResult = ChangeDisplaySettings(ref dm, CDS_TEST);
+            // Test before applying
+            int testResult = ChangeDisplaySettings(ref bestMatch, CDS_TEST);
             if (testResult != DISP_CHANGE_SUCCESSFUL)
             {
-                Logger.Warn($"Test failed for {width}x{height} with current settings. Trying without frequency flag.");
-                // Fallback: Remove frequency flag to let Windows pick a safe one for this resolution.
-                dm.dmFields &= ~DM_DISPLAYFREQUENCY;
-                testResult = ChangeDisplaySettings(ref dm, CDS_TEST);
+                Logger.Warn($"Test failed for mode {width}x{height} @ {bestMatch.dmDisplayFrequency}Hz with orientation {bestMatch.dmDisplayOrientation}. Error: {testResult}. Trying without orientation flag.");
+                bestMatch.dmFields &= ~DM_DISPLAYORIENTATION;
+                testResult = ChangeDisplaySettings(ref bestMatch, CDS_TEST);
             }
 
             if (testResult != DISP_CHANGE_SUCCESSFUL)
             {
-                Console.WriteLine("Resolution not supported.");
+                Logger.Error($"Failed to validate resolution {width}x{height}. Error code: {testResult}");
                 return;
             }
 
             // Apply permanently
-            int result = ChangeDisplaySettings(ref dm, CDS_UPDATEREGISTRY);
-
+            int result = ChangeDisplaySettings(ref bestMatch, CDS_UPDATEREGISTRY);
             if (result == DISP_CHANGE_SUCCESSFUL)
             {
-                Console.WriteLine("Resolution changed successfully.");
+                Logger.Info($"Resolution changed successfully to {width}x{height}.");
             }
             else
             {
-                Console.WriteLine($"Failed to change resolution, error code: {result}");
+                Logger.Error($"Failed to apply resolution {width}x{height}. Error code: {result}");
             }
         }
 
