@@ -198,8 +198,10 @@ namespace XboxGamingBarHelper.Windows
 
             if (EnumDisplaySettings(null, ENUM_CURRENT_SETTINGS, ref vDevMode))
             {
+                Logger.Info($"Current refresh rate: {vDevMode.dmDisplayFrequency}Hz");
                 return vDevMode.dmDisplayFrequency;
             }
+            Logger.Error("Failed to get current refresh rate.");
             return 0; // failed
         }
 
@@ -252,7 +254,7 @@ namespace XboxGamingBarHelper.Windows
 
             if (!EnumDisplaySettings(null, ENUM_CURRENT_SETTINGS, ref mode))
             {
-                Console.WriteLine("Error: Could not retrieve current display settings.");
+                Logger.Info("Error: Could not retrieve current display settings.");
                 return false;
             }
 
@@ -263,7 +265,7 @@ namespace XboxGamingBarHelper.Windows
             int testResult = ChangeDisplaySettings(ref mode, CDS_TEST);
             if (testResult != DISP_CHANGE_SUCCESSFUL)
             {
-                Console.WriteLine($"Test failed: {targetRate}Hz not valid on this mode.");
+                Logger.Info($"Test failed: {targetRate}Hz not valid on this mode.");
                 return false;
             }
 
@@ -271,12 +273,12 @@ namespace XboxGamingBarHelper.Windows
             int result = ChangeDisplaySettings(ref mode, CDS_UPDATEREGISTRY);
             if (result == DISP_CHANGE_SUCCESSFUL)
             {
-                Console.WriteLine($"Successfully switched to {targetRate}Hz.");
+                Logger.Info($"Sucessfully set refresh rate to {targetRate}Hz.");
                 return true;
             }
             else
             {
-                Console.WriteLine($"Failed to apply {targetRate}Hz (error code {result}).");
+                Logger.Info($"Failed to set refresh rate to {targetRate}Hz (error code {result}).");
                 return false;
             }
         }
@@ -345,9 +347,11 @@ namespace XboxGamingBarHelper.Windows
 
             if (EnumDisplaySettings(null, ENUM_CURRENT_SETTINGS, ref dm))
             {
-                return ((int)dm.dmPelsWidth, (int)dm.dmPelsHeight);
+                Logger.Info($"Current resolution: {dm.dmPelsWidth}x{dm.dmPelsHeight}");
+                return (dm.dmPelsWidth, dm.dmPelsHeight);
             }
 
+            Logger.Error("Failed to get current resolution.");
             return (0, 0); // fallback
         }
 

@@ -125,6 +125,7 @@ namespace XboxGamingBarHelper.Systems
             }
 
             SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
+            SystemEvents.DisplaySettingsChanged += SystemEvents_DisplaySettingsChanged;
         }
 
         private RunningGame GetRunningGame()
@@ -287,6 +288,22 @@ namespace XboxGamingBarHelper.Systems
                     Logger.Info($"Power mode status change detected: {DateTime.Now}");
                     break;
             }
+        }
+
+        private void SystemEvents_DisplaySettingsChanged(object sender, EventArgs e)
+        {
+            Logger.Info("Display settings changed, updating resolution and refresh rates.");
+
+            var supportedRefreshRates = User32.GetSupportedRefreshRates();
+            refreshRates.SetValue(supportedRefreshRates);
+
+            var currentRefreshRate = User32.GetCurrentRefreshRate();
+            refreshRate.SetValue(currentRefreshRate);
+
+            resolution.SetValue(new Resolution(User32.GetCurrentResolution()));
+
+            var resolutionList = User32.GetSupportedNativeResolutions().Select(res => new Resolution(res.width, res.height)).ToList();
+            resolutions.SetValue(new Resolutions(resolutionList));
         }
     }
 }
