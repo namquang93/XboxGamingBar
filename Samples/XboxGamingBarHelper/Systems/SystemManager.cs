@@ -10,6 +10,7 @@ using Windows.ApplicationModel.AppService;
 using System.Collections.Generic;
 using Shared.Utilities;
 using Microsoft.Win32;
+using System.Timers;
 
 namespace XboxGamingBarHelper.Systems
 {
@@ -96,6 +97,7 @@ namespace XboxGamingBarHelper.Systems
         // Keep track to current opening windows to determine currently running game.
         private Dictionary<int, ProcessWindow> ProcessWindows { get; }
         private Dictionary<int, AppEntry> AppEntries { get; }
+        private readonly Timer displayUpdateTimer;
 
         public event ResumeFromSleepEventHandler ResumeFromSleep;
 
@@ -124,7 +126,12 @@ namespace XboxGamingBarHelper.Systems
                 Logger.Info($"Supported native resolution: {res.Width}x{res.Height} vs {resolution.Width}x{resolution.Height}");
             }
 
+            displayUpdateTimer = new Timer(500); // 500ms debounce
+            displayUpdateTimer.AutoReset = false;
+            displayUpdateTimer.Elapsed += DisplayUpdateTimer_Elapsed;
+
             SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
+            SystemEvents.DisplaySettingsChanged += SystemEvents_DisplaySettingsChanged;
         }
 
         private RunningGame GetRunningGame()
@@ -135,13 +142,12 @@ namespace XboxGamingBarHelper.Systems
             }
             catch (Exception e)
             {
-                Logger.Error($"Can't get open windows: {e}");
-                return new RunningGame();
+                Logger.Warn($"Can't get open windows: {e.Message}, {ProcessWindows.Count} found.");
             }
+
             if (ProcessWindows.Count == 0)
             {
                 Logger.Debug("There is not any opening window, so no game detected");
-                return new RunningGame();
             }
 
             AppEntries.Clear();
@@ -183,33 +189,38 @@ namespace XboxGamingBarHelper.Systems
                     if (trackedGame.IsValid() && trackedGame.DisplayName == processWindow.Value.Title)
                     {
                         Logger.Debug($"Found window \"{processWindow.Value.Title}\" running {(processWindow.Value.IsForeground ? "foreground" : "background")} process id {processWindow.Key} at path \"{processWindow.Value.Path}\" named \"{processWindow.Value.ProcessName}\" matches the xbox game bar widget app tracker target.");
-                        possibleGames.Add(new RunningGame(processWindow.Value.ProcessId, processWindow.Value.Title, processWindow.Value.Path, 0, processWindow.Value.IsForeground));
+                        possibleGames.Add(new RunningGame(processWindow.Value.ProcessId, processWindow.Value.Title, processWindow.Value.Path, trackedGame.AumId, 0, processWindow.Value.IsForeground));
                     }
 
                     if (Profiles.ContainsKey(new GameId(processWindow.Value.Title, processWindow.Value.Path)))
                     {
                         Logger.Debug($"Found window \"{processWindow.Value.Title}\" running {(processWindow.Value.IsForeground ? "foreground" : "background")} process id {processWindow.Key} at path \"{processWindow.Value.Path}\" named \"{processWindow.Value.ProcessName}\" has profile, use it.");
-                        possibleGames.Add(new RunningGame(processWindow.Value.ProcessId, processWindow.Value.Title, processWindow.Value.Path, 0, processWindow.Value.IsForeground));
+                        possibleGames.Add(new RunningGame(processWindow.Value.ProcessId, processWindow.Value.Title, processWindow.Value.Path, string.Empty, 0, processWindow.Value.IsForeground));
                         continue;
                     }
 
                     if (AppEntries.TryGetValue(processWindow.Value.ProcessId, out var appEntry) && appEntry.InstantaneousFrames > 0)
                     {
                         Logger.Debug($"Found window \"{processWindow.Value.Title}\" running {(processWindow.Value.IsForeground ? "foreground" : "background")} process id {processWindow.Key} at path \"{processWindow.Value.Path}\" named \"{processWindow.Value.ProcessName}\" has {appEntry.InstantaneousFrames} FPS, use it.");
-                        possibleGames.Add(new RunningGame(processWindow.Value.ProcessId, processWindow.Value.Title, processWindow.Value.Path, appEntry.InstantaneousFrames, processWindow.Value.IsForeground));
+                        possibleGames.Add(new RunningGame(processWindow.Value.ProcessId, processWindow.Value.Title, processWindow.Value.Path, string.Empty, appEntry.InstantaneousFrames, processWindow.Value.IsForeground));
                         continue;
                     }
 
                     if (GameProcesses.Contains(processExecutable))
                     {
                         Logger.Debug($"Found window \"{processWindow.Value.Title}\" running {(processWindow.Value.IsForeground ? "foreground" : "background")} process id {processWindow.Key} at path \"{processPath}\" named \"{processWindow.Value.ProcessName}\" in pre-defined list.");
-                        possibleGames.Add(new RunningGame(processWindow.Value.ProcessId, processWindow.Value.Title, processPath, 0, processWindow.Value.IsForeground));
+                        possibleGames.Add(new RunningGame(processWindow.Value.ProcessId, processWindow.Value.Title, processPath, string.Empty, 0, processWindow.Value.IsForeground));
                         continue;
                     }
 
                     Logger.Debug($"Window \"{processWindow.Value.Title}\" at path {processWindow.Value.Path} doesn't have profile nor FPS.");
                 }
             }
+            
+            //if (possibleGames.Count == 0 && trackedGame.IsValid())
+            //{
+            //    possibleGames.Add(new RunningGame(-1, trackedGame.DisplayName, string.Empty, trackedGame.AumId, 0, true));
+            //}
 
             if (possibleGames.Count == 0)
             {
@@ -283,6 +294,29 @@ namespace XboxGamingBarHelper.Systems
                     Logger.Info($"Power mode status change detected: {DateTime.Now}");
                     break;
             }
+        }
+
+        private void SystemEvents_DisplaySettingsChanged(object sender, EventArgs e)
+        {
+            Logger.Info("Display settings change detected, debouncing update.");
+            displayUpdateTimer.Stop();
+            displayUpdateTimer.Start();
+        }
+
+        private void DisplayUpdateTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            Logger.Info("Debounced display update triggered.");
+
+            var supportedRefreshRates = User32.GetSupportedRefreshRates();
+            refreshRates.SetValue(supportedRefreshRates);
+
+            var currentRefreshRate = User32.GetCurrentRefreshRate();
+            refreshRate.SetValue(currentRefreshRate);
+
+            resolution.SetValue(new Resolution(User32.GetCurrentResolution()));
+
+            var resolutionList = User32.GetSupportedNativeResolutions().Select(res => new Resolution(res.width, res.height)).ToList();
+            resolutions.SetValue(new Resolutions(resolutionList));
         }
     }
 }

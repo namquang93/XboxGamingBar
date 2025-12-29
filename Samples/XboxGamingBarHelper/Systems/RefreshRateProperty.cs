@@ -14,7 +14,11 @@ namespace XboxGamingBarHelper.Systems
         {
             base.NotifyPropertyChanged(propertyName);
 
-            User32.SetRefreshRate(Value);
+            var currentRate = User32.GetCurrentRefreshRate();
+            if (currentRate != Value)
+            {
+                User32.SetRefreshRate(Value);
+            }
         }
     }
 }

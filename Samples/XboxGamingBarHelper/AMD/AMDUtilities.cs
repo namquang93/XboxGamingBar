@@ -14,7 +14,7 @@ namespace XboxGamingBarHelper.AMD
             if (getValueResult != ADLX_RESULT.ADLX_OK)
             {
                 ADLX.delete_boolP(boolPointer);
-                Logger.Error($"Failed to get AMD bool value. ADLX_RESULT: {getValueResult}");
+                Logger.Error($"Failed to get AMD bool value using function {func}. ADLX_RESULT: {getValueResult}");
                 return false;
             }
 
@@ -30,7 +30,7 @@ namespace XboxGamingBarHelper.AMD
             if (getValueResult != ADLX_RESULT.ADLX_OK)
             {
                 ADLX.delete_intRangeP(intRangePointer);
-                Logger.Error($"Failed to get AMD int range value. ADLX_RESULT: {getValueResult}");
+                Logger.Error($"Failed to get AMD bool value using function {func} . ADLX_RESULT: {getValueResult}");
                 return new Tuple<int, int>(0, 0);
             }
 
@@ -47,7 +47,7 @@ namespace XboxGamingBarHelper.AMD
             if (getValueResult != ADLX_RESULT.ADLX_OK)
             {
                 ADLX.delete_intP(intPointer);
-                Logger.Error($"Failed to get AMD int value. ADLX_RESULT: {getValueResult}");
+                Logger.Error($"Failed to get AMD int value using function {func}. ADLX_RESULT: {getValueResult}");
                 return 0;
             }
 

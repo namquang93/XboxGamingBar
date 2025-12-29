@@ -26,7 +26,7 @@ namespace XboxGamingBarHelper.RTSS.OSDItems
 
             if (osdLevel >= 4)
             {
-                osdItems.Add(new OSDItemValue(memoryUsedSensor.Value, "GB"));
+                osdItems.Add(new OSDItemValue(memoryUsedSensor.Value, "GB", string.Empty, false));
             }
 
             return osdItems;

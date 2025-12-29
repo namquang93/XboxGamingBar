@@ -11,10 +11,10 @@
   <Identity
     Name="PlayandBuild.10365195AA1EC"
     Publisher="CN=632C25E4-B6CB-4B80-A9DB-AAB4012EE37A"
-    Version="0.5.0.0" />
+    Version="0.7.2.0" />
 
   <Properties>
-    <DisplayName>Xbox Gaming Bar</DisplayName>
+    <DisplayName>Gaming Bar</DisplayName>
     <PublisherDisplayName>Play and Build</PublisherDisplayName>
     <Logo>Images\StoreLogo.png</Logo>
   </Properties>
@@ -33,7 +33,7 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="$targetentrypoint$">
       <uap:VisualElements
-        DisplayName="Xbox Gaming Bar"
+        DisplayName="Gaming Bar"
         Description="XboxGamingBarPackage"
         BackgroundColor="transparent"
         Square150x150Logo="Images\Square150x150Logo.png"
@@ -80,7 +80,7 @@
             <uap3:AppExtension Name="microsoft.gameBarUIExtension"
                               Id="GamingWidgetSettings"
                               DisplayName="Gaming Settings"
-                              Description="Xbox Gaming Bar settings."
+                              Description="Gaming Bar settings."
                               PublicFolder="Images">
               <uap3:Properties>
                 <GameBarWidget Type="Settings">
@@ -136,9 +136,9 @@
   </Extensions>
 
   <Capabilities>
-    <Capability Name="internetClient" />
+    <!--<Capability Name="internetClient" />-->
     <rescap:Capability Name="runFullTrust" />
-	<rescap:Capability Name="allowElevation" />
-	<rescap:Capability Name="broadFileSystemAccess" />
+	  <rescap:Capability Name="allowElevation" />
+	<!--<rescap:Capability Name="broadFileSystemAccess" />-->
   </Capabilities>
 </Package>

@@ -2,10 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Windows.Forms;
 
 namespace XboxGamingBarHelper.Windows
 {
@@ -55,6 +53,8 @@ namespace XboxGamingBarHelper.Windows
         }
 
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
+        private static readonly List<string> ProtectedProcesses = new List<string>() { "parsecd", "Taskmgr" };
 
         [DllImport("user32.dll")]
         private static extern IntPtr GetForegroundWindow();
@@ -144,10 +144,17 @@ namespace XboxGamingBarHelper.Windows
             EnumWindows(delegate (IntPtr hWnd, int lParam)
             {
                 // Exclude the shell window itself
-                if (hWnd == shellWindow) return true;
+                if (hWnd == shellWindow)
+                {
+                    Logger.Debug("Skip window because it's the shell window.");
+                    return true;
+                }
 
                 // Exclude invisible windows
-                if (!IsWindowVisible(hWnd)) return true;
+                if (!IsWindowVisible(hWnd))
+                {
+                    return true;
+                }
 
                 var processId = GetWindowProcessId(hWnd);
                 var windowTitle = GetWindowTitle(hWnd);
@@ -158,7 +165,22 @@ namespace XboxGamingBarHelper.Windows
                 }
 
                 var process = Process.GetProcessById(processId);
-                windows[processId] = new ProcessWindow(processId, hWnd, windowTitle, process.ProcessName, process.MainModule.FileName, processId == foregroundWindowProcessId);
+                if (ProtectedProcesses.Contains(process.ProcessName))
+                {
+                    Logger.Debug($"Ignore protected process {process.ProcessName}");
+                    return true;
+                }
+
+                var fileName = string.Empty;
+                try
+                {
+                    fileName = process.MainModule.FileName;
+                }
+                catch (Exception e)
+                {
+                    Logger.Warn($"Can't get file name {e.Message} of process {process.ProcessName}.");
+                }
+                windows[processId] = new ProcessWindow(processId, hWnd, windowTitle, process.ProcessName, fileName, processId == foregroundWindowProcessId);
                 return true; // Continue enumeration
             }, 0);
         }
@@ -167,7 +189,10 @@ namespace XboxGamingBarHelper.Windows
         private const int CDS_UPDATEREGISTRY = 0x01;
         private const int CDS_TEST = 0x02;
         private const int DISP_CHANGE_SUCCESSFUL = 0;
-        private const int DM_DISPLAYFREQUENCY = 0x400000;
+        private const int DM_PELSWIDTH = 0x00080000;
+        private const int DM_PELSHEIGHT = 0x00100000;
+        private const int DM_DISPLAYFREQUENCY = 0x00400000;
+        private const int DM_DISPLAYORIENTATION = 0x00000080;
 
         public static int GetCurrentRefreshRate()
         {
@@ -176,8 +201,10 @@ namespace XboxGamingBarHelper.Windows
 
             if (EnumDisplaySettings(null, ENUM_CURRENT_SETTINGS, ref vDevMode))
             {
+                Logger.Info($"Current refresh rate: {vDevMode.dmDisplayFrequency}Hz");
                 return vDevMode.dmDisplayFrequency;
             }
+            Logger.Error("Failed to get current refresh rate.");
             return 0; // failed
         }
 
@@ -230,18 +257,18 @@ namespace XboxGamingBarHelper.Windows
 
             if (!EnumDisplaySettings(null, ENUM_CURRENT_SETTINGS, ref mode))
             {
-                Console.WriteLine("Error: Could not retrieve current display settings.");
+                Logger.Info("Error: Could not retrieve current display settings.");
                 return false;
             }
 
             mode.dmDisplayFrequency = targetRate;
-            mode.dmFields = DM_DISPLAYFREQUENCY;
+            mode.dmFields |= DM_DISPLAYFREQUENCY;
 
             // Test before applying
             int testResult = ChangeDisplaySettings(ref mode, CDS_TEST);
             if (testResult != DISP_CHANGE_SUCCESSFUL)
             {
-                Console.WriteLine($"Test failed: {targetRate}Hz not valid on this mode.");
+                Logger.Info($"Test failed: {targetRate}Hz not valid on this mode.");
                 return false;
             }
 
@@ -249,12 +276,12 @@ namespace XboxGamingBarHelper.Windows
             int result = ChangeDisplaySettings(ref mode, CDS_UPDATEREGISTRY);
             if (result == DISP_CHANGE_SUCCESSFUL)
             {
-                Console.WriteLine($"Successfully switched to {targetRate}Hz.");
+                Logger.Info($"Sucessfully set refresh rate to {targetRate}Hz.");
                 return true;
             }
             else
             {
-                Console.WriteLine($"Failed to apply {targetRate}Hz (error code {result}).");
+                Logger.Info($"Failed to set refresh rate to {targetRate}Hz (error code {result}).");
                 return false;
             }
         }
@@ -323,49 +350,90 @@ namespace XboxGamingBarHelper.Windows
 
             if (EnumDisplaySettings(null, ENUM_CURRENT_SETTINGS, ref dm))
             {
-                return ((int)dm.dmPelsWidth, (int)dm.dmPelsHeight);
+                Logger.Info($"Current resolution: {dm.dmPelsWidth}x{dm.dmPelsHeight}");
+                return (dm.dmPelsWidth, dm.dmPelsHeight);
             }
 
+            Logger.Error("Failed to get current resolution.");
             return (0, 0); // fallback
         }
 
         public static void SetResolution(int width, int height)
         {
-            Console.WriteLine($"Attempting to set {width}x{height}...");
+            Logger.Info($"Attempting to set resolution to {width}x{height}...");
 
-            DEVMODE dm = new DEVMODE();
-            dm.dmSize = (short)Marshal.SizeOf(typeof(DEVMODE));
+            DEVMODE currentMode = new DEVMODE { dmSize = (short)Marshal.SizeOf(typeof(DEVMODE)) };
+            bool hasCurrent = EnumDisplaySettings(null, ENUM_CURRENT_SETTINGS, ref currentMode);
+            int currentFrequency = hasCurrent ? currentMode.dmDisplayFrequency : 0;
+            int currentOrientation = hasCurrent ? currentMode.dmDisplayOrientation : 0;
 
-            // Get current settings as base
-            if (!EnumDisplaySettings(null, ENUM_CURRENT_SETTINGS, ref dm))
+            DEVMODE targetMode = new DEVMODE { dmSize = (short)Marshal.SizeOf(typeof(DEVMODE)) };
+            bool found = false;
+            int modeNum = 0;
+            
+            DEVMODE bestMatch = new DEVMODE { dmSize = (short)Marshal.SizeOf(typeof(DEVMODE)) };
+            int bestFrequency = -1;
+
+            while (EnumDisplaySettings(null, modeNum++, ref targetMode))
             {
-                Console.WriteLine("Unable to get current DEVMODE.");
+                if (targetMode.dmPelsWidth == width && targetMode.dmPelsHeight == height)
+                {
+                    // If we find a mode with matching frequency, that's perfect.
+                    if (targetMode.dmDisplayFrequency == currentFrequency)
+                    {
+                        bestMatch = targetMode;
+                        found = true;
+                        break;
+                    }
+                    
+                    // Otherwise, keep track of the one with highest frequency as a fallback.
+                    if (targetMode.dmDisplayFrequency > bestFrequency)
+                    {
+                        bestFrequency = targetMode.dmDisplayFrequency;
+                        bestMatch = targetMode;
+                        found = true;
+                    }
+                }
+            }
+
+            if (!found)
+            {
+                Logger.Error($"Could not find a supported mode for {width}x{height}.");
                 return;
             }
 
-            // Apply new resolution
-            dm.dmPelsWidth = (int)width;
-            dm.dmPelsHeight = (int)height;
-            dm.dmFields = 0x00080000 | 0x00100000; // DM_PELSWIDTH | DM_PELSHEIGHT
+            // Important: We want to preserve the current orientation.
+            // Many handhelds have internal panels that are physically portrait but used as landscape.
+            if (hasCurrent)
+            {
+                bestMatch.dmDisplayOrientation = currentOrientation;
+                bestMatch.dmFields |= DM_DISPLAYORIENTATION;
+            }
 
-            // Optional test first
-            int testResult = ChangeDisplaySettings(ref dm, CDS_TEST);
+            // Test before applying
+            int testResult = ChangeDisplaySettings(ref bestMatch, CDS_TEST);
             if (testResult != DISP_CHANGE_SUCCESSFUL)
             {
-                Console.WriteLine("Resolution not supported.");
+                Logger.Warn($"Test failed for mode {width}x{height} @ {bestMatch.dmDisplayFrequency}Hz with orientation {bestMatch.dmDisplayOrientation}. Error: {testResult}. Trying without orientation flag.");
+                bestMatch.dmFields &= ~DM_DISPLAYORIENTATION;
+                testResult = ChangeDisplaySettings(ref bestMatch, CDS_TEST);
+            }
+
+            if (testResult != DISP_CHANGE_SUCCESSFUL)
+            {
+                Logger.Error($"Failed to validate resolution {width}x{height}. Error code: {testResult}");
                 return;
             }
 
             // Apply permanently
-            int result = ChangeDisplaySettings(ref dm, CDS_UPDATEREGISTRY);
-
+            int result = ChangeDisplaySettings(ref bestMatch, CDS_UPDATEREGISTRY);
             if (result == DISP_CHANGE_SUCCESSFUL)
             {
-                Console.WriteLine("Resolution changed successfully.");
+                Logger.Info($"Resolution changed successfully to {width}x{height}.");
             }
             else
             {
-                Console.WriteLine($"Failed to change resolution, error code: {result}");
+                Logger.Error($"Failed to apply resolution {width}x{height}. Error code: {result}");
             }
         }
 

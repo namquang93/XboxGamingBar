@@ -20,7 +20,11 @@ namespace XboxGamingBarHelper.Systems
 
             Logger.Debug($"Resolution changed to {Value}");
 
-            User32.SetResolution(Value.Width, Value.Height);
+            var currentResolution = User32.GetCurrentResolution();
+            if (currentResolution.width != Value.Width || currentResolution.height != Value.Height)
+            {
+                 User32.SetResolution(Value.Width, Value.Height);
+            }
         }
     }
 }

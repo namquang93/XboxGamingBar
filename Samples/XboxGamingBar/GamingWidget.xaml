@@ -31,8 +31,8 @@
                     <RowDefinition x:Name="Row_5_Spacer_2" Height="20"/>
                     <RowDefinition x:Name="Row_6_Spacer_3" Height="20"/>
                     <RowDefinition x:Name="Row_7_PerGameProfile" Height="36"/>
-                    <RowDefinition x:Name="Row_8_TDPLimitText" Height="30"/>
-                    <RowDefinition x:Name="Row_9_TDPSlider" Height="32"/>
+                    <RowDefinition x:Name="Row_8_TDPLimitText" Height="Auto"/>
+                    <RowDefinition x:Name="Row_9_TDPSlider" Height="Auto"/>
                     <RowDefinition x:Name="Row_10_CPUBoost" Height="36"/>
                     <RowDefinition x:Name="Row_11_CPUEPPText" Height="30"/>
                     <RowDefinition x:Name="Row_12_CPUEPPSlider" Height="32"/>
@@ -46,13 +46,13 @@
                     <RowDefinition x:Name="Row_20_Spacer_6" Height="20"/>
                     <RowDefinition x:Name="Row_21_AMDText" Height="50"/>
                     <RowDefinition x:Name="Row_22_Spacer_7" Height="20"/>
-                    <RowDefinition x:Name="Row_23_AMDRadeonSuperResolutionToggle" Height="36"/>
+                    <RowDefinition x:Name="Row_23_AMDRadeonSuperResolutionToggle" Height="Auto"/>
                     <RowDefinition x:Name="Row_24_AMDRadeonSuperResolutionSlider" Height="Auto"/>
-                    <RowDefinition x:Name="Row_25_AMDFluidMotionFrameToggle" Height="36"/>
-                    <RowDefinition x:Name="Row_26_AMDRadeonAntiLagToggle" Height="36"/>
-                    <RowDefinition x:Name="Row_27_AMDRadeonBoostToggle" Height="36"/>
+                    <RowDefinition x:Name="Row_25_AMDFluidMotionFrameToggle" Height="Auto"/>
+                    <RowDefinition x:Name="Row_26_AMDRadeonAntiLagToggle" Height="Auto"/>
+                    <RowDefinition x:Name="Row_27_AMDRadeonBoostToggle" Height="Auto"/>
                     <RowDefinition x:Name="Row_28_AMDRadeonBoostResolutionSlider" Height="Auto"/>
-                    <RowDefinition x:Name="Row_29_AMDRadeonChillToggle" Height="36"/>
+                    <RowDefinition x:Name="Row_29_AMDRadeonChillToggle" Height="Auto"/>
                     <RowDefinition x:Name="Row_30_AMDRadeonChillMinFPSText" Height="Auto"/>
                     <RowDefinition x:Name="Row_31_AMDRadeonChillMinFPSSlider" Height="Auto"/>
                     <RowDefinition x:Name="Row_32_AMDRadeonChillMaxFPSText" Height="Auto"/>
@@ -92,41 +92,43 @@
                 <ToggleSwitch x:Name="PerGameProfileToggle" IsEnabled="False" OffContent="Global Profile" OnContent="Per-game Profile"
                 FlowDirection="RightToLeft" Grid.Row="7" VerticalAlignment="Center" HorizontalAlignment="Right"/>
 
-                <TextBlock x:Name="TDPLimitText" Text="Thermal Power (TDP) Limit" Margin="0,0,0,0" FontWeight="SemiBold" FontSize="18" Grid.Row="8"/>
-                <TextBlock x:Name="TDPValueText" Grid.Row="8" Margin="0,0,0,0" Text="{Binding ElementName=TDPSlider, Path=Value, Converter={StaticResource WattStringConverter}}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                <TextBlock x:Name="TDPLimitText" Text="Thermal Power (TDP) Limit" Margin="0,0,0,0" FontWeight="SemiBold" FontSize="18" Grid.Row="8" Visibility="Collapsed"/>
+                <TextBlock x:Name="TDPValueText" Grid.Row="8" Margin="0,0,0,0" Text="{Binding ElementName=TDPSlider, Path=Value, Converter={StaticResource WattStringConverter}}" 
+                    VerticalAlignment="Center" HorizontalAlignment="Right" Visibility="Collapsed"/>
                 <Slider x:Name="TDPSlider" Grid.Row="9" Margin="0,0,0,0"
-                Minimum="4" Maximum="32"
-                TickFrequency="1"
-                SnapsTo="Ticks"
-                TickPlacement="BottomRight"
-                IsEnabled="False"/>
+                    Minimum="4" Maximum="32"
+                    TickFrequency="1"
+                    SnapsTo="Ticks"
+                    TickPlacement="BottomRight"
+                    IsEnabled="False"
+                    Visibility="Collapsed"/>
 
                 <TextBlock x:Name="CPUBoostText" Text="CPU Boost" FontWeight="SemiBold" FontSize="18" Grid.Row="10"
-                TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" Width="250" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                    TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" Width="250" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                 <ToggleSwitch x:Name="CPUBoostToggle" IsEnabled="False" OffContent="Disabled" OnContent="Aggressive"
-                FlowDirection="RightToLeft" Grid.Row="10" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                    FlowDirection="RightToLeft" Grid.Row="10" VerticalAlignment="Center" HorizontalAlignment="Right" />
 
                 <TextBlock x:Name="CPUEPPText" Text="CPU Energy Performance Preference (EPP)" Margin="0,0,0,0" FontWeight="SemiBold" FontSize="18" Grid.Row="11"/>
                 <TextBlock x:Name="CPUEPPValueText" Grid.Row="11" Margin="0,0,0,0" Text="{Binding ElementName=CPUEPPSlider, Path=Value}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                 <Slider x:Name="CPUEPPSlider" Grid.Row="12" Margin="0,0,0,0"
-                Minimum="10" Maximum="95"
-                TickFrequency="5"
-                SnapsTo="Ticks"
-                TickPlacement="BottomRight"
-                IsEnabled="False"/>
+                    Minimum="10" Maximum="95"
+                    TickFrequency="5"
+                    SnapsTo="Ticks"
+                    TickPlacement="BottomRight"
+                    IsEnabled="False"/>
 
                 <!-- CPU Clock -->
                 <TextBlock x:Name="LimitCPUClockText" Text="Limit CPU Clock" FontWeight="SemiBold" FontSize="18" Grid.Row="13"
-                TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" Width="250" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                    TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" Width="250" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                 <ToggleSwitch x:Name="LimitCPUClockToggle" IsEnabled="False" OffContent="Disabled" OnContent="{Binding ElementName=CPUClockMaxSlider, Path=Value, Converter={StaticResource MegahertzStringConverter}}"
-                FlowDirection="RightToLeft" Grid.Row="13" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                    FlowDirection="RightToLeft" Grid.Row="13" VerticalAlignment="Center" HorizontalAlignment="Right" />
                 <Slider x:Name="CPUClockMaxSlider" Grid.Row="14" Margin="0,0,0,0"
-                Minimum="300" Maximum="5100"
-                TickFrequency="100"
-                SnapsTo="Ticks"
-                TickPlacement="BottomRight"
-                IsEnabled="False"
-                Visibility="{Binding ElementName=LimitCPUClockToggle, Path=IsOn, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                    Minimum="300" Maximum="5100"
+                    TickFrequency="100"
+                    SnapsTo="Ticks"
+                    TickPlacement="BottomRight"
+                    IsEnabled="False"
+                    Visibility="{Binding ElementName=LimitCPUClockToggle, Path=IsOn, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
                 <TextBlock x:Name="SystemText" Text="System" Margin="0,0,0,0" FontWeight="Bold" FontSize="26" Grid.Row="16"/>
                 <Line X1="0" Y1="0" X2="100000" Y2="0" Stroke="DarkGray" StrokeThickness="1.5" Grid.Row="16" VerticalAlignment="Bottom"/>
@@ -143,13 +145,13 @@
                     <x:String>1920x1080</x:String>
                 </ComboBox>
 
-                <TextBlock x:Name="AMDText" Text="AMD Settings" Margin="0,0,0,0" FontWeight="Bold" FontSize="26" Grid.Row="21"/>
-                <Line X1="0" Y1="0" X2="100000" Y2="0" Stroke="DarkGray" StrokeThickness="1.5" Grid.Row="22" VerticalAlignment="Bottom"/>
+                <TextBlock x:Name="AMDText" Text="AMD Settings" Margin="0,0,0,0" FontWeight="Bold" FontSize="26" Grid.Row="21" Visibility="Collapsed"/>
+                <Line x:Name="AMDTextLine" X1="0" Y1="0" X2="100000" Y2="0" Stroke="DarkGray" StrokeThickness="1.5" Grid.Row="21" VerticalAlignment="Bottom" Visibility="Collapsed"/>
 
-                <TextBlock x:Name="AMDRadeonSuperResolutionText" Text="Radeon Super Resolution" FontWeight="SemiBold" FontSize="18" Grid.Row="23"
-                    TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" Width="250" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                <TextBlock x:Name="AMDRadeonSuperResolutionText" Text="Radeon Super Resolution" FontWeight="SemiBold" FontSize="18" Grid.Row="23"  Visibility="Collapsed"
+                    TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" Width="250" HorizontalAlignment="Left" VerticalAlignment="Center" />
                 <ToggleSwitch x:Name="AMDRadeonSuperResolutionToggle" IsEnabled="False" OffContent="Disabled" OnContent="{Binding ElementName=AMDRadeonSuperResolutionSharpnessSlider, Path=Value, Converter={StaticResource SharpnessPercentStringConverter}}"
-                    FlowDirection="RightToLeft" Grid.Row="23" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                    FlowDirection="RightToLeft" Grid.Row="23" VerticalAlignment="Center" HorizontalAlignment="Right" Visibility="Collapsed"/>
                 <Slider x:Name="AMDRadeonSuperResolutionSharpnessSlider" Grid.Row="24" Margin="0,0,0,0"
                     Minimum="0" Maximum="100"
                     TickFrequency="1"
@@ -158,20 +160,20 @@
                     IsEnabled="False"
                     Visibility="{Binding ElementName=AMDRadeonSuperResolutionToggle, Path=IsOn, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
-                <TextBlock x:Name="AMDFluidMotionFrameText" Text="AMD Fluid Motion Frame" FontWeight="SemiBold" FontSize="18" Grid.Row="25"
+                <TextBlock x:Name="AMDFluidMotionFrameText" Text="AMD Fluid Motion Frame" FontWeight="SemiBold" FontSize="18" Grid.Row="25" Visibility="Collapsed"
                     TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" Width="250" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                <ToggleSwitch x:Name="AMDFluidMotionFrameToggle" IsEnabled="False" OffContent="Disabled" OnContent="Enabled"
+                <ToggleSwitch x:Name="AMDFluidMotionFrameToggle" IsEnabled="False" OffContent="Disabled" OnContent="Enabled"  Visibility="Collapsed"
                     FlowDirection="RightToLeft" Grid.Row="25" VerticalAlignment="Center" HorizontalAlignment="Right" />
 
-                <TextBlock x:Name="AMDRadeonAntiLagText" Text="Radeon Anti-Lag" FontWeight="SemiBold" FontSize="18" Grid.Row="26"
+                <TextBlock x:Name="AMDRadeonAntiLagText" Text="Radeon Anti-Lag" FontWeight="SemiBold" FontSize="18" Grid.Row="26" Visibility="Collapsed"
                     TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" Width="250" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                <ToggleSwitch x:Name="AMDRadeonAntiLagToggle" IsEnabled="False" OffContent="Disabled" OnContent="Enabled"
+                <ToggleSwitch x:Name="AMDRadeonAntiLagToggle" IsEnabled="False" OffContent="Disabled" OnContent="Enabled"  Visibility="Collapsed"
                     FlowDirection="RightToLeft" Grid.Row="26" VerticalAlignment="Center" HorizontalAlignment="Right" />
 
-                <TextBlock x:Name="AMDRadeonBoostText" Text="Radeon Boost" FontWeight="SemiBold" FontSize="18" Grid.Row="27"
+                <TextBlock x:Name="AMDRadeonBoostText" Text="Radeon Boost" FontWeight="SemiBold" FontSize="18" Grid.Row="27" Visibility="Collapsed"
                     TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" Width="250" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                 <ToggleSwitch x:Name="AMDRadeonBoostToggle" IsEnabled="False" OffContent="Disabled" OnContent="{Binding ElementName=AMDRadeonBoostResolutionSlider, Path=Value, Converter={StaticResource RadeonBoostResolutionStringConverter}}"
-                    FlowDirection="RightToLeft" Grid.Row="27" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                    FlowDirection="RightToLeft" Grid.Row="27" VerticalAlignment="Center" HorizontalAlignment="Right" Visibility="Collapsed" />
                 <Slider x:Name="AMDRadeonBoostResolutionSlider" Grid.Row="28" Margin="0,0,0,0"
                     Minimum="0" Maximum="1"
                     TickFrequency="1"
@@ -180,9 +182,9 @@
                     IsEnabled="False"
                     Visibility="{Binding ElementName=AMDRadeonBoostToggle, Path=IsOn, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
-                <TextBlock x:Name="AMDRadeonChillText" Text="Radeon Chill" FontWeight="SemiBold" FontSize="18" Grid.Row="29"
+                <TextBlock x:Name="AMDRadeonChillText" Text="Radeon Chill" FontWeight="SemiBold" FontSize="18" Grid.Row="29" Visibility="Collapsed"
                     TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" Width="250" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                <ToggleSwitch x:Name="AMDRadeonChillToggle" IsEnabled="False" OffContent="Disabled" OnContent="Enabled"
+                <ToggleSwitch x:Name="AMDRadeonChillToggle" IsEnabled="False" OffContent="Disabled" OnContent="Enabled" Visibility="Collapsed"
                     FlowDirection="RightToLeft" Grid.Row="29" VerticalAlignment="Center" HorizontalAlignment="Right" />
                 <TextBlock x:Name="AMDRadeonChillMinFPSText" Text="{Binding ElementName=AMDRadeonChillMinFPSSlider, Path=Value, Converter={StaticResource RadeonChillMinFPSStringConverter}}" Grid.Row="30"
                     TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" Width="250" HorizontalAlignment="Left" VerticalAlignment="Center"

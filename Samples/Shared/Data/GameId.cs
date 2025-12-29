@@ -11,10 +11,21 @@ namespace Shared.Data
         [XmlElement("Path")]
         public string Path;
 
+        [XmlElement("AumId")]
+        public string AumId;
+
         public GameId(string name, string path)
         {
             Name = name;
             Path = path;
+            AumId = string.Empty;
+        }
+
+        public GameId(string name, string path, string aumId)
+        {
+            Name = name;
+            Path = path;
+            AumId = aumId;
         }
 
         public bool IsValid()
@@ -30,19 +41,7 @@ namespace Shared.Data
             if (ReferenceEquals(g1, null) || ReferenceEquals(g2, null))
                 return false;
 
-            if (g1.Name == null && g2.Name != null || g1.Name != null && g2.Name == null)
-                return false;
-
-            if (g1.Path == null && g2.Path != null || g1.Path != null && g2.Path == null)
-                return false;
-
-            if (g1.Name == null && g2.Name == null)
-                return g1.Path == null && g2.Path == null;
-
-            if (g1.Path == null && g2.Path == null)
-                return g1.Name == null && g2.Name == null;
-
-            return g1.Name.CompareTo(g2.Name) == 0 && g1.Path.CompareTo(g2.Path) == 0;
+            return g1.Name == g2.Name && (g1.Path == g2.Path || g1.AumId == g2.AumId);
         }
 
         public static bool operator !=(GameId p1, GameId p2)
@@ -61,19 +60,19 @@ namespace Shared.Data
 
         public override int GetHashCode()
         {
-            if (string.IsNullOrEmpty(Name) ||string.IsNullOrEmpty(Path))
+            if (string.IsNullOrEmpty(Name) || string.IsNullOrEmpty(Path) || string.IsNullOrEmpty(AumId))
             {
                 return -1;
             }
 
-            return Name.GetHashCode() ^ Path.GetHashCode();
+            return Name.GetHashCode() ^ Path.GetHashCode() ^ AumId.GetHashCode();
         }
 
         public override string ToString()
         {
             if (string.IsNullOrEmpty(Name))
                 return "Nothing";
-            return $"{Name} at {Path}";
+            return $"{Name} ({AumId}) at \"{Path}\"";
         }
     }
 }

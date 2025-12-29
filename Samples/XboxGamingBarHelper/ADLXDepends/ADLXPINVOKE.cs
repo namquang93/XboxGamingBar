@@ -2210,6 +2210,21 @@ class ADLXPINVOKE {
   [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_systemMetricsSupportP_Ptr_value")]
   public static extern global::System.IntPtr systemMetricsSupportP_Ptr_value(global::System.Runtime.InteropServices.HandleRef jarg1);
 
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_new_gpuMetricsSupportP_Ptr")]
+  public static extern global::System.IntPtr new_gpuMetricsSupportP_Ptr();
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_copy_gpuMetricsSupportP_Ptr")]
+  public static extern global::System.IntPtr copy_gpuMetricsSupportP_Ptr(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_delete_gpuMetricsSupportP_Ptr")]
+  public static extern void delete_gpuMetricsSupportP_Ptr(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_gpuMetricsSupportP_Ptr_assign")]
+  public static extern void gpuMetricsSupportP_Ptr_assign(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_gpuMetricsSupportP_Ptr_value")]
+  public static extern global::System.IntPtr gpuMetricsSupportP_Ptr_value(global::System.Runtime.InteropServices.HandleRef jarg1);
+
   [global::System.Runtime.InteropServices.DllImport("ADLXCSharpBind", EntryPoint="CSharp_new_allMetricsListP_Ptr")]
   public static extern global::System.IntPtr new_allMetricsListP_Ptr();
 

@@ -3,6 +3,39 @@ using System.Runtime.InteropServices;
 
 namespace XboxGamingBarHelper.Windows
 {
+    internal enum POWER_INFORMATION_LEVEL
+    {
+        SystemBatteryState = 5,
+        ProcessorInformation = 11
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct SYSTEM_BATTERY_STATE
+    {
+        [MarshalAs(UnmanagedType.U1)] public bool AcOnLine;
+        [MarshalAs(UnmanagedType.U1)] public bool BatteryPresent;
+        [MarshalAs(UnmanagedType.U1)] public bool Charging;
+        [MarshalAs(UnmanagedType.U1)] public bool Discharging;
+
+        public uint MaxCapacity;
+        public uint RemainingCapacity;
+        public int Rate;              // signed mW
+        public uint EstimatedTime;
+        public uint DefaultAlert1;
+        public uint DefaultAlert2;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct PROCESSOR_POWER_INFORMATION
+    {
+        public uint Number;
+        public uint MaxMhz;
+        public uint CurrentMhz;
+        public uint MhzLimit;
+        public uint MaxIdleState;
+        public uint CurrentIdleState;
+    }
+
     internal static class PowrProf
     {
         [DllImport("powrprof.dll", SetLastError = true)]
@@ -42,5 +75,13 @@ namespace XboxGamingBarHelper.Windows
             ref Guid SubGroupOfPowerSettingsGuid,
             ref Guid PowerSettingGuid,
             uint DcValueIndex);
+
+        [DllImport("powrprof.dll", ExactSpelling = true)]
+        internal static extern uint CallNtPowerInformation(
+            int InformationLevel,
+            IntPtr InputBuffer,
+            int InputBufferLength,
+            IntPtr OutputBuffer,
+            int OutputBufferLength);
     }
 }

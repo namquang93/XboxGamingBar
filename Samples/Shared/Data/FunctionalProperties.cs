@@ -18,6 +18,12 @@ namespace Shared.Data
             properties = new Dictionary<Function, FunctionalProperty>();
             foreach (var property in inProperties)
             {
+                if (property == null)
+                {
+                    Logger.Warn("Null property found, skip it...");
+                    continue;
+                }
+
                 if (!properties.ContainsKey(property.Function))
                 {
                     properties.Add(property.Function, property);

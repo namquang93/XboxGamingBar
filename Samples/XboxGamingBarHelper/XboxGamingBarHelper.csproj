@@ -76,13 +76,34 @@
     <StartupObject />
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationManifest Condition="'$(Configuration)' != 'Store'">app.manifest</ApplicationManifest>
+    <ApplicationManifest Condition="'$(Configuration)' == 'Store'">app.Store.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Store|x64'">
+    <OutputPath>bin\x64\Store\</OutputPath>
+    <DefineConstants>TRACE;STORE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Store|x86'">
+    <OutputPath>bin\x86\Store\</OutputPath>
+    <DefineConstants>TRACE;STORE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="HidSharp, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="HidSharp, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL" Condition="'$(Configuration)' != 'Store'">
       <HintPath>..\packages\HidSharp.2.1.0\lib\net35\HidSharp.dll</HintPath>
     </Reference>
-    <Reference Include="LibreHardwareMonitorLib, Version=0.9.4.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="LibreHardwareMonitorLib, Version=0.9.4.0, Culture=neutral, processorArchitecture=MSIL" Condition="'$(Configuration)' != 'Store'">
       <HintPath>..\packages\LibreHardwareMonitorLib.0.9.4\lib\net472\LibreHardwareMonitorLib.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=9.0.0.9, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -356,6 +377,7 @@
     <Compile Include="AMD\Settings\AMDRadeonBoostSetting.cs" />
     <Compile Include="AMD\Settings\AMDRadeonChillSetting.cs" />
     <Compile Include="AMD\Settings\AMDRadeonSuperResolutionSetting.cs" />
+    <Compile Include="AMD\AMDSettingsSupportedProperty.cs" />
     <Compile Include="Core\HelperProperties.cs" />
     <Compile Include="Core\HelperProperty.cs" />
     <Compile Include="Core\IManager.cs" />
@@ -368,8 +390,12 @@
     <Compile Include="Hardware\Devices\GenericDevice.cs" />
     <Compile Include="Hardware\Devices\Lenovo\Lenovo_Legion_GO_2.cs" />
     <Compile Include="Hardware\Devices\Onexplayer\Onexplayer_2_Pro.cs" />
+    <Compile Include="Hardware\IHardwareProvider.cs" />
+    <Compile Include="Hardware\LibreHardwareProvider.cs" />
     <Compile Include="Hardware\MaxTDPProperty.cs" />
     <Compile Include="Hardware\MinTDPProperty.cs" />
+    <Compile Include="Hardware\TDPControlSupportProperty.cs" />
+    <Compile Include="Hardware\WindowsHardwareProvider.cs" />
     <Compile Include="OnScreenDisplay\IOnScreenDisplayProvider.cs" />
     <Compile Include="OnScreenDisplay\OnScreenDisplayManager.cs" />
     <Compile Include="Hardware\CPUs\CPUFactory.cs" />
@@ -433,6 +459,7 @@
     <Compile Include="Systems\ResolutionsProperty.cs" />
     <Compile Include="Systems\RunningGameProperty.cs" />
     <Compile Include="Systems\TrackedGameProperty.cs" />
+    <Compile Include="Windows\Kernel32.cs" />
     <Compile Include="Windows\PowerGuids.cs" />
     <Compile Include="Windows\PowrProf.cs" />
     <Compile Include="Windows\ProcessWindow.cs" />
@@ -440,18 +467,12 @@
     <Compile Include="Systems\SystemManager.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ADLXCSharpBind.exp">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="ADLXCSharpBind.lib">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="App.config" />
     <None Include="app.manifest" />
     <None Include="NLog.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="WinRing0x64.sys">
+    <None Include="WinRing0x64.sys" Condition="'$(Configuration)' != 'Store'">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
@@ -463,15 +484,15 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="inpoutx64.dll">
+    <None Include="inpoutx64.dll" Condition="'$(Configuration)' != 'Store'">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="libryzenadj.dll">
+    <None Include="libryzenadj.dll" Condition="'$(Configuration)' != 'Store'">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="WinRing0x64.dll">
+    <None Include="WinRing0x64.dll" Condition="'$(Configuration)' != 'Store'">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
@@ -489,9 +510,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ADLXCSharpBind.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="ADLXCSharpBind.pdb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

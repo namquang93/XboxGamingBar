@@ -2,27 +2,26 @@
 
 <Package
   xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
-  xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
   xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
-  xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3"
   xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
-  IgnorableNamespaces="uap uap3 mp rescap">
+  xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10"
+  xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3"
+  IgnorableNamespaces="uap uap3 rescap">
 
   <Identity
     Name="PlayandBuild.10365195AA1EC"
     Publisher="CN=632C25E4-B6CB-4B80-A9DB-AAB4012EE37A"
-    Version="1.0.0.0" />
-
-  <mp:PhoneIdentity PhoneProductId="c2dd2cd0-7156-428e-b305-d3dd3505b10d" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+    Version="0.7.2.0" />
 
   <Properties>
     <DisplayName>Gaming Bar</DisplayName>
     <PublisherDisplayName>Play and Build</PublisherDisplayName>
-    <Logo>Assets\StoreLogo.png</Logo>
+    <Logo>Images\StoreLogo.png</Logo>
   </Properties>
 
   <Dependencies>
     <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.0.0" MaxVersionTested="10.0.0.0" />
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.14393.0" MaxVersionTested="10.0.14393.0" />
   </Dependencies>
 
   <Resources>
@@ -32,23 +31,27 @@
   <Applications>
     <Application Id="App"
       Executable="$targetnametoken$.exe"
-      EntryPoint="XboxGamingBar.App">
+      EntryPoint="$targetentrypoint$">
       <uap:VisualElements
         DisplayName="Gaming Bar"
-        Square150x150Logo="Assets\Square150x150Logo.png"
-        Square44x44Logo="Assets\Square44x44Logo.png"
-        Description="Xbox Game Bar widget for changing system settings during game sessions with gamepad."
-        BackgroundColor="transparent">
-        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square71x71Logo="Assets\SmallTile.png" Square310x310Logo="Assets\LargeTile.png"/>
-        <uap:SplashScreen Image="Assets\SplashScreen.png" />
+        Description="XboxGamingBarPackage"
+        BackgroundColor="transparent"
+        Square150x150Logo="Images\Square150x150Logo.png"
+        Square44x44Logo="Images\Square44x44Logo.png">
+        <uap:DefaultTile Wide310x150Logo="Images\Wide310x150Logo.png" />
+        <uap:SplashScreen Image="Images\SplashScreen.png" />
       </uap:VisualElements>
-      <Extensions>
+	  <Extensions>
+        <uap:Extension Category="windows.appService">
+          <uap:AppService Name="XboxGamingBarService" />
+        </uap:Extension>
+        <desktop:Extension Category="windows.fullTrustProcess" Executable="XboxGamingBarHelper\XboxGamingBarHelper.exe" />
         <uap3:Extension Category="windows.appExtension">
           <uap3:AppExtension Name="microsoft.gameBarUIExtension"
                              Id="GamingWidget"
                              DisplayName="Gaming"
                              Description="Xbox Game Bar widget for changing system settings during game sessions with gamepad."
-                             PublicFolder="Assets">
+                             PublicFolder="Images">
             <uap3:Properties>
               <GameBarWidget Type="Standard">
                 <HomeMenuVisible>true</HomeMenuVisible>
@@ -56,11 +59,11 @@
                 <SettingsSupported AppExtensionId="GamingWidgetSettings" />
                 <Window>
                   <Size>
-                    <Height>670</Height>
+                    <Height>824</Height>
                     <Width>464</Width>
-                    <MinHeight>670</MinHeight>
+                    <MinHeight>824</MinHeight>
                     <MinWidth>464</MinWidth>
-                    <MaxHeight>670</MaxHeight>
+                    <MaxHeight>824</MaxHeight>
                     <MaxWidth>900</MaxWidth>
                   </Size>
                   <ResizeSupported>
@@ -73,36 +76,36 @@
           </uap3:AppExtension>
         </uap3:Extension>
 
-		<uap3:Extension Category="windows.appExtension">
-			<uap3:AppExtension Name="microsoft.gameBarUIExtension"
-							Id="GamingWidgetSettings"
-							DisplayName="Gaming Settings"
-							Description="Gaming Bar settings."
-							PublicFolder="Assets">
-				<uap3:Properties>
-					<GameBarWidget Type="Settings">
-						<Window>
-							<Size>
-								<Height>300</Height>
-								<Width>300</Width>
-							</Size>
-							<ResizeSupported>
-								<Horizontal>false</Horizontal>
-								<Vertical>false</Vertical>
-							</ResizeSupported>
-						</Window>
-					</GameBarWidget>
-				</uap3:Properties>
-			</uap3:AppExtension>
-		</uap3:Extension>
-      </Extensions>
+        <uap3:Extension Category="windows.appExtension">
+            <uap3:AppExtension Name="microsoft.gameBarUIExtension"
+                              Id="GamingWidgetSettings"
+                              DisplayName="Gaming Settings"
+                              Description="Gaming Bar settings."
+                              PublicFolder="Images">
+              <uap3:Properties>
+                <GameBarWidget Type="Settings">
+                  <Window>
+                    <Size>
+                      <Height>300</Height>
+                      <Width>300</Width>
+                    </Size>
+                    <ResizeSupported>
+                      <Horizontal>false</Horizontal>
+                      <Vertical>false</Vertical>
+                    </ResizeSupported>
+                  </Window>
+                </GameBarWidget>
+              </uap3:Properties>
+            </uap3:AppExtension>
+          </uap3:Extension>
+	  </Extensions>
     </Application>
   </Applications>
 
   <Extensions>
     <!-- Enlighten COM on where to find Metadata Based Marshaling (MBM) data for the Game Bar private types 
-         <Path> is a required element (by VS) and has to point to a binary in the package, but it's not used when the class id is
-         00000355-0000-0000-C000-000000000046 (MBM). Due to that we just put the Microsoft.Gaming.XboxGameBar.winmd here. -->
+        <Path> is a required element (by VS) and has to point to a binary in the package, but it's not used when the class id is
+        00000355-0000-0000-C000-000000000046 (MBM). Due to that we just put the Microsoft.Gaming.XboxGameBar.winmd here. -->
     <Extension Category="windows.activatableClass.proxyStub">
       <ProxyStub ClassId="00000355-0000-0000-C000-000000000046">
         <Path>Microsoft.Gaming.XboxGameBar.winmd</Path>
@@ -131,10 +134,11 @@
       </ProxyStub>
     </Extension>
   </Extensions>
-  
+
   <Capabilities>
     <!--<Capability Name="internetClient" />-->
-	<!--<rescap:Capability Name="appDiagnostics" />-->
+    <rescap:Capability Name="runFullTrust" />
+	<!--<rescap:Capability Name="allowElevation" />-->
 	<!--<rescap:Capability Name="broadFileSystemAccess" />-->
   </Capabilities>
 </Package>

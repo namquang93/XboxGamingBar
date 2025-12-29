@@ -1,4 +1,5 @@
-﻿using LibreHardwareMonitor.Hardware;
+﻿#if !STORE
+using LibreHardwareMonitor.Hardware;
 
 namespace XboxGamingBarHelper.Hardware
 {
@@ -17,3 +18,4 @@ namespace XboxGamingBarHelper.Hardware
         public void VisitParameter(IParameter parameter) { }
     }
 }
+#endif

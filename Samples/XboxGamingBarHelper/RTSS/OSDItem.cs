@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NLog;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 
@@ -6,6 +7,8 @@ namespace XboxGamingBarHelper.RTSS
 {
     internal abstract class OSDItem
     {
+        protected static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         protected string name;
 
         protected string colorCode;
@@ -33,21 +36,28 @@ namespace XboxGamingBarHelper.RTSS
 
             var osdString = $"{GetNameString()} <C=FFFFFF>";
             
-            if (osdValues == null || osdValues.Count == 0)
-            {
-                return osdString + " N/A";
-            }
+            //if (osdValues == null || osdValues.Count == 0)
+            //{
+            //    return osdString + " N/A";
+            //}
 
             for (int i = 0; i < osdValues.Count; i++)
             {
                 var osdValue = osdValues[i];
                 if (osdValue.Value < 0)
                 {
-                    osdString += "N/A";
+                    //osdString += "N/A";
                 }
                 else
                 {
-                    osdString += $"{osdValue.Prefix}{Math.Floor(osdValue.Value)}<S=50> {osdValue.Unit}<S>";
+                    if (osdValue.ShouldFloorToInt)
+                    {
+                        osdString += $"{osdValue.Prefix}{Math.Floor(osdValue.Value)}<S=50> {osdValue.Unit}<S>";
+                    }
+                    else
+                    {
+                        osdString += $"{osdValue.Prefix}{osdValue.Value:F1}<S=50> {osdValue.Unit}<S>";
+                    }
                 }
                 if (i < osdValues.Count - 1)
                 {

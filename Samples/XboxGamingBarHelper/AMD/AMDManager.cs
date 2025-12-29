@@ -38,6 +38,16 @@ namespace XboxGamingBarHelper.AMD
         private readonly IADLXGPU adlxDedicatedGPU;
         private readonly IADLXGPU adlxSecondDedicatedGPU;
         private readonly IADLX3DSettingsServices2 adlx3DSettingsServices;
+        private readonly IADLXGPUMetrics adlxGPUMetrics;
+        private readonly bool isSupportGPUUsage;
+        private SWIGTYPE_p_double gpuUsagePointer;
+        private SWIGTYPE_p_double gpuPowerPointer;
+        private SWIGTYPE_p_double totalBoardPowerPointer;
+        private SWIGTYPE_p_double gpuTemperaturePointer;
+        private SWIGTYPE_p_int gpuClockSpeedPointer;
+
+        private static AMDManager instance;
+        public static AMDManager Instance => instance;
 
         // AMD Settings.
         private readonly AMDRadeonSuperResolutionSetting amdRadeonSuperResolutionSetting;
@@ -185,24 +195,67 @@ namespace XboxGamingBarHelper.AMD
 
         private string lastLog;
 
+        private AMDSettingsSupportedProperty amdSettingsSupported;
+        public AMDSettingsSupportedProperty AMDSettingsSupported
+        {
+            get { return amdSettingsSupported; }
+        }
+
         public AMDManager(AppServiceConnection connection) : base(connection)
         {
+            instance = this;
+            inputInjector = InputInjector.TryCreate();
+            turnAMDOverlayOnOffKeyboardCombo = new InjectedInputKeyboardInfo[]
+            {
+                new InjectedInputKeyboardInfo { VirtualKey = (ushort)VirtualKey.LeftControl, KeyOptions = InjectedInputKeyOptions.None },
+                new InjectedInputKeyboardInfo { VirtualKey = (ushort)VirtualKey.LeftShift, KeyOptions = InjectedInputKeyOptions.None },
+                new InjectedInputKeyboardInfo { VirtualKey = (ushort)VirtualKey.O, KeyOptions = InjectedInputKeyOptions.None },
+                new InjectedInputKeyboardInfo { VirtualKey = (ushort)VirtualKey.LeftControl, KeyOptions = InjectedInputKeyOptions.KeyUp },
+                new InjectedInputKeyboardInfo { VirtualKey = (ushort)VirtualKey.LeftShift, KeyOptions = InjectedInputKeyOptions.KeyUp },
+                new InjectedInputKeyboardInfo { VirtualKey = (ushort)VirtualKey.O, KeyOptions = InjectedInputKeyOptions.KeyUp },
+            };
+            changeAMDOverlayLevelKeyboardCombo = new InjectedInputKeyboardInfo[]
+            {
+                new InjectedInputKeyboardInfo { VirtualKey = (ushort)VirtualKey.LeftControl, KeyOptions = InjectedInputKeyOptions.None },
+                new InjectedInputKeyboardInfo { VirtualKey = (ushort)VirtualKey.LeftShift, KeyOptions = InjectedInputKeyOptions.None },
+                new InjectedInputKeyboardInfo { VirtualKey = (ushort)VirtualKey.X, KeyOptions = InjectedInputKeyOptions.None },
+                new InjectedInputKeyboardInfo { VirtualKey = (ushort)VirtualKey.LeftControl, KeyOptions = InjectedInputKeyOptions.KeyUp },
+                new InjectedInputKeyboardInfo { VirtualKey = (ushort)VirtualKey.LeftShift, KeyOptions = InjectedInputKeyOptions.KeyUp },
+                new InjectedInputKeyboardInfo { VirtualKey = (ushort)VirtualKey.X, KeyOptions = InjectedInputKeyOptions.KeyUp }
+            };
+            // In AMD Software: Adrenaline Edition:
+            // Level 3 is basic (FPS only)                      => Our level 1 (FPS)
+            // Level 1 is intermediate (FPS + Usage + Wattage)  => Our level 2 (BATTERY)
+            // Level 2 is advanced (many elements)              => Our level 3 (DETAILED)
+            // Level 0 is custom (user seletectable)            => Our level 4 (FULL)
+            amdOverlayLevelList = new List<Tuple<int, int>>()
+            {
+                new Tuple<int, int>(1, 3),
+                new Tuple<int, int>(2, 1),
+                new Tuple<int, int>(3, 2),
+                new Tuple<int, int>(4, 0),
+            };
+            amdOverlayLevelMap = new Dictionary<int, int>();
+            foreach (var amdOverlayLevel in amdOverlayLevelList)
+            {
+                amdOverlayLevelMap.Add(amdOverlayLevel.Item1, amdOverlayLevel.Item2);
+            }
+            focusingOnOSDSlider = new FocusingOnOSDSliderProperty(this);
+
             // Initialize ADLX with ADLXHelper
             adlxHelper = new ADLXHelper();
             adlxInitializeResult = adlxHelper.Initialize();
 
             if (adlxInitializeResult != ADLX_RESULT.ADLX_OK)
             {
+                amdSettingsSupported = new AMDSettingsSupportedProperty(false, this);
                 Logger.Error("AMD Manager initialize failed.");
                 return;
             }
 
+            amdSettingsSupported = new AMDSettingsSupportedProperty(true, this);
+            Logger.Info("Get AMD system services.");
             adlxSystemSevices = adlxHelper.GetSystemServices();
-            if (adlxSystemSevices == null)
-            {
-                Logger.Error("Can't get AMD system service.");
-                return;
-            }
 
             Logger.Info("Get AMD display services.");
             // Get display services
@@ -255,6 +308,66 @@ namespace XboxGamingBarHelper.AMD
                     }
                 }
             }
+
+            Logger.Info("Get AMD Performance Monitoring Services.");
+            var performanceMonitoringServicesPointer = ADLX.new_performanceMonitoringSerP_Ptr();
+            adlxSystemSevices.GetPerformanceMonitoringServices(performanceMonitoringServicesPointer);
+            var adlxPerformanceMonitoringServices = ADLX.performanceMonitoringSerP_Ptr_value(performanceMonitoringServicesPointer);
+
+            var gpuMetricsSupportPointer = ADLX.new_gpuMetricsSupportP_Ptr();
+            adlxPerformanceMonitoringServices.GetSupportedGPUMetrics(adlxInternalGPU, gpuMetricsSupportPointer);
+            var gpuMetricsSupport = ADLX.gpuMetricsSupportP_Ptr_value(gpuMetricsSupportPointer);
+
+            var isSupportGPUUsagePointer = ADLX.new_boolP();
+            gpuMetricsSupport.IsSupportedGPUUsage(isSupportGPUUsagePointer);
+            isSupportGPUUsage = ADLX.boolP_value(isSupportGPUUsagePointer);
+
+            //var systemMetricsSupportedPointer = ADLX.new_systemMetricsSupportP_Ptr();
+            //adlxPerformanceMonitoringServices.GetSupportedSystemMetrics(systemMetricsSupportedPointer);
+            //var systemMetricsSupported = ADLX.systemMetricsSupportP_Ptr_value(systemMetricsSupportedPointer);
+            //systemMetricsSupported.Dispose();
+
+            //var allMetricsPointer = ADLX.new_allMetricsP_Ptr();
+            //adlxPerformanceMonitoringServices.GetCurrentAllMetrics(allMetricsPointer);
+            //var allMetrics = ADLX.allMetricsP_Ptr_value(allMetricsPointer);
+
+            //var fpsPointer = ADLX.new_fpsP_Ptr();
+            //allMetrics.GetFPS(fpsPointer);
+            //var fps = ADLX.fpsP_Ptr_value(fpsPointer);
+            //var fpsValuePointer = ADLX.new_intP();
+            //fps.FPS(fpsValuePointer);
+            //var fpsValue = ADLX.intP_value(fpsValuePointer);
+
+            //var systemMetricsPointer = ADLX.new_systemMetricsP_Ptr();
+            //allMetrics.GetSystemMetrics(systemMetricsPointer);
+            //var systemMetrics = ADLX.systemMetricsP_Ptr_value(systemMetricsPointer);
+
+            //var cpuUsagePointer = ADLX.new_doubleP();
+            //systemMetrics.CPUUsage(cpuUsagePointer);
+            //var cpuUsage = ADLX.doubleP_value(cpuUsagePointer);
+
+            //Logger.Info($"Got all metrics FPS: {fpsValue}, CPU Usage: {cpuUsage}.");
+
+            var gpuMetricsPointer = ADLX.new_gpuMetricsP_Ptr();
+            adlxPerformanceMonitoringServices.GetCurrentGPUMetrics(adlxInternalGPU, gpuMetricsPointer);
+            adlxGPUMetrics = ADLX.gpuMetricsP_Ptr_value(gpuMetricsPointer);
+
+            gpuUsagePointer = ADLX.new_doubleP();
+            gpuPowerPointer = ADLX.new_doubleP();
+            totalBoardPowerPointer = ADLX.new_doubleP();
+            gpuTemperaturePointer = ADLX.new_doubleP();
+            gpuClockSpeedPointer = ADLX.new_intP();
+
+            //aDLXGPUMetrics.GPUPower(gpuPowerPointer);
+            //var gpuPower = ADLX.doubleP_value(gpuPowerPointer);
+
+            //aDLXGPUMetrics.GPUTotalBoardPower(totalBoardPowerPointer);
+            //var totalBoardPower = ADLX.doubleP_value(totalBoardPowerPointer);
+
+            //aDLXGPUMetrics.GPUTemperature(gpuTemperaturePointer);
+            //var gpuTemperature = ADLX.doubleP_value(gpuTemperaturePointer);
+
+            //Logger.Info($"Got GPU metrics Power: {gpuPower}W, Total Board Power: {totalBoardPower}W, GPU Temperature: {gpuTemperature}C.");
 
             Logger.Info("Get AMD 3D Settings Services.");
             var threeDSettingsServicesPointer = ADLX.new_threeDSettingsSerP_Ptr();
@@ -319,44 +432,6 @@ namespace XboxGamingBarHelper.AMD
             var threeDSettingsChangedHandling = ADLX.threeDSettingsChangedHandlingP_Ptr_value(threeDSettingsChangedHandlingPointer);
             amd3DSettingsChangedListener = new AMD3DSettingsChangedListener(this);
             threeDSettingsChangedHandling.Add3DSettingsEventListener(amd3DSettingsChangedListener);
-
-            inputInjector = InputInjector.TryCreate();
-            turnAMDOverlayOnOffKeyboardCombo = new InjectedInputKeyboardInfo[]
-            {
-                new InjectedInputKeyboardInfo { VirtualKey = (ushort)VirtualKey.LeftControl, KeyOptions = InjectedInputKeyOptions.None },
-                new InjectedInputKeyboardInfo { VirtualKey = (ushort)VirtualKey.LeftShift, KeyOptions = InjectedInputKeyOptions.None },
-                new InjectedInputKeyboardInfo { VirtualKey = (ushort)VirtualKey.O, KeyOptions = InjectedInputKeyOptions.None },
-                new InjectedInputKeyboardInfo { VirtualKey = (ushort)VirtualKey.LeftControl, KeyOptions = InjectedInputKeyOptions.KeyUp },
-                new InjectedInputKeyboardInfo { VirtualKey = (ushort)VirtualKey.LeftShift, KeyOptions = InjectedInputKeyOptions.KeyUp },
-                new InjectedInputKeyboardInfo { VirtualKey = (ushort)VirtualKey.O, KeyOptions = InjectedInputKeyOptions.KeyUp },
-            };
-            changeAMDOverlayLevelKeyboardCombo = new InjectedInputKeyboardInfo[]
-            {
-                new InjectedInputKeyboardInfo { VirtualKey = (ushort)VirtualKey.LeftControl, KeyOptions = InjectedInputKeyOptions.None },
-                new InjectedInputKeyboardInfo { VirtualKey = (ushort)VirtualKey.LeftShift, KeyOptions = InjectedInputKeyOptions.None },
-                new InjectedInputKeyboardInfo { VirtualKey = (ushort)VirtualKey.X, KeyOptions = InjectedInputKeyOptions.None },
-                new InjectedInputKeyboardInfo { VirtualKey = (ushort)VirtualKey.LeftControl, KeyOptions = InjectedInputKeyOptions.KeyUp },
-                new InjectedInputKeyboardInfo { VirtualKey = (ushort)VirtualKey.LeftShift, KeyOptions = InjectedInputKeyOptions.KeyUp },
-                new InjectedInputKeyboardInfo { VirtualKey = (ushort)VirtualKey.X, KeyOptions = InjectedInputKeyOptions.KeyUp }
-            };
-            // In AMD Software: Adrenaline Edition:
-            // Level 3 is basic (FPS only)                      => Our level 1 (FPS)
-            // Level 1 is intermediate (FPS + Usage + Wattage)  => Our level 2 (BATTERY)
-            // Level 2 is advanced (many elements)              => Our level 3 (DETAILED)
-            // Level 0 is custom (user seletectable)            => Our level 4 (FULL)
-            amdOverlayLevelList = new List<Tuple<int, int>>()
-            {
-                new Tuple<int, int>(1, 3),
-                new Tuple<int, int>(2, 1),
-                new Tuple<int, int>(3, 2),
-                new Tuple<int, int>(4, 0),
-            };
-            amdOverlayLevelMap = new Dictionary<int, int>();
-            foreach (var amdOverlayLevel in amdOverlayLevelList)
-            {
-                amdOverlayLevelMap.Add(amdOverlayLevel.Item1, amdOverlayLevel.Item2);
-            }
-            focusingOnOSDSlider = new FocusingOnOSDSliderProperty(this);
         }
 
         private void AmdRadeonChillEnabled(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -500,6 +575,7 @@ namespace XboxGamingBarHelper.AMD
 
             if (!isRunning)
             {
+#if !STORE
                 if (applicationState == ApplicationState.Starting)
                 {
                     Logger.Info("Starting AMD Software: Adrenaline Edition.");
@@ -518,6 +594,7 @@ namespace XboxGamingBarHelper.AMD
                         applicationState = ApplicationState.NotRunning;
                     }
                 }
+#endif
                 
                 return;
             }
@@ -648,6 +725,50 @@ namespace XboxGamingBarHelper.AMD
                 Logger.Error($"An error occurred: {ex.Message}");
                 return new Tuple<int, int>(0, 0);
             }
+        }
+
+        public double GetGPUUsage()
+        {
+            if (!isSupportGPUUsage || adlxGPUMetrics == null || gpuUsagePointer == null)
+            {
+                return -1.0;
+            }
+
+            adlxGPUMetrics.GPUUsage(gpuUsagePointer);
+            return ADLX.doubleP_value(gpuUsagePointer);
+        }
+
+        public double GetGPUClock()
+        {
+            if (adlxGPUMetrics == null || gpuClockSpeedPointer == null)
+            {
+                return -1.0;
+            }
+
+            adlxGPUMetrics.GPUClockSpeed(gpuClockSpeedPointer);
+            return ADLX.intP_value(gpuClockSpeedPointer);
+        }
+
+        public double GetGPUWattage()
+        {
+            if (adlxGPUMetrics == null || gpuPowerPointer == null)
+            {
+                return -1.0;
+            }
+
+            adlxGPUMetrics.GPUPower(gpuPowerPointer);
+            return ADLX.doubleP_value(gpuPowerPointer);
+        }
+
+        public double GetGPUTemperature()
+        {
+            if (adlxGPUMetrics == null || gpuTemperaturePointer == null)
+            {
+                return -1.0;
+            }
+
+            adlxGPUMetrics.GPUTemperature(gpuTemperaturePointer);
+            return ADLX.doubleP_value(gpuTemperaturePointer);
         }
     }
 }

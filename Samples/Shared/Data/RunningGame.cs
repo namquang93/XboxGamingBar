@@ -21,10 +21,10 @@
         [XmlElement("IsForeground")]
         public bool IsForeground;
 
-        public RunningGame(int processId, string name, string path, uint fps, bool isForeground)
+        public RunningGame(int processId, string name, string path, string aumId, uint fps, bool isForeground)
         {
             ProcessId = processId;
-            GameId = new GameId(name, path);
+            GameId = new GameId(name, path, aumId);
             FPS = fps;
             IsForeground = isForeground;
         }

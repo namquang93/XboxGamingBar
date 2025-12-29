@@ -1,4 +1,4 @@
-﻿using LibreHardwareMonitor.Hardware;
+﻿
 using NLog;
 using System;
 //using System.Collections;
@@ -83,8 +83,7 @@ namespace XboxGamingBarHelper.Hardware
         private readonly CPU cpu;
         private readonly Device device;
 
-        private readonly Computer computer;
-        private readonly IVisitor updateVisitor;
+        private readonly IHardwareProvider hardwareProvider;
         private readonly IntPtr ryzenAdjHandle;
 
         public CPUUsageSensor CPUUsage { get; }
@@ -125,48 +124,22 @@ namespace XboxGamingBarHelper.Hardware
             get { return maxTDP; }
         }
 
+        private readonly TDPControlSupportProperty tdpControlSupport;
+        public TDPControlSupportProperty TDPControlSupport
+        {
+            get { return tdpControlSupport; }
+        }
+
         internal HardwareManager(AppServiceConnection connection) : base(connection)
         {
-            // Initialize the computer sensors
-            computer = new Computer
-            {
-                IsCpuEnabled = true,
-                IsGpuEnabled = true,
-                IsMemoryEnabled = true,
-                IsMotherboardEnabled = true,
-                IsControllerEnabled = true,
-                IsNetworkEnabled = true,
-                IsStorageEnabled = true,
-                IsBatteryEnabled = true,
-            };
-            updateVisitor = new UpdateVisitor();
-            computer.Open();
-            computer.Accept(updateVisitor);
+#if STORE
+            hardwareProvider = new WindowsHardwareProvider();
+#else
+            hardwareProvider = new LibreHardwareProvider();
+#endif
 
-            var cpuId = string.Empty;
-            var mainboardId = string.Empty;
-            foreach (IHardware hardware in computer.Hardware)
-            {
-                var properties = string.Empty;
-                if (hardware.Properties.Count > 0)
-                {
-                    foreach (var property in hardware.Properties)
-                    {
-                        properties = properties.Length == 0 ? $"{property.Key}:{property.Value}" : $"{properties}, {property.Key}:{property.Value}";
-                    }
-                }
-
-                Logger.Info($"Found hardware {hardware.HardwareType}: Name={hardware.Name}, Type={hardware.HardwareType}, Id={hardware.Identifier}, Properties={properties}");
-                if (hardware.HardwareType == HardwareType.Cpu)
-                {
-                    cpuId = hardware.Name;
-                }
-
-                if (hardware.HardwareType == HardwareType.Motherboard)
-                {
-                    mainboardId = hardware.Name;
-                }
-            }
+            var cpuId = hardwareProvider.GetCpuName();
+            var mainboardId = hardwareProvider.GetMotherboardName();
 
             cpu = CPUFactory.Create(cpuId);
             Logger.Info($"Initialized CPU: {cpu.Name} (\"{cpuId}\")");
@@ -206,19 +179,26 @@ namespace XboxGamingBarHelper.Hardware
                 BatteryChargeRate,
             };
 
-            ryzenAdjHandle = RyzenAdj.init_ryzenadj();
             var initialTDP = 25;
+#if !STORE
+            ryzenAdjHandle = RyzenAdj.init_ryzenadj();
             if (ryzenAdjHandle == IntPtr.Zero)
             {
-                Logger.Error("Failed to initialize RyzenAdj");
+                Logger.Error("RyzenAdj initialized failed.");
+                tdpControlSupport = new TDPControlSupportProperty(false, this);
             }
             else
             {
                 RyzenAdj.refresh_table(ryzenAdjHandle);
                 // RyzenAdj.set_fast_limit(ryzenAdjHandle, 30000);
                 initialTDP = (int)RyzenAdj.get_fast_limit(ryzenAdjHandle);
-                Logger.Info($"RyzenAdj initialized successfully at {initialTDP}W");
+                Logger.Info($"RyzenAdj initialized successfully at {initialTDP}W.");
+                tdpControlSupport = new TDPControlSupportProperty(true, this);
             }
+#else
+            Logger.Info("RyzenAdj is disabled due to Microsoft Store restrictions.");
+            tdpControlSupport = new TDPControlSupportProperty(false, this);
+#endif
 
             minTDP = new MinTDPProperty(device.GetMinTDP(), this);
             maxTDP = new MaxTDPProperty(device.GetMaxTDP(), this);
@@ -240,36 +220,25 @@ namespace XboxGamingBarHelper.Hardware
                 Logger.Info($"set_max={setMaxResult} set_min={setMinResult} set={"123"}");
             }*/
 
-            foreach (var hardwareSensor in hardwareSensors)
-            {
-                hardwareSensor.Value = -1.0f;
-            }
+            hardwareProvider.Update();
 
-            if (computer == null)
-                return;
+            CPUClock.Value = hardwareProvider.GetCpuClock();
+            CPUUsage.Value = hardwareProvider.GetCpuUsage();
+            CPUWattage.Value = hardwareProvider.GetCpuWattage();
+            CPUTemperature.Value = hardwareProvider.GetCpuTemperature();
 
-            computer.Accept(updateVisitor);
-            foreach (IHardware hardware in computer.Hardware)
-            {
-                foreach (ISensor sensor in hardware.Sensors)
-                {
-                    //Logger.Info("[2] Hardware {3} Sensor: {0}, value: {1}, type: {2}", sensor.Name, sensor.Value, sensor.SensorType.ToString(), hardware.Name);
+            GPUClock.Value = hardwareProvider.GetGpuClock();
+            GPUUsage.Value = hardwareProvider.GetGpuUsage();
+            GPUWattage.Value = hardwareProvider.GetGpuWattage();
+            GPUTemperature.Value = hardwareProvider.GetGpuTemperature();
 
-                    HardwareSensor hardwareSensorFound = null;
-                    foreach (var hardwareSensor in hardwareSensors)
-                    {
-                        if (hardwareSensor.HardwareType == hardware.HardwareType && hardwareSensor.SensorType == sensor.SensorType && hardwareSensor.SensorName == sensor.Name)
-                        {
-                            hardwareSensorFound = hardwareSensor;
-                            break;
-                        }
-                    }
-                    if (hardwareSensorFound != null)
-                    {
-                        hardwareSensorFound.Value = sensor.Value ?? -1;
-                    }
-                }
-            }
+            MemoryUsage.Value = hardwareProvider.GetMemoryUsage();
+            MemoryUsed.Value = hardwareProvider.GetMemoryUsed();
+
+            BatteryLevel.Value = hardwareProvider.GetBatteryLevel();
+            BatteryRemainingTime.Value = hardwareProvider.GetBatteryRemainingTime();
+            BatteryDischargeRate.Value = hardwareProvider.GetBatteryDischargeRate();
+            BatteryChargeRate.Value = hardwareProvider.GetBatteryChargeRate();
         }
 
         public int GetTDP()
