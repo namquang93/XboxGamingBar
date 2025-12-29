@@ -189,7 +189,10 @@ namespace XboxGamingBarHelper.Windows
         private const int CDS_UPDATEREGISTRY = 0x01;
         private const int CDS_TEST = 0x02;
         private const int DISP_CHANGE_SUCCESSFUL = 0;
-        private const int DM_DISPLAYFREQUENCY = 0x400000;
+        private const int DM_PELSWIDTH = 0x00080000;
+        private const int DM_PELSHEIGHT = 0x00100000;
+        private const int DM_DISPLAYFREQUENCY = 0x00400000;
+        private const int DM_DISPLAYORIENTATION = 0x00000080;
 
         public static int GetCurrentRefreshRate()
         {
@@ -259,7 +262,7 @@ namespace XboxGamingBarHelper.Windows
             }
 
             mode.dmDisplayFrequency = targetRate;
-            mode.dmFields = DM_DISPLAYFREQUENCY;
+            mode.dmFields |= DM_DISPLAYFREQUENCY;
 
             // Test before applying
             int testResult = ChangeDisplaySettings(ref mode, CDS_TEST);
@@ -372,10 +375,18 @@ namespace XboxGamingBarHelper.Windows
             // Apply new resolution
             dm.dmPelsWidth = (int)width;
             dm.dmPelsHeight = (int)height;
-            dm.dmFields = 0x00080000 | 0x00100000; // DM_PELSWIDTH | DM_PELSHEIGHT
+            dm.dmFields |= DM_PELSWIDTH | DM_PELSHEIGHT;
 
             // Optional test first
             int testResult = ChangeDisplaySettings(ref dm, CDS_TEST);
+            if (testResult != DISP_CHANGE_SUCCESSFUL)
+            {
+                Logger.Warn($"Test failed for {width}x{height} with current settings. Trying without frequency flag.");
+                // Fallback: Remove frequency flag to let Windows pick a safe one for this resolution.
+                dm.dmFields &= ~DM_DISPLAYFREQUENCY;
+                testResult = ChangeDisplaySettings(ref dm, CDS_TEST);
+            }
+
             if (testResult != DISP_CHANGE_SUCCESSFUL)
             {
                 Console.WriteLine("Resolution not supported.");

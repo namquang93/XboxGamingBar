@@ -10,6 +10,7 @@ using Windows.ApplicationModel.AppService;
 using System.Collections.Generic;
 using Shared.Utilities;
 using Microsoft.Win32;
+using System.Timers;
 
 namespace XboxGamingBarHelper.Systems
 {
@@ -96,6 +97,7 @@ namespace XboxGamingBarHelper.Systems
         // Keep track to current opening windows to determine currently running game.
         private Dictionary<int, ProcessWindow> ProcessWindows { get; }
         private Dictionary<int, AppEntry> AppEntries { get; }
+        private readonly Timer displayUpdateTimer;
 
         public event ResumeFromSleepEventHandler ResumeFromSleep;
 
@@ -123,6 +125,10 @@ namespace XboxGamingBarHelper.Systems
             {
                 Logger.Info($"Supported native resolution: {res.Width}x{res.Height} vs {resolution.Width}x{resolution.Height}");
             }
+
+            displayUpdateTimer = new Timer(500); // 500ms debounce
+            displayUpdateTimer.AutoReset = false;
+            displayUpdateTimer.Elapsed += DisplayUpdateTimer_Elapsed;
 
             SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
             SystemEvents.DisplaySettingsChanged += SystemEvents_DisplaySettingsChanged;
@@ -292,7 +298,14 @@ namespace XboxGamingBarHelper.Systems
 
         private void SystemEvents_DisplaySettingsChanged(object sender, EventArgs e)
         {
-            Logger.Info("Display settings changed, updating resolution and refresh rates.");
+            Logger.Info("Display settings change detected, debouncing update.");
+            displayUpdateTimer.Stop();
+            displayUpdateTimer.Start();
+        }
+
+        private void DisplayUpdateTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            Logger.Info("Debounced display update triggered.");
 
             var supportedRefreshRates = User32.GetSupportedRefreshRates();
             refreshRates.SetValue(supportedRefreshRates);
