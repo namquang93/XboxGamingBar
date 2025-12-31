@@ -57,9 +57,9 @@
                 <Window>
                   <Size>
                     <Height>670</Height>
-                    <Width>464</Width>
+                    <Width>500</Width>
                     <MinHeight>670</MinHeight>
-                    <MinWidth>464</MinWidth>
+                    <MinWidth>500</MinWidth>
                     <MaxHeight>670</MaxHeight>
                     <MaxWidth>900</MaxWidth>
                   </Size>

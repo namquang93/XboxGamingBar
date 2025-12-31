@@ -7,7 +7,7 @@
     xmlns:converter="using:XboxGamingBar.Converter"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    d:DesignHeight="670" d:DesignWidth="464">
+    d:DesignHeight="670" d:DesignWidth="500">
 
     <Page.Resources>
         <converter:WattStringConverter x:Key="WattStringConverter"/>
@@ -22,15 +22,15 @@
     <Grid x:Name="RootGrid">
         <ProgressRing x:Name="LoadingProgressRing" IsActive="True" Visibility="Collapsed" Width="100" Height="100" VerticalAlignment="Center" HorizontalAlignment="Center" Canvas.ZIndex="1"/>
 
-        <!-- Tab Navigation Icons -->
-        <FontIcon Glyph="&#xEB3E;" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="12,16,0,0" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" IsHitTestVisible="False"/>
-        <FontIcon Glyph="&#xEB3F;" FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,16,12,0" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" IsHitTestVisible="False"/>
+        <!-- Tab Navigation Indicators -->
+        <TextBlock Text="[LT]" FontWeight="Bold" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,14,0,0" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" IsHitTestVisible="False"/>
+        <TextBlock Text="[RT]" FontWeight="Bold" FontSize="14" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,14,5,0" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" IsHitTestVisible="False"/>
         
         <Pivot x:Name="MainPivot">
             <!-- PERFORMANCE TAB -->
             <PivotItem>
                 <PivotItem.Header>
-                    <StackPanel Orientation="Horizontal">
+                    <StackPanel Orientation="Horizontal" Margin="25,0,0,0">
                         <FontIcon Glyph="&#xE9D2;" Margin="0,0,8,0" FontSize="16" VerticalAlignment="Center"/>
                         <TextBlock Text="Performance" FontWeight="Bold" VerticalAlignment="Center"/>
                     </StackPanel>
@@ -132,7 +132,7 @@
             <!-- SYSTEM TAB -->
             <PivotItem>
                 <PivotItem.Header>
-                    <StackPanel Orientation="Horizontal">
+                    <StackPanel Orientation="Horizontal" Margin="10,0,10,0">
                         <FontIcon Glyph="&#xE770;" Margin="0,0,8,0" FontSize="16" VerticalAlignment="Center"/>
                         <TextBlock Text="System" FontWeight="Bold" VerticalAlignment="Center"/>
                     </StackPanel>
@@ -167,7 +167,7 @@
             <!-- AMD SETTINGS TAB -->
             <PivotItem x:Name="AMDPivotItem" Visibility="Collapsed">
                 <PivotItem.Header>
-                    <StackPanel Orientation="Horizontal">
+                    <StackPanel Orientation="Horizontal" Margin="0,0,25,0">
                         <FontIcon Glyph="&#xE945;" Margin="0,0,8,0" FontSize="16" VerticalAlignment="Center"/>
                         <TextBlock Text="AMD" FontWeight="Bold" VerticalAlignment="Center"/>
                     </StackPanel>
