@@ -15,6 +15,8 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Windows.UI.Xaml.Input;
+using Windows.System;
 using XboxGamingBar.Data;
 using XboxGamingBar.Event;
 
@@ -158,6 +160,45 @@ namespace XboxGamingBar
                 amdRadeonChillMaxFPSProperty,
                 focusingOnOSDSlider
             );
+
+            this.KeyDown += GamingWidget_KeyDown;
+        }
+
+        private void GamingWidget_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == VirtualKey.GamepadLeftTrigger)
+            {
+                NavigatePivot(-1);
+                e.Handled = true;
+            }
+            else if (e.Key == VirtualKey.GamepadRightTrigger)
+            {
+                NavigatePivot(1);
+                e.Handled = true;
+            }
+        }
+
+        private void NavigatePivot(int direction)
+        {
+            int count = MainPivot.Items.Count;
+            if (count <= 1) return;
+
+            int currentIndex = MainPivot.SelectedIndex;
+            int nextIndex = currentIndex;
+
+            // Try to find the next visible PivotItem
+            for (int i = 0; i < count; i++)
+            {
+                nextIndex = (nextIndex + direction + count) % count;
+                if (MainPivot.Items[nextIndex] is PivotItem item && item.Visibility == Visibility.Visible)
+                {
+                    MainPivot.SelectedIndex = nextIndex;
+                    break;
+                }
+
+                // If we've circled back to current, stop
+                if (nextIndex == currentIndex) break;
+            }
         }
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
