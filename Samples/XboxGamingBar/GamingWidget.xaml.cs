@@ -87,7 +87,7 @@ namespace XboxGamingBar
             InitializeComponent();
             minTDP = new MinTDPProperty(TDPSlider, this);
             maxTDP = new MaxTDPProperty(TDPSlider, this);
-            tdpControlSupport = new TDPControlSupportProperty(TDPSlider, this, TDPLimitText, TDPValueText);
+            tdpControlSupport = new TDPControlSupportProperty(TDPSlider, this, TDPHeaderGrid);
             tdp = new TDPProperty(4, TDPSlider, this);
             osd = new OSDProperty(0, PerformanceOverlaySlider, this);
             runningGame = new RunningGameProperty(RunningGameText, PerGameProfileToggle, this);
@@ -103,7 +103,7 @@ namespace XboxGamingBar
             trackedGame = new TrackedGameProperty(new TrackedGame());
             onScreenDisplayProviderInstalled = new OnScreenDisplayProviderInstalledProperty(PerformanceOverlaySlider, this);
             isForeground = new IsForegroundProperty();
-            amdSettingsSupported = new AMDSettingsSupportedProperty(AMDText, this, AMDTextLine, AMDRadeonSuperResolutionToggle,
+            amdSettingsSupported = new AMDSettingsSupportedProperty(AMDPivotItem, this, AMDRadeonSuperResolutionToggle,
                 AMDRadeonSuperResolutionText, AMDFluidMotionFrameToggle, AMDFluidMotionFrameText, AMDRadeonAntiLagToggle, AMDRadeonAntiLagText,
                 AMDRadeonBoostToggle, AMDRadeonBoostText, AMDRadeonChillToggle, AMDRadeonChillText);
             amdRadeonSuperResolutionEnabled = new AMDRadeonSuperResolutionEnabledProperty(AMDRadeonSuperResolutionToggle, this);

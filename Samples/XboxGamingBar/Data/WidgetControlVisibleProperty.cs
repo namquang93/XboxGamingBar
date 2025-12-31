@@ -28,19 +28,28 @@ namespace XboxGamingBar.Data
             {
                 await Owner.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
-                    Logger.Debug($"{(Value ? "Show" : "Hide")} {UI} property changed.");
+                    Logger.Debug($"{(Value ? "Show" : "Hide")} {GetUIName(UI)} property changed.");
                     UI.Visibility = Value ? Visibility.Visible : Visibility.Collapsed;
 
                     foreach (var additionalUI in AdditionalUIs)
                     {
                         if (additionalUI != null)
                         {
-                            Logger.Debug($"{(Value ? "Show" : "Hide")} {additionalUI} property changed.");
+                            Logger.Debug($"{(Value ? "Show" : "Hide")} {GetUIName(additionalUI)} property changed.");
                             additionalUI.Visibility = Value ? Visibility.Visible : Visibility.Collapsed;
                         }
                     }
                 });
             }
+        }
+
+        private static string GetUIName(UIType ui)
+        {
+            if (ui is FrameworkElement fe && !string.IsNullOrEmpty(fe.Name))
+            {
+                return fe.Name;
+            }
+            return ui.GetType().Name;
         }
     }
 }
