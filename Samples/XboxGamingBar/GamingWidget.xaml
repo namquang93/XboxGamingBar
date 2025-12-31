@@ -24,7 +24,13 @@
         
         <Pivot x:Name="MainPivot">
             <!-- PERFORMANCE TAB -->
-            <PivotItem Header="Performance">
+            <PivotItem>
+                <PivotItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <FontIcon Glyph="&#xE9D2;" Margin="0,0,8,0" FontSize="16" VerticalAlignment="Center"/>
+                        <TextBlock Text="Performance" FontWeight="Bold" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </PivotItem.Header>
                 <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                     <Grid Margin="3,10,3,15">
                         <Grid.RowDefinitions>
@@ -120,7 +126,13 @@
             </PivotItem>
 
             <!-- SYSTEM TAB -->
-            <PivotItem Header="System">
+            <PivotItem>
+                <PivotItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <FontIcon Glyph="&#xE770;" Margin="0,0,8,0" FontSize="16" VerticalAlignment="Center"/>
+                        <TextBlock Text="System" FontWeight="Bold" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </PivotItem.Header>
                 <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                     <Grid Margin="3,10,3,15">
                         <Grid.RowDefinitions>
@@ -149,7 +161,13 @@
             </PivotItem>
 
             <!-- AMD SETTINGS TAB -->
-            <PivotItem x:Name="AMDPivotItem" Header="AMD" Visibility="Collapsed">
+            <PivotItem x:Name="AMDPivotItem" Visibility="Collapsed">
+                <PivotItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <FontIcon Glyph="&#xE945;" Margin="0,0,8,0" FontSize="16" VerticalAlignment="Center"/>
+                        <TextBlock Text="AMD" FontWeight="Bold" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </PivotItem.Header>
                 <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                     <Grid Margin="3,10,3,15">
                         <Grid.RowDefinitions>
@@ -167,7 +185,7 @@
                         </Grid.RowDefinitions>
 
                         <Grid Grid.Row="0">
-                            <TextBlock x:Name="AMDRadeonSuperResolutionText" Text="Radeon Super Res" FontWeight="SemiBold" FontSize="18"
+                            <TextBlock x:Name="AMDRadeonSuperResolutionText" Text="Radeon Super Resolution" FontWeight="SemiBold" FontSize="18"
                                 TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" HorizontalAlignment="Left" VerticalAlignment="Center" />
                             <ToggleSwitch x:Name="AMDRadeonSuperResolutionToggle" IsEnabled="False" OffContent="Disabled" OnContent="{Binding ElementName=AMDRadeonSuperResolutionSharpnessSlider, Path=Value, Converter={StaticResource SharpnessPercentStringConverter}}"
                                 FlowDirection="RightToLeft" VerticalAlignment="Center" HorizontalAlignment="Right"/>
@@ -181,7 +199,7 @@
                             Visibility="{Binding ElementName=AMDRadeonSuperResolutionToggle, Path=IsOn, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
                         <Grid Grid.Row="2">
-                            <TextBlock x:Name="AMDFluidMotionFrameText" Text="Fluid Motion Frame" FontWeight="SemiBold" FontSize="18"
+                            <TextBlock x:Name="AMDFluidMotionFrameText" Text="AMD Fluid Motion Frame" FontWeight="SemiBold" FontSize="18"
                                 TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                             <ToggleSwitch x:Name="AMDFluidMotionFrameToggle" IsEnabled="False" OffContent="Disabled" OnContent="Enabled"
                                 FlowDirection="RightToLeft" VerticalAlignment="Center" HorizontalAlignment="Right" />
