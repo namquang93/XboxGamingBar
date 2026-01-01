@@ -191,7 +191,7 @@
             <!-- AMD SETTINGS TAB -->
             <PivotItem x:Name="AMDPivotItem" Visibility="Collapsed">
                 <PivotItem.Header>
-                    <StackPanel Orientation="Horizontal" Margin="0,0,25,0">
+                    <StackPanel x:Name="AMDPivotItemStackPanel" Orientation="Horizontal" Margin="0,0,25,0" Visibility="Collapsed">
                         <FontIcon Glyph="&#xE945;" Margin="0,0,8,0" FontSize="16" VerticalAlignment="Center"/>
                         <TextBlock Text="AMD" FontWeight="SemiBold" VerticalAlignment="Center"/>
                     </StackPanel>

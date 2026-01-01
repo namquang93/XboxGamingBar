@@ -112,7 +112,7 @@ namespace XboxGamingBar
             trackedGame = new TrackedGameProperty(new TrackedGame());
             onScreenDisplayProviderInstalled = new OnScreenDisplayProviderInstalledProperty(PerformanceOverlaySlider, this);
             isForeground = new IsForegroundProperty();
-            amdSettingsSupported = new AMDSettingsSupportedProperty(AMDPivotItem, this, AMDRadeonSuperResolutionToggle,
+            amdSettingsSupported = new AMDSettingsSupportedProperty(AMDPivotItem, this, AMDPivotItemStackPanel, AMDRadeonSuperResolutionToggle,
                 AMDRadeonSuperResolutionText, AMDFluidMotionFrameToggle, AMDFluidMotionFrameText, AMDRadeonAntiLagToggle, AMDRadeonAntiLagText,
                 AMDRadeonBoostToggle, AMDRadeonBoostText, AMDRadeonChillToggle, AMDRadeonChillText);
             amdRadeonSuperResolutionEnabled = new AMDRadeonSuperResolutionEnabledProperty(AMDRadeonSuperResolutionToggle, this);
