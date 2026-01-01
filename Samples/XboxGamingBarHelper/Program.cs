@@ -7,10 +7,12 @@ using System.ComponentModel;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.AppService;
+using System.Windows.Forms;
 using XboxGamingBarHelper.AMD;
 using XboxGamingBarHelper.Core;
-using XboxGamingBarHelper.OnScreenDisplay;
 using XboxGamingBarHelper.Hardware;
+using XboxGamingBarHelper.Input;
+using XboxGamingBarHelper.OnScreenDisplay;
 using XboxGamingBarHelper.Power;
 using XboxGamingBarHelper.Profile;
 using XboxGamingBarHelper.RTSS;
@@ -32,6 +34,7 @@ namespace XboxGamingBarHelper
         private static PowerManager powerManager;
         private static AMDManager amdManager;
         private static SettingsManager settingsManager;
+        private static InputManager inputManager;
         private static List<IManager> Managers;
         private static AppServiceConnectionStatus appServiceConnectionStatus;
 
@@ -41,15 +44,27 @@ namespace XboxGamingBarHelper
         // Properties
         private static HelperProperties properties;
 
-        static async Task Main(string[] args)
+        //[STAThread]
+        static void Main(string[] args)
         {
-            await Initialize();
+            Run(args);
         }
+
+        static void Run(string[] args)
+        {
+            _ = MainLoopAsync(args);
+            Application.Run();
+        }
+
+        //static async Task Main(string[] args)
+        //{
+        //    await Initialize();
+        //}
 
         /// <summary>
         /// Open connection to UWP app service
         /// </summary>
-        private static async Task Initialize()
+        private static async Task MainLoopAsync(string[] args)
         {
             // Initialize app service connection.
             InitializeConnection();
@@ -75,6 +90,8 @@ namespace XboxGamingBarHelper
             powerManager = new PowerManager(connection);
             Logger.Info("Initialize AMD Manager.");
             amdManager = new AMDManager(connection);
+            Logger.Info("Initialize Input Manager.");
+            inputManager = new InputManager(connection);
             
             Managers = new List<IManager>
             {
@@ -84,7 +101,8 @@ namespace XboxGamingBarHelper
                 systemManager,
                 powerManager,
                 amdManager,
-                settingsManager
+                settingsManager,
+                inputManager
             };
 
             Logger.Info("Initialize properties.");

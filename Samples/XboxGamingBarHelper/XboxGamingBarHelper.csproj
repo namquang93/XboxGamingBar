@@ -440,6 +440,8 @@
     <Compile Include="Profile\GameProfileProperty.cs" />
     <Compile Include="Profile\PerGameProfileProperty.cs" />
     <Compile Include="Profile\ProfileManager.cs" />
+    <Compile Include="Input\InputManager.cs" />
+    <Compile Include="Input\XInput.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RTSS\OSDItem.cs" />
