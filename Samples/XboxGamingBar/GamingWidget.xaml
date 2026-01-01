@@ -20,19 +20,34 @@
     </Page.Resources>
 
     <Grid x:Name="RootGrid">
-        <ProgressRing x:Name="LoadingProgressRing" IsActive="True" Visibility="Collapsed" Width="100" Height="100" VerticalAlignment="Center" HorizontalAlignment="Center" Canvas.ZIndex="1"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-        <!-- Tab Navigation Indicators -->
-        <Border Width="20" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,8,0,0" 
-                BorderBrush="{ThemeResource SystemControlForegroundBaseMediumBrush}" BorderThickness="1.2" CornerRadius="3" Background="Transparent" IsHitTestVisible="False">
-            <TextBlock Text="LT" FontSize="9" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
-        </Border>
-        <Border Width="20" Height="30" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,8,10,0" 
-                BorderBrush="{ThemeResource SystemControlForegroundBaseMediumBrush}" BorderThickness="1.2" CornerRadius="3" Background="Transparent" IsHitTestVisible="False">
-            <TextBlock Text="RT" FontSize="9" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
-        </Border>
-        
-        <Pivot x:Name="MainPivot">
+        <ProgressRing x:Name="LoadingProgressRing" Grid.RowSpan="2" IsActive="True" Visibility="Collapsed" Width="100" Height="100" VerticalAlignment="Center" HorizontalAlignment="Center" Canvas.ZIndex="1"/>
+
+        <!-- Running Game Info (Now at the top) -->
+        <Grid x:Name="GameInfoGrid" Grid.Row="0" Margin="12,12,12,5">
+            <TextBlock x:Name="RunningGameText" Text="No game detected" FontWeight="SemiBold" FontSize="18"
+                TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            <ToggleSwitch x:Name="PerGameProfileToggle" IsEnabled="False" OffContent="Global" OnContent="Per-game"
+                FlowDirection="RightToLeft" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+        </Grid>
+
+        <Grid Grid.Row="1">
+
+            <!-- Tab Navigation Indicators -->
+            <Border Width="20" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,8,0,0" 
+                    BorderBrush="{ThemeResource SystemControlForegroundBaseMediumBrush}" BorderThickness="1.2" CornerRadius="3" Background="Transparent" IsHitTestVisible="False">
+                <TextBlock Text="LT" FontSize="9" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+            </Border>
+            <Border Width="20" Height="30" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,8,10,0" 
+                    BorderBrush="{ThemeResource SystemControlForegroundBaseMediumBrush}" BorderThickness="1.2" CornerRadius="3" Background="Transparent" IsHitTestVisible="False">
+                <TextBlock Text="RT" FontSize="9" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+            </Border>
+            
+            <Pivot x:Name="MainPivot">
             <!-- PERFORMANCE TAB -->
             <PivotItem>
                 <PivotItem.Header>
@@ -48,14 +63,13 @@
                             <RowDefinition Height="32"/>   <!-- 1: Overlay Slider -->
                             <RowDefinition Height="10"/>   <!-- 2: Spacer shortened -->
                             <RowDefinition Height="32"/>   <!-- 3: Overlay Labels -->
-                            <RowDefinition Height="36"/>   <!-- 4: Running Game / Per Game Profile -->
-                            <RowDefinition Height="Auto"/> <!-- 5: TDP Text -->
-                            <RowDefinition Height="32"/>   <!-- 6: TDP Slider -->
-                            <RowDefinition Height="36"/>   <!-- 7: CPU Boost -->
-                            <RowDefinition Height="Auto"/> <!-- 8: CPU EPP Text -->
-                            <RowDefinition Height="32"/>   <!-- 9: CPU EPP Slider -->
-                            <RowDefinition Height="36"/>   <!-- 10: Limit CPU Clock -->
-                            <RowDefinition Height="32"/>   <!-- 11: CPU Clock Slider -->
+                            <RowDefinition Height="Auto"/> <!-- 4: TDP Text (Shifted up) -->
+                            <RowDefinition Height="32"/>   <!-- 5: TDP Slider -->
+                            <RowDefinition Height="36"/>   <!-- 6: CPU Boost -->
+                            <RowDefinition Height="Auto"/> <!-- 7: CPU EPP Text -->
+                            <RowDefinition Height="32"/>   <!-- 8: CPU EPP Slider -->
+                            <RowDefinition Height="36"/>   <!-- 9: Limit CPU Clock -->
+                            <RowDefinition Height="32"/>   <!-- 10: CPU Clock Slider -->
                         </Grid.RowDefinitions>
 
                         <TextBlock x:Name="PerformanceOverlayText" Text="Performance Overlay" FontWeight="SemiBold" FontSize="18" Grid.Row="0"/>
@@ -80,51 +94,41 @@
                             <TextBlock Text="FULL"     Grid.Column="4" HorizontalAlignment="Center" FontSize="16"/>
                         </Grid>
 
-                        <Grid Grid.Row="4">
-                            <TextBlock x:Name="RunningGameText" Text="No game detected" FontWeight="SemiBold" FontSize="18"
-                                TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" Width="220" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                            <ToggleSwitch x:Name="PerGameProfileToggle" IsEnabled="False" OffContent="Global" OnContent="Per-game"
-                                FlowDirection="RightToLeft" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                        </Grid>
-
-                        <Grid Grid.Row="5" Visibility="Collapsed" x:Name="TDPHeaderGrid">
+                        <Grid Grid.Row="4" Visibility="Collapsed" x:Name="TDPHeaderGrid">
                             <TextBlock x:Name="TDPLimitText" Text="Thermal Power (TDP) Limit" FontWeight="SemiBold" FontSize="18" Grid.Row="0"/>
                             <TextBlock x:Name="TDPValueText" Text="{Binding ElementName=TDPSlider, Path=Value, Converter={StaticResource WattStringConverter}}" 
                                 VerticalAlignment="Center" HorizontalAlignment="Right"/>
                         </Grid>
-                        <Slider x:Name="TDPSlider" Grid.Row="6"
+                        <Slider x:Name="TDPSlider" Grid.Row="5"
                             Minimum="4" Maximum="32"
                             TickFrequency="1"
                             SnapsTo="Ticks"
                             TickPlacement="BottomRight"
                             IsEnabled="False"
                             Visibility="Collapsed"/>
-
-                        <Grid Grid.Row="7">
+                        <Grid Grid.Row="6">
                             <TextBlock x:Name="CPUBoostText" Text="CPU Boost" FontWeight="SemiBold" FontSize="18"
                                 TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                             <ToggleSwitch x:Name="CPUBoostToggle" IsEnabled="False" OffContent="Disabled" OnContent="Aggressive"
                                 FlowDirection="RightToLeft" VerticalAlignment="Center" HorizontalAlignment="Right" />
                         </Grid>
-
-                        <Grid Grid.Row="8">
+                        <Grid Grid.Row="7">
                             <TextBlock x:Name="CPUEPPText" Text="Energy Pref (EPP)" FontWeight="SemiBold" FontSize="18"/>
                             <TextBlock x:Name="CPUEPPValueText" Text="{Binding ElementName=CPUEPPSlider, Path=Value}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                         </Grid>
-                        <Slider x:Name="CPUEPPSlider" Grid.Row="9"
+                        <Slider x:Name="CPUEPPSlider" Grid.Row="8"
                             Minimum="10" Maximum="95"
                             TickFrequency="5"
                             SnapsTo="Ticks"
                             TickPlacement="BottomRight"
                             IsEnabled="False"/>
-
-                        <Grid Grid.Row="10">
+                        <Grid Grid.Row="9">
                             <TextBlock x:Name="LimitCPUClockText" Text="Limit CPU Clock" FontWeight="SemiBold" FontSize="18"
                                 TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                             <ToggleSwitch x:Name="LimitCPUClockToggle" IsEnabled="False" OffContent="Disabled" OnContent="{Binding ElementName=CPUClockMaxSlider, Path=Value, Converter={StaticResource MegahertzStringConverter}}"
                                 FlowDirection="RightToLeft" VerticalAlignment="Center" HorizontalAlignment="Right" />
                         </Grid>
-                        <Slider x:Name="CPUClockMaxSlider" Grid.Row="11"
+                        <Slider x:Name="CPUClockMaxSlider" Grid.Row="10"
                             Minimum="300" Maximum="5100"
                             TickFrequency="100"
                             SnapsTo="Ticks"
@@ -269,12 +273,13 @@
             </PivotItem>
         </Pivot>
 
-        <!-- Thin line below the tabs -->
-        <Border BorderBrush="{ThemeResource SystemControlForegroundBaseMediumLowBrush}" 
-                BorderThickness="0,0,0,1" 
-                VerticalAlignment="Top" 
-                Height="48" 
-                IsHitTestVisible="False"/>
+            <!-- Thin line below the tabs -->
+            <Border BorderBrush="{ThemeResource SystemControlForegroundBaseMediumLowBrush}" 
+                    BorderThickness="0,0,0,1" 
+                    VerticalAlignment="Top" 
+                    Height="48" 
+                    IsHitTestVisible="False"/>
+        </Grid>
     </Grid>
 
 
