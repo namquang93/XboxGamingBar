@@ -87,6 +87,7 @@ namespace XboxGamingBar
         private readonly WidgetProperties properties;
 
         private bool isListeningForKeyBinding = false;
+        private bool isFirstKeyCaptured = false;
 
         public GamingWidget()
         {
@@ -168,6 +169,31 @@ namespace XboxGamingBar
             );
 
             this.KeyDown += GamingWidget_KeyDown;
+            this.MainPivot.SelectionChanged += MainPivot_SelectionChanged;
+            this.LosslessScalingBindingButton.LostFocus += LosslessScalingBindingButton_LostFocus;
+        }
+
+        private void LosslessScalingBindingButton_LostFocus(object sender, RoutedEventArgs e)
+        {
+            CancelListening();
+        }
+
+        private void MainPivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            CancelListening();
+        }
+
+        private void CancelListening()
+        {
+            if (isListeningForKeyBinding)
+            {
+                isListeningForKeyBinding = false;
+                if (!isFirstKeyCaptured)
+                {
+                    losslessScalingShortcut.RefreshUI();
+                }
+                LosslessScalingBindingButton.IsEnabled = true;
+            }
         }
 
         private void GamingWidget_KeyDown(object sender, KeyRoutedEventArgs e)
@@ -177,7 +203,28 @@ namespace XboxGamingBar
                 // Capture the gamepad key
                 if (e.Key.ToString().Contains("Gamepad"))
                 {
-                    List<int> keys = new List<int>(losslessScalingShortcut.Value);
+                    // Allow navigation if no key has been captured yet? 
+                    // Or prioritize capturing. Let's allow DPad/Stick navigation to cancel listening.
+                    if (e.Key == VirtualKey.GamepadDPadUp || e.Key == VirtualKey.GamepadDPadDown || 
+                        e.Key == VirtualKey.GamepadDPadLeft || e.Key == VirtualKey.GamepadDPadRight ||
+                        e.Key == VirtualKey.GamepadLeftThumbstickUp || e.Key == VirtualKey.GamepadLeftThumbstickDown ||
+                        e.Key == VirtualKey.GamepadLeftThumbstickLeft || e.Key == VirtualKey.GamepadLeftThumbstickRight)
+                    {
+                        CancelListening();
+                        return; // Let the event bubble up for navigation
+                    }
+
+                    List<int> keys;
+                    if (!isFirstKeyCaptured)
+                    {
+                        keys = new List<int>();
+                        isFirstKeyCaptured = true;
+                    }
+                    else
+                    {
+                        keys = new List<int>(losslessScalingShortcut.Value);
+                    }
+
                     if (!keys.Contains((int)e.Key))
                     {
                         keys.Add((int)e.Key);
@@ -216,10 +263,29 @@ namespace XboxGamingBar
         private void LosslessScalingBindingButton_Click(object sender, RoutedEventArgs e)
         {
             isListeningForKeyBinding = true;
-            losslessScalingShortcut.SetValue(new List<int>());
-            LosslessScalingBindingButton.Content = "...";
-            // Disable button so it doesn't fire again while listening
-            // LosslessScalingBindingButton.IsEnabled = false; // Optional
+            isFirstKeyCaptured = false;
+            
+            StartListeningTimeout();
+        }
+
+        private async void StartListeningTimeout()
+        {
+            // Give the user 5 seconds to press any gamepad key
+            for (int i = 5; i > 0; i--)
+            {
+                if (!isListeningForKeyBinding || isFirstKeyCaptured)
+                {
+                    return;
+                }
+                LosslessScalingBindingButton.Content = i.ToString();
+                await Task.Delay(1000);
+            }
+
+            if (isListeningForKeyBinding && !isFirstKeyCaptured)
+            {
+                isListeningForKeyBinding = false;
+                losslessScalingShortcut.RefreshUI();
+            }
         }
 
         private void NavigatePivot(int direction)

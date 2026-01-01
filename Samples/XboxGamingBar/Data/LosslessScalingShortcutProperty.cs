@@ -17,6 +17,11 @@ namespace XboxGamingBar.Data
             button = inUI;
         }
 
+        public void RefreshUI()
+        {
+            NotifyPropertyChanged();
+        }
+
         protected override async void NotifyPropertyChanged(string propertyName = "")
         {
             base.NotifyPropertyChanged(propertyName);
