@@ -90,7 +90,7 @@ namespace XboxGamingBarHelper.Input
                                     }
                                 }
 
-                                if (allKeysPressed && shortcutKeys.Count > 0)
+                                if (allKeysPressed && shortcutKeys.Count >= 2)
                                 {
                                     // Debounce: Check if they were NOT all pressed in the previous state
                                     bool wasPressedBefore = true;
