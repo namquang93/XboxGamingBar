@@ -41,5 +41,6 @@
         Support_TDPControl,
         Support_PerformanceOverlay,
         Support_AMDSettings,
+        LosslessScalingShortcut,
     }
 }

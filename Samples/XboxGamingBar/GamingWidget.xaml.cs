@@ -65,6 +65,7 @@ namespace XboxGamingBar
         private readonly OnScreenDisplayProviderInstalledProperty onScreenDisplayProviderInstalled;
         private readonly IsForegroundProperty isForeground;
         private readonly FocusingOnOSDSliderProperty focusingOnOSDSlider;
+        private readonly LosslessScalingShortcutProperty losslessScalingShortcut;
 
         // AMD properties
         private readonly AMDSettingsSupportedProperty amdSettingsSupported;
@@ -127,6 +128,7 @@ namespace XboxGamingBar
             amdRadeonChillMinFPSProperty = new AMDRadeonChillMinFPSProperty(AMDRadeonChillMinFPSSlider, this);
             amdRadeonChillMaxFPSProperty = new AMDRadeonChillMaxFPSProperty(AMDRadeonChillMaxFPSSlider, this);
             focusingOnOSDSlider = new FocusingOnOSDSliderProperty(PerformanceOverlaySlider, this);
+            losslessScalingShortcut = new LosslessScalingShortcutProperty(LosslessScalingBindingButton, new List<int>());
 
             properties = new WidgetProperties(
                 osd,
@@ -162,7 +164,8 @@ namespace XboxGamingBar
                 amdRadeonChillSupported,
                 amdRadeonChillMinFPSProperty,
                 amdRadeonChillMaxFPSProperty,
-                focusingOnOSDSlider
+                focusingOnOSDSlider,
+                losslessScalingShortcut
             );
 
             this.KeyDown += GamingWidget_KeyDown;
@@ -211,6 +214,9 @@ namespace XboxGamingBar
             {
                 isListeningForKeyBinding = false;
                 LosslessScalingBindingButton.IsEnabled = true;
+
+                // Save to property
+                losslessScalingShortcut.SetValue(capturedKeys.Select(k => (int)k).ToList());
             }
         }
 
@@ -222,7 +228,7 @@ namespace XboxGamingBar
             }
             else
             {
-                LosslessScalingBindingButton.Content = string.Join(" + ", capturedKeys.Select(k => k.ToString().Replace("Gamepad", "")));
+                LosslessScalingBindingButton.Content = string.Join(" + ", capturedKeys.Select(k => LosslessScalingShortcutProperty.FormatGamepadKey(k)));
             }
         }
 
