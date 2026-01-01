@@ -131,6 +131,7 @@ namespace XboxGamingBarHelper
                 systemManager.TrackedGame,
                 settingsManager.OnScreenDisplayProviderInstalled,
                 settingsManager.IsForeground,
+                settingsManager.IsListeningForKeyBinding,
                 amdManager.AMDSettingsSupported,
                 amdManager.AMDRadeonSuperResolutionEnabled,
                 amdManager.AMDRadeonSuperResolutionSupported,

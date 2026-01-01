@@ -42,5 +42,6 @@
         Support_PerformanceOverlay,
         Support_AMDSettings,
         LosslessScalingShortcut,
+        IsListeningForKeyBinding
     }
 }

@@ -105,6 +105,7 @@
     <Compile Include="Data\AMDSettingsSupportedProperty.cs" />
     <Compile Include="Data\CPUBoostProperty.cs" />
     <Compile Include="Data\FocusingOnOSDSliderProperty.cs" />
+    <Compile Include="Data\IsListeningForKeyBindingProperty.cs" />
     <Compile Include="Data\IsForegroundProperty.cs" />
     <Compile Include="Data\LimitCPUClockProperty.cs" />
     <Compile Include="Data\CPUClockMaxProperty.cs" />

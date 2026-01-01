@@ -411,6 +411,7 @@
     <Compile Include="Hardware\CPUs\AMD\AMD_Ryzen_Z2_Extreme.cs" />
     <Compile Include="Hardware\CPUs\GenericCPU.cs" />
     <Compile Include="Settings\IsForegroundProperty.cs" />
+    <Compile Include="Settings\IsListeningForKeyBindingProperty.cs" />
     <Compile Include="Settings\LosslessScalingManager.cs" />
     <Compile Include="Settings\LosslessScalingShortcutProperty.cs" />
     <Compile Include="Settings\OnScreenDisplayProviderProperty.cs" />

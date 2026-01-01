@@ -78,7 +78,15 @@ namespace XboxGamingBarHelper.Input
                             if (settings != null && settings.LosslessScalingShortcut != null && settings.LosslessScalingShortcut.Value != null)
                             {
                                 List<int> shortcutKeys = settings.LosslessScalingShortcut.Value;
-                                
+                                Logger.Debug($"Checking Lossless Scaling hotkey: [{string.Join(",", shortcutKeys)}]");
+
+                                if (settings.IsListeningForKeyBinding.Value)
+                                {
+                                    // Skip detection if we are listening for key binding
+                                    previousState = currentState;
+                                    continue;
+                                }
+
                                 // Check if all keys in the shortcut are pressed
                                 bool allKeysPressed = true;
                                 foreach (int keyVal in shortcutKeys)

@@ -84,9 +84,11 @@ namespace XboxGamingBar
         private readonly AMDRadeonChillMinFPSProperty amdRadeonChillMinFPSProperty;
         private readonly AMDRadeonChillMaxFPSProperty amdRadeonChillMaxFPSProperty;
 
+        private readonly IsListeningForKeyBindingProperty isListeningForKeyBinding;
+
         private readonly WidgetProperties properties;
 
-        private bool isListeningForKeyBinding = false;
+        //private bool isListeningForKeyBinding = false;
         private bool isFirstKeyCaptured = false;
 
         public GamingWidget()
@@ -128,6 +130,7 @@ namespace XboxGamingBar
             amdRadeonChillMinFPSProperty = new AMDRadeonChillMinFPSProperty(AMDRadeonChillMinFPSSlider, this);
             amdRadeonChillMaxFPSProperty = new AMDRadeonChillMaxFPSProperty(AMDRadeonChillMaxFPSSlider, this);
             focusingOnOSDSlider = new FocusingOnOSDSliderProperty(PerformanceOverlaySlider, this);
+            isListeningForKeyBinding = new IsListeningForKeyBindingProperty();
             losslessScalingShortcut = new LosslessScalingShortcutProperty(LosslessScalingBindingButton, new List<int>());
 
             properties = new WidgetProperties(
@@ -165,6 +168,7 @@ namespace XboxGamingBar
                 amdRadeonChillMinFPSProperty,
                 amdRadeonChillMaxFPSProperty,
                 focusingOnOSDSlider,
+                isListeningForKeyBinding,
                 losslessScalingShortcut
             );
 
@@ -187,7 +191,7 @@ namespace XboxGamingBar
         {
             if (isListeningForKeyBinding)
             {
-                isListeningForKeyBinding = false;
+                isListeningForKeyBinding.SetValue(false);
                 if (!isFirstKeyCaptured)
                 {
                     losslessScalingShortcut.RefreshUI();
@@ -252,17 +256,17 @@ namespace XboxGamingBar
         private async void StopListeningWithDelay()
         {
             int currentKeyCount = losslessScalingShortcut.Value.Count;
-            await System.Threading.Tasks.Task.Delay(1000);
+            await Task.Delay(1000);
             if (losslessScalingShortcut.Value.Count == currentKeyCount && isListeningForKeyBinding)
             {
-                isListeningForKeyBinding = false;
+                isListeningForKeyBinding.SetValue(false);
                 LosslessScalingBindingButton.IsEnabled = true;
             }
         }
 
         private void LosslessScalingBindingButton_Click(object sender, RoutedEventArgs e)
         {
-            isListeningForKeyBinding = true;
+            isListeningForKeyBinding.SetValue(true);
             isFirstKeyCaptured = false;
             
             StartListeningTimeout();
@@ -283,7 +287,7 @@ namespace XboxGamingBar
 
             if (isListeningForKeyBinding && !isFirstKeyCaptured)
             {
-                isListeningForKeyBinding = false;
+                isListeningForKeyBinding.SetValue(false);
                 losslessScalingShortcut.RefreshUI();
             }
         }
