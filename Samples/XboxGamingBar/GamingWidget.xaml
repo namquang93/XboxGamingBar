@@ -154,6 +154,9 @@
                             <RowDefinition Height="36"/>   <!-- 1: Refresh Rate -->
                             <RowDefinition Height="10"/>   <!-- 2: Spacer -->
                             <RowDefinition Height="36"/>   <!-- 3: Resolution -->
+                            <RowDefinition Height="20"/>   <!-- 4: Spacer -->
+                            <RowDefinition Height="Auto"/> <!-- 5: Key Bindings Headline -->
+                            <RowDefinition Height="36"/>   <!-- 6: Lossless Scaling Row -->
                         </Grid.RowDefinitions>
 
                         <TextBlock Text="Display" FontWeight="SemiBold" FontSize="18" Grid.Row="0" Margin="0,0,0,5"/>
@@ -172,6 +175,14 @@
                             <ComboBox x:Name="ResolutionsComboBox" PlaceholderText="1920x1080" Width="140" IsEnabled="False" HorizontalAlignment="Right">
                                 <x:String>1920x1080</x:String>
                             </ComboBox>
+                        </Grid>
+
+                        <TextBlock Text="Key Bindings" FontWeight="SemiBold" FontSize="18" Grid.Row="5" Margin="0,0,0,5"/>
+
+                        <Grid Grid.Row="6">
+                            <TextBlock Text="Lossless Scaling" FontWeight="Normal" FontSize="18"
+                                TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                            <Button x:Name="LosslessScalingBindingButton" Content="None" Width="140" HorizontalAlignment="Right" Click="LosslessScalingBindingButton_Click"/>
                         </Grid>
                     </Grid>
                 </ScrollViewer>

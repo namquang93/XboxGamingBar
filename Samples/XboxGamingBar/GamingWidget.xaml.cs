@@ -3,6 +3,7 @@ using NLog;
 using Shared.Data;
 using Shared.Utilities;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
@@ -83,6 +84,9 @@ namespace XboxGamingBar
         private readonly AMDRadeonChillMaxFPSProperty amdRadeonChillMaxFPSProperty;
 
         private readonly WidgetProperties properties;
+
+        private bool isListeningForKeyBinding = false;
+        private List<VirtualKey> capturedKeys = new List<VirtualKey>();
 
         public GamingWidget()
         {
@@ -166,6 +170,27 @@ namespace XboxGamingBar
 
         private void GamingWidget_KeyDown(object sender, KeyRoutedEventArgs e)
         {
+            if (isListeningForKeyBinding)
+            {
+                // Capture the gamepad key
+                if (e.Key.ToString().Contains("Gamepad"))
+                {
+                    if (!capturedKeys.Contains(e.Key))
+                    {
+                        capturedKeys.Add(e.Key);
+                        UpdateBindingButtonContent();
+                    }
+                    e.Handled = true;
+                    // We stop listening after a short delay or when they click again?
+                    // Typically, we stop after they release all buttons or after a timeout.
+                    // For now, let's just stop after one gamepad button is pressed to keep it simple,
+                    // or let them build a combo and press 'A' to confirm? 
+                    // Actually, let's stop listening after 1 second of last key press.
+                    StopListeningWithDelay();
+                }
+                return;
+            }
+
             if (e.Key == VirtualKey.GamepadLeftTrigger)
             {
                 NavigatePivot(-1);
@@ -176,6 +201,38 @@ namespace XboxGamingBar
                 NavigatePivot(1);
                 e.Handled = true;
             }
+        }
+
+        private async void StopListeningWithDelay()
+        {
+            int currentKeyCount = capturedKeys.Count;
+            await System.Threading.Tasks.Task.Delay(1000);
+            if (capturedKeys.Count == currentKeyCount && isListeningForKeyBinding)
+            {
+                isListeningForKeyBinding = false;
+                LosslessScalingBindingButton.IsEnabled = true;
+            }
+        }
+
+        private void UpdateBindingButtonContent()
+        {
+            if (capturedKeys.Count == 0)
+            {
+                LosslessScalingBindingButton.Content = "None";
+            }
+            else
+            {
+                LosslessScalingBindingButton.Content = string.Join(" + ", capturedKeys.Select(k => k.ToString().Replace("Gamepad", "")));
+            }
+        }
+
+        private void LosslessScalingBindingButton_Click(object sender, RoutedEventArgs e)
+        {
+            isListeningForKeyBinding = true;
+            capturedKeys.Clear();
+            LosslessScalingBindingButton.Content = "...";
+            // Disable button so it doesn't fire again while listening
+            // LosslessScalingBindingButton.IsEnabled = false; // Optional
         }
 
         private void NavigatePivot(int direction)
