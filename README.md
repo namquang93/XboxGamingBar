@@ -5,21 +5,33 @@
 XBox Gaming Bar is a helper tool for gamers to control all gaming-related settings using the gamepad/game controller.
 Xbox Gaming Bar is built as an Xbox Game Bar widget as the frontend, and a Win32 helper as the backend tool.
 As of now, there are the following functions:
+
+### Performance Control
 - Performance Overlay using RivaTuner Statistics Server OSD.
-- TDP Limit.
+- TDP Limit **(Not available in Microsoft Store version)**.
 - Per-game Profile.
 - CPU performance adjustments.
   - Enable or disable CPU Boost.
   - Set CPU Energy Performance Preference (EPP).
   - Set CPU clock speed limit.
-- AMD Settings.
+
+![alt text](Screenshots/v4_1.png)
+
+### Quick System Settings
+- Quickly change screen refresh rate and resolution.
+- Binding gamepad keys to some system functions.
+  - Lossless Scaling hotkey.
+
+![alt text](Screenshots/v4_2.png)
+
+### AMD Settings
   - Radeon Super Resolution.
   - AMD Fluid Motion Frame.
   - Radeon Anti-Lag.
   - Radeon Boost.
   - Radeon Chill.
 
-![alt text](Screenshots/v3_2.png)
+![alt text](Screenshots/v4_3.png)
 
 ## Installation
 
@@ -41,6 +53,5 @@ If you have an issue with the application, feel free to create an issue in the [
 
 Xbox Gaming Bar is 100% free and open source. It's built upon C#.
 Libraries used:
-- LibreHardwareMonitor for performance statistics overlay.
-
-- RyzenAdj for AMD TDP control.
+- **[LibreHardwareMonitor](https://github.com/LibreHardwareMonitor/LibreHardwareMonitor)** for performance statistics overlay.
+- **[RyzenAdj](https://github.com/FlyGoat/RyzenAdj)** for AMD TDP control.
