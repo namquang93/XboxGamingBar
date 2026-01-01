@@ -6,6 +6,7 @@ using Windows.ApplicationModel.AppService;
 using XboxGamingBarHelper.Core;
 using XboxGamingBarHelper.Settings;
 using static XboxGamingBarHelper.Input.XInput;
+using Windows.UI.Input.Preview.Injection;
 
 namespace XboxGamingBarHelper.Input
 {
@@ -14,6 +15,7 @@ namespace XboxGamingBarHelper.Input
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private CancellationTokenSource cancellationTokenSource;
         private Task pollingTask;
+        private InputInjector inputInjector;
         
         // State tracking for Controller 0
         private XInputState previousState;
@@ -44,6 +46,7 @@ namespace XboxGamingBarHelper.Input
         public InputManager(AppServiceConnection connection) : base(connection)
         {
             Connection = connection;
+            inputInjector = InputInjector.TryCreate();
             cancellationTokenSource = new CancellationTokenSource();
             pollingTask = Task.Run(() => PollingLoop(cancellationTokenSource.Token));
         }
@@ -103,6 +106,50 @@ namespace XboxGamingBarHelper.Input
                                     if (!wasPressedBefore)
                                     {
                                         Logger.Info($"Lossless Scaling Shortcut triggered! Keys: {string.Join("+", shortcutKeys)}");
+
+                                        // Trigger the Lossless Scaling keyboard hotkey
+                                        var keyboardKeys = LosslessScalingManager.GetHotkey();
+                                        if (keyboardKeys.Count > 0)
+                                        {
+                                            Logger.Info($"Sending Keyboard Input: {string.Join("+", keyboardKeys)}");
+                                            
+                                            // Prepare injected input
+                                            var injectedInputs = new List<InjectedInputKeyboardInfo>();
+                                            
+                                            // Key Downs
+                                            foreach (var key in keyboardKeys)
+                                            {
+                                                injectedInputs.Add(new InjectedInputKeyboardInfo 
+                                                { 
+                                                    VirtualKey = key, 
+                                                    KeyOptions = InjectedInputKeyOptions.None 
+                                                });
+                                            }
+
+                                            // Key Ups (Reverse order)
+                                            for (int i = keyboardKeys.Count - 1; i >= 0; i--)
+                                            {
+                                                injectedInputs.Add(new InjectedInputKeyboardInfo 
+                                                { 
+                                                    VirtualKey = keyboardKeys[i], 
+                                                    KeyOptions = InjectedInputKeyOptions.KeyUp 
+                                                });
+                                            }
+
+                                            // Inject
+                                            if (inputInjector != null)
+                                            {
+                                                inputInjector.InjectKeyboardInput(injectedInputs);
+                                            }
+                                            else
+                                            {
+                                                Logger.Error("InputInjector is null, cannot inject hotkey.");
+                                            }
+                                        }
+                                        else
+                                        {
+                                            Logger.Warn("No Lossless Scaling hotkey found or parsed.");
+                                        }
                                     }
                                 }
                             }

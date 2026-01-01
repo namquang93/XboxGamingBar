@@ -467,38 +467,34 @@ namespace XboxGamingBarHelper.Windows
         const uint INPUT_KEYBOARD = 1;
         const uint KEYEVENTF_KEYUP = 0x0002;
 
-        public static void SendKeyCombo(ushort modifier1, ushort modifier2, ushort key)
+        public static void SendKeyboardInput(IEnumerable<ushort> keyCodes)
         {
-            INPUT[] inputs = new INPUT[6];
+            var keys = new List<ushort>(keyCodes);
+            if (keys.Count == 0) return;
 
-            // Press modifier1 (e.g., Ctrl)
-            inputs[0].type = INPUT_KEYBOARD;
-            inputs[0].u.ki.wVk = modifier1;
+            int len = keys.Count * 2; // Press + Release
+            INPUT[] inputs = new INPUT[len];
+            int i = 0;
 
-            // Press modifier2 (e.g., Shift)
-            inputs[1].type = INPUT_KEYBOARD;
-            inputs[1].u.ki.wVk = modifier2;
+            // Key Downs
+            foreach (var key in keys)
+            {
+                inputs[i].type = INPUT_KEYBOARD;
+                inputs[i].u.ki.wVk = key;
+                inputs[i].u.ki.dwFlags = 0; // KeyDown
+                i++;
+            }
 
-            // Press key (e.g., S)
-            inputs[2].type = INPUT_KEYBOARD;
-            inputs[2].u.ki.wVk = key;
+            // Key Ups (Reverse order)
+            for (int j = keys.Count - 1; j >= 0; j--)
+            {
+                inputs[i].type = INPUT_KEYBOARD;
+                inputs[i].u.ki.wVk = keys[j];
+                inputs[i].u.ki.dwFlags = KEYEVENTF_KEYUP;
+                i++;
+            }
 
-            //// Release key
-            //inputs[3].type = INPUT_KEYBOARD;
-            //inputs[3].u.ki.wVk = key;
-            //inputs[3].u.ki.dwFlags = KEYEVENTF_KEYUP;
-
-            //// Release modifier2
-            //inputs[4].type = INPUT_KEYBOARD;
-            //inputs[4].u.ki.wVk = modifier2;
-            //inputs[4].u.ki.dwFlags = KEYEVENTF_KEYUP;
-
-            //// Release modifier1
-            //inputs[5].type = INPUT_KEYBOARD;
-            //inputs[5].u.ki.wVk = modifier1;
-            //inputs[5].u.ki.dwFlags = KEYEVENTF_KEYUP;
-
-            SendInput((uint)inputs.Length, inputs, Marshal.SizeOf(typeof(INPUT)));
+            SendInput((uint)len, inputs, Marshal.SizeOf(typeof(INPUT)));
         }
 
         public const UInt32 WM_KEYDOWN = 0x0100;
