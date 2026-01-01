@@ -23,8 +23,14 @@
         <ProgressRing x:Name="LoadingProgressRing" IsActive="True" Visibility="Collapsed" Width="100" Height="100" VerticalAlignment="Center" HorizontalAlignment="Center" Canvas.ZIndex="1"/>
 
         <!-- Tab Navigation Indicators -->
-        <TextBlock Text="[LT]" FontWeight="Bold" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,14,0,0" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" IsHitTestVisible="False"/>
-        <TextBlock Text="[RT]" FontWeight="Bold" FontSize="14" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,14,5,0" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" IsHitTestVisible="False"/>
+        <Border Width="20" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,8,0,0" 
+                BorderBrush="{ThemeResource SystemControlForegroundBaseMediumBrush}" BorderThickness="1.2" CornerRadius="3" Background="Transparent" IsHitTestVisible="False">
+            <TextBlock Text="LT" FontSize="9" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+        </Border>
+        <Border Width="20" Height="30" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,8,10,0" 
+                BorderBrush="{ThemeResource SystemControlForegroundBaseMediumBrush}" BorderThickness="1.2" CornerRadius="3" Background="Transparent" IsHitTestVisible="False">
+            <TextBlock Text="RT" FontSize="9" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+        </Border>
         
         <Pivot x:Name="MainPivot">
             <!-- PERFORMANCE TAB -->
