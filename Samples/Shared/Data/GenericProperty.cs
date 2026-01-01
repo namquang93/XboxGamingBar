@@ -270,7 +270,14 @@ namespace Shared.Data
             }
             else if (typeof(ValueType) == typeof(List<int>) && newValue is string listIntStringValue)
             {
-                myTypeValue = (ValueType)(object)listIntStringValue.Split(StringConstants.COMMA.ToCharArray()).Select(int.Parse).ToList();
+                if (string.IsNullOrEmpty(listIntStringValue))
+                {
+                    myTypeValue = (ValueType)(object)new List<int>();
+                }
+                else
+                {
+                    myTypeValue = (ValueType)(object)listIntStringValue.Split(StringConstants.COMMA.ToCharArray()).Select(int.Parse).ToList();
+                }
                 Logger.Debug($"SetValue string \"{listIntStringValue}\" to list {myTypeValue}.");
             }
             else if (newValue is ValueType correctValueType)

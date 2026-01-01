@@ -3,6 +3,7 @@ using NLog;
 using Shared.Data;
 using Shared.Utilities;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
@@ -15,6 +16,8 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Windows.UI.Xaml.Input;
+using Windows.System;
 using XboxGamingBar.Data;
 using XboxGamingBar.Event;
 
@@ -62,6 +65,7 @@ namespace XboxGamingBar
         private readonly OnScreenDisplayProviderInstalledProperty onScreenDisplayProviderInstalled;
         private readonly IsForegroundProperty isForeground;
         private readonly FocusingOnOSDSliderProperty focusingOnOSDSlider;
+        private readonly LosslessScalingShortcutProperty losslessScalingShortcut;
 
         // AMD properties
         private readonly AMDSettingsSupportedProperty amdSettingsSupported;
@@ -80,14 +84,19 @@ namespace XboxGamingBar
         private readonly AMDRadeonChillMinFPSProperty amdRadeonChillMinFPSProperty;
         private readonly AMDRadeonChillMaxFPSProperty amdRadeonChillMaxFPSProperty;
 
+        private readonly IsListeningForKeyBindingProperty isListeningForKeyBinding;
+
         private readonly WidgetProperties properties;
+
+        //private bool isListeningForKeyBinding = false;
+        private bool isFirstKeyCaptured = false;
 
         public GamingWidget()
         {
             InitializeComponent();
             minTDP = new MinTDPProperty(TDPSlider, this);
             maxTDP = new MaxTDPProperty(TDPSlider, this);
-            tdpControlSupport = new TDPControlSupportProperty(TDPSlider, this, TDPLimitText, TDPValueText);
+            tdpControlSupport = new TDPControlSupportProperty(TDPSlider, this, TDPHeaderGrid);
             tdp = new TDPProperty(4, TDPSlider, this);
             osd = new OSDProperty(0, PerformanceOverlaySlider, this);
             runningGame = new RunningGameProperty(RunningGameText, PerGameProfileToggle, this);
@@ -103,7 +112,7 @@ namespace XboxGamingBar
             trackedGame = new TrackedGameProperty(new TrackedGame());
             onScreenDisplayProviderInstalled = new OnScreenDisplayProviderInstalledProperty(PerformanceOverlaySlider, this);
             isForeground = new IsForegroundProperty();
-            amdSettingsSupported = new AMDSettingsSupportedProperty(AMDText, this, AMDTextLine, AMDRadeonSuperResolutionToggle,
+            amdSettingsSupported = new AMDSettingsSupportedProperty(AMDPivotItem, this, AMDPivotItemStackPanel, AMDRadeonSuperResolutionToggle,
                 AMDRadeonSuperResolutionText, AMDFluidMotionFrameToggle, AMDFluidMotionFrameText, AMDRadeonAntiLagToggle, AMDRadeonAntiLagText,
                 AMDRadeonBoostToggle, AMDRadeonBoostText, AMDRadeonChillToggle, AMDRadeonChillText);
             amdRadeonSuperResolutionEnabled = new AMDRadeonSuperResolutionEnabledProperty(AMDRadeonSuperResolutionToggle, this);
@@ -121,6 +130,8 @@ namespace XboxGamingBar
             amdRadeonChillMinFPSProperty = new AMDRadeonChillMinFPSProperty(AMDRadeonChillMinFPSSlider, this);
             amdRadeonChillMaxFPSProperty = new AMDRadeonChillMaxFPSProperty(AMDRadeonChillMaxFPSSlider, this);
             focusingOnOSDSlider = new FocusingOnOSDSliderProperty(PerformanceOverlaySlider, this);
+            isListeningForKeyBinding = new IsListeningForKeyBindingProperty();
+            losslessScalingShortcut = new LosslessScalingShortcutProperty(LosslessScalingBindingButton, new List<int>());
 
             properties = new WidgetProperties(
                 osd,
@@ -156,8 +167,152 @@ namespace XboxGamingBar
                 amdRadeonChillSupported,
                 amdRadeonChillMinFPSProperty,
                 amdRadeonChillMaxFPSProperty,
-                focusingOnOSDSlider
+                focusingOnOSDSlider,
+                isListeningForKeyBinding,
+                losslessScalingShortcut
             );
+
+            this.KeyDown += GamingWidget_KeyDown;
+            this.MainPivot.SelectionChanged += MainPivot_SelectionChanged;
+            this.LosslessScalingBindingButton.LostFocus += LosslessScalingBindingButton_LostFocus;
+        }
+
+        private void LosslessScalingBindingButton_LostFocus(object sender, RoutedEventArgs e)
+        {
+            CancelListening();
+        }
+
+        private void MainPivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            CancelListening();
+        }
+
+        private void CancelListening()
+        {
+            if (isListeningForKeyBinding)
+            {
+                isListeningForKeyBinding.SetValue(false);
+                if (!isFirstKeyCaptured)
+                {
+                    losslessScalingShortcut.RefreshUI();
+                }
+                LosslessScalingBindingButton.IsEnabled = true;
+            }
+        }
+
+        private void GamingWidget_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (isListeningForKeyBinding)
+            {
+                // Capture the gamepad key
+                if (e.Key.ToString().Contains("Gamepad"))
+                {
+                    // Allow navigation if no key has been captured yet? 
+                    // Or prioritize capturing. Let's allow DPad/Stick navigation to cancel listening.
+                    if (e.Key == VirtualKey.GamepadDPadUp || e.Key == VirtualKey.GamepadDPadDown || 
+                        e.Key == VirtualKey.GamepadDPadLeft || e.Key == VirtualKey.GamepadDPadRight ||
+                        e.Key == VirtualKey.GamepadLeftThumbstickUp || e.Key == VirtualKey.GamepadLeftThumbstickDown ||
+                        e.Key == VirtualKey.GamepadLeftThumbstickLeft || e.Key == VirtualKey.GamepadLeftThumbstickRight)
+                    {
+                        CancelListening();
+                        return; // Let the event bubble up for navigation
+                    }
+
+                    List<int> keys;
+                    if (!isFirstKeyCaptured)
+                    {
+                        keys = new List<int>();
+                        isFirstKeyCaptured = true;
+                    }
+                    else
+                    {
+                        keys = new List<int>(losslessScalingShortcut.Value);
+                    }
+
+                    if (!keys.Contains((int)e.Key))
+                    {
+                        keys.Add((int)e.Key);
+                        losslessScalingShortcut.SetValue(keys);
+                    }
+                    e.Handled = true;
+                    // We stop listening after a short delay
+                    StopListeningWithDelay();
+                }
+                return;
+            }
+
+            if (e.Key == VirtualKey.GamepadLeftTrigger)
+            {
+                NavigatePivot(-1);
+                e.Handled = true;
+            }
+            else if (e.Key == VirtualKey.GamepadRightTrigger)
+            {
+                NavigatePivot(1);
+                e.Handled = true;
+            }
+        }
+
+        private async void StopListeningWithDelay()
+        {
+            int currentKeyCount = losslessScalingShortcut.Value.Count;
+            await Task.Delay(1000);
+            if (losslessScalingShortcut.Value.Count == currentKeyCount && isListeningForKeyBinding)
+            {
+                isListeningForKeyBinding.SetValue(false);
+                LosslessScalingBindingButton.IsEnabled = true;
+            }
+        }
+
+        private void LosslessScalingBindingButton_Click(object sender, RoutedEventArgs e)
+        {
+            isListeningForKeyBinding.SetValue(true);
+            isFirstKeyCaptured = false;
+            
+            StartListeningTimeout();
+        }
+
+        private async void StartListeningTimeout()
+        {
+            // Give the user 5 seconds to press any gamepad key
+            for (int i = 5; i > 0; i--)
+            {
+                if (!isListeningForKeyBinding || isFirstKeyCaptured)
+                {
+                    return;
+                }
+                LosslessScalingBindingButton.Content = i.ToString();
+                await Task.Delay(1000);
+            }
+
+            if (isListeningForKeyBinding && !isFirstKeyCaptured)
+            {
+                isListeningForKeyBinding.SetValue(false);
+                losslessScalingShortcut.RefreshUI();
+            }
+        }
+
+        private void NavigatePivot(int direction)
+        {
+            int count = MainPivot.Items.Count;
+            if (count <= 1) return;
+
+            int currentIndex = MainPivot.SelectedIndex;
+            int nextIndex = currentIndex;
+
+            // Try to find the next visible PivotItem
+            for (int i = 0; i < count; i++)
+            {
+                nextIndex = (nextIndex + direction + count) % count;
+                if (MainPivot.Items[nextIndex] is PivotItem item && item.Visibility == Visibility.Visible)
+                {
+                    MainPivot.SelectedIndex = nextIndex;
+                    break;
+                }
+
+                // If we've circled back to current, stop
+                if (nextIndex == currentIndex) break;
+            }
         }
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)

@@ -11,7 +11,7 @@
   <Identity
     Name="PlayandBuild.10365195AA1EC"
     Publisher="CN=632C25E4-B6CB-4B80-A9DB-AAB4012EE37A"
-    Version="0.7.2.0" />
+    Version="0.8.0.0" />
 
   <Properties>
     <DisplayName>Gaming Bar</DisplayName>
@@ -60,9 +60,9 @@
                 <Window>
                   <Size>
                     <Height>824</Height>
-                    <Width>464</Width>
+                    <Width>500</Width>
                     <MinHeight>824</MinHeight>
-                    <MinWidth>464</MinWidth>
+                    <MinWidth>500</MinWidth>
                     <MaxHeight>824</MaxHeight>
                     <MaxWidth>900</MaxWidth>
                   </Size>

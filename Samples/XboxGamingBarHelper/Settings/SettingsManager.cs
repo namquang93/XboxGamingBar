@@ -43,6 +43,18 @@ namespace XboxGamingBarHelper.Settings
             get { return isForeground; }
         }
 
+        private readonly IsListeningForKeyBindingProperty isListeningForKeyBinding;
+        public IsListeningForKeyBindingProperty IsListeningForKeyBinding
+        {
+            get { return isListeningForKeyBinding; }
+        }
+
+        private readonly LosslessScalingShortcutProperty losslessScalingShortcut;
+        public LosslessScalingShortcutProperty LosslessScalingShortcut
+        {
+            get { return losslessScalingShortcut; }
+        }
+
         private readonly string settingsPath;
         private Setting setting;
         public Setting Setting
@@ -70,6 +82,9 @@ namespace XboxGamingBarHelper.Settings
             onScreenDisplayProvider.PropertyChanged += OnScreenDisplayProviderChanged;
             onScreenDisplayProviderInstalled = new OnScreenDisplayProviderInstalledProperty(this);
             isForeground = new IsForegroundProperty(this);
+            isListeningForKeyBinding = new IsListeningForKeyBindingProperty(this);
+            losslessScalingShortcut = new LosslessScalingShortcutProperty(setting.LosslessScalingShortcut, null, this);
+            losslessScalingShortcut.PropertyChanged += LosslessScalingShortcutChanged;
         }
 
         public void SyncOnScreenDisplaySettings(GenericProperty<int> onScreenDisplayProperty)
@@ -102,6 +117,14 @@ namespace XboxGamingBarHelper.Settings
                 setting.OnScreenDisplay = onScreenDisplayPropertySettings.Value;
                 XmlHelper.ToXMLFile(setting, settingsPath);
             }
+        }
+
+        private void LosslessScalingShortcutChanged(object sender, PropertyChangedEventArgs e)
+        {
+            Logger.Info($"Save setting Lossless Scaling Shortcut {string.Join(",", losslessScalingShortcut.Value)}.");
+
+            setting.LosslessScalingShortcut = losslessScalingShortcut.Value;
+            XmlHelper.ToXMLFile(setting, settingsPath);
         }
 
         public override void Update()

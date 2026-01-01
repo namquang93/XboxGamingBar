@@ -411,6 +411,9 @@
     <Compile Include="Hardware\CPUs\AMD\AMD_Ryzen_Z2_Extreme.cs" />
     <Compile Include="Hardware\CPUs\GenericCPU.cs" />
     <Compile Include="Settings\IsForegroundProperty.cs" />
+    <Compile Include="Settings\IsListeningForKeyBindingProperty.cs" />
+    <Compile Include="Settings\LosslessScalingManager.cs" />
+    <Compile Include="Settings\LosslessScalingShortcutProperty.cs" />
     <Compile Include="Settings\OnScreenDisplayProviderProperty.cs" />
     <Compile Include="Hardware\HardwareSensor.cs" />
     <Compile Include="Hardware\HardwareManager.cs" />
@@ -439,6 +442,8 @@
     <Compile Include="Profile\GameProfileProperty.cs" />
     <Compile Include="Profile\PerGameProfileProperty.cs" />
     <Compile Include="Profile\ProfileManager.cs" />
+    <Compile Include="Input\InputManager.cs" />
+    <Compile Include="Input\XInput.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RTSS\OSDItem.cs" />
