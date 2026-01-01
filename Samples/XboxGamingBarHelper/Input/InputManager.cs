@@ -1,6 +1,5 @@
 using NLog;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.AppService;
@@ -20,7 +19,27 @@ namespace XboxGamingBarHelper.Input
         private XInputState previousState;
         private bool wasConnected = false;
 
-        public AppServiceConnection Connection { get; set; }
+        // Static mapping for O(1) lookup
+        // Note: Triggers (GamepadLeftTrigger, GamepadRightTrigger) are not included here 
+        // because they are analog inputs in XInput and don't have corresponding bit flags.
+        // They are handled explicitly in IsKeyPressed.
+        private static readonly Dictionary<int, GamepadButtonFlags> ButtonMapping = new Dictionary<int, GamepadButtonFlags>
+        {
+            { (int)global::Windows.System.VirtualKey.GamepadA, GamepadButtonFlags.A },
+            { (int)global::Windows.System.VirtualKey.GamepadB, GamepadButtonFlags.B },
+            { (int)global::Windows.System.VirtualKey.GamepadX, GamepadButtonFlags.X },
+            { (int)global::Windows.System.VirtualKey.GamepadY, GamepadButtonFlags.Y },
+            { (int)global::Windows.System.VirtualKey.GamepadRightShoulder, GamepadButtonFlags.RightShoulder },
+            { (int)global::Windows.System.VirtualKey.GamepadLeftShoulder, GamepadButtonFlags.LeftShoulder },
+            { (int)global::Windows.System.VirtualKey.GamepadMenu, GamepadButtonFlags.Start },
+            { (int)global::Windows.System.VirtualKey.GamepadView, GamepadButtonFlags.Back },
+            { (int)global::Windows.System.VirtualKey.GamepadDPadUp, GamepadButtonFlags.DPadUp },
+            { (int)global::Windows.System.VirtualKey.GamepadDPadDown, GamepadButtonFlags.DPadDown },
+            { (int)global::Windows.System.VirtualKey.GamepadDPadLeft, GamepadButtonFlags.DPadLeft },
+            { (int)global::Windows.System.VirtualKey.GamepadDPadRight, GamepadButtonFlags.DPadRight },
+            { (int)global::Windows.System.VirtualKey.GamepadLeftThumbstickButton, GamepadButtonFlags.LeftThumb },
+            { (int)global::Windows.System.VirtualKey.GamepadRightThumbstickButton, GamepadButtonFlags.RightThumb }
+        };
 
         public InputManager(AppServiceConnection connection) : base(connection)
         {
@@ -36,7 +55,7 @@ namespace XboxGamingBarHelper.Input
             while (!token.IsCancellationRequested)
             {
                 XInputState currentState = new XInputState();
-                // 0 = First Controller. In a robust app you might check 0-3.
+                // 0 = First Controller.
                 int result = XInputGetState(0, ref currentState);
 
                 if (result == 0) // ERROR_SUCCESS
@@ -57,16 +76,11 @@ namespace XboxGamingBarHelper.Input
                             {
                                 List<int> shortcutKeys = settings.LosslessScalingShortcut.Value;
                                 
-                                // Map the current button state to our internal list of ints (assuming they map to GamepadButtonFlags)
-                                // We check if the bitmask in currentState.Gamepad.Buttons contains ALL keys in the shortcut list
-                                
+                                // Check if all keys in the shortcut are pressed
                                 bool allKeysPressed = true;
-                                int currentButtons = currentState.Gamepad.Buttons;
-                                
-                                // Assuming the shortcut integers in settings map directly to the XInput button bitmask values
-                                foreach (int key in shortcutKeys)
+                                foreach (int keyVal in shortcutKeys)
                                 {
-                                    if ((currentButtons & key) != key)
+                                    if (!IsKeyPressed(currentState, keyVal))
                                     {
                                         allKeysPressed = false;
                                         break;
@@ -75,13 +89,11 @@ namespace XboxGamingBarHelper.Input
 
                                 if (allKeysPressed && shortcutKeys.Count > 0)
                                 {
-                                    // Debounce: Check if they were NOT all pressed in the previous state to avoid repeat triggering
+                                    // Debounce: Check if they were NOT all pressed in the previous state
                                     bool wasPressedBefore = true;
-                                    int previousButtons = previousState.Gamepad.Buttons;
-
-                                    foreach (int key in shortcutKeys)
+                                    foreach (int keyVal in shortcutKeys)
                                     {
-                                        if ((previousButtons & key) != key)
+                                        if (!IsKeyPressed(previousState, keyVal))
                                         {
                                             wasPressedBefore = false;
                                             break;
@@ -116,6 +128,26 @@ namespace XboxGamingBarHelper.Input
 
                 await Task.Delay(16, token); // ~60Hz polling
             }
+        }
+
+        private bool IsKeyPressed(XInputState state, int keyVal)
+        {
+            // Triggers are analog values in XInput, mapped to VirtualKey by our logic
+            if (keyVal == (int)global::Windows.System.VirtualKey.GamepadLeftTrigger)
+            {
+                return state.Gamepad.LeftTrigger > 30; // Threshold
+            }
+            if (keyVal == (int)global::Windows.System.VirtualKey.GamepadRightTrigger)
+            {
+                return state.Gamepad.RightTrigger > 30; // Threshold
+            }
+
+            if (ButtonMapping.TryGetValue(keyVal, out GamepadButtonFlags flag))
+            {
+                return (((GamepadButtonFlags)state.Gamepad.Buttons) & flag) == flag;
+            }
+
+            return false;
         }
     }
 }
