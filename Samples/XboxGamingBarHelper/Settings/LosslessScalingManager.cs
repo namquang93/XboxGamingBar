@@ -26,7 +26,11 @@ namespace XboxGamingBarHelper.Settings
 
                 var doc = XDocument.Load(SettingsPath);
                 var root = doc.Root;
-                if (root == null) return keys;
+                if (root == null)
+                {
+                     Logger.Warn($"Lossless Scaling settings file {SettingsPath} is invalid or empty.");
+                     return keys;
+                }
 
                 var hotkeyEl = root.Element("Hotkey");
                 var modifiersEl = root.Element("HotkeyModifierKeys");
