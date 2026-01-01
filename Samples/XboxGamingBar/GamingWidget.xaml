@@ -29,7 +29,7 @@
 
         <!-- Running Game Info (Now at the top) -->
         <Grid x:Name="GameInfoGrid" Grid.Row="0" Margin="12,12,12,5">
-            <TextBlock x:Name="RunningGameText" Text="No game detected" FontWeight="SemiBold" FontSize="18"
+            <TextBlock x:Name="RunningGameText" Text="No game detected" FontWeight="Normal" FontSize="18"
                 TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" HorizontalAlignment="Left" VerticalAlignment="Center"/>
             <ToggleSwitch x:Name="PerGameProfileToggle" IsEnabled="False" OffContent="Global" OnContent="Per-game"
                 FlowDirection="RightToLeft" VerticalAlignment="Center" HorizontalAlignment="Right"/>
@@ -40,11 +40,11 @@
             <!-- Tab Navigation Indicators -->
             <Border Width="20" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,8,0,0" 
                     BorderBrush="{ThemeResource SystemControlForegroundBaseMediumBrush}" BorderThickness="1.2" CornerRadius="3" Background="Transparent" IsHitTestVisible="False">
-                <TextBlock Text="LT" FontSize="9" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+                <TextBlock Text="LT" FontSize="9" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
             </Border>
             <Border Width="20" Height="30" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,8,10,0" 
                     BorderBrush="{ThemeResource SystemControlForegroundBaseMediumBrush}" BorderThickness="1.2" CornerRadius="3" Background="Transparent" IsHitTestVisible="False">
-                <TextBlock Text="RT" FontSize="9" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+                <TextBlock Text="RT" FontSize="9" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
             </Border>
             
             <Pivot x:Name="MainPivot">
@@ -53,7 +53,7 @@
                 <PivotItem.Header>
                     <StackPanel Orientation="Horizontal" Margin="25,0,0,0">
                         <FontIcon Glyph="&#xE9D2;" Margin="0,0,8,0" FontSize="16" VerticalAlignment="Center"/>
-                        <TextBlock Text="Performance" FontWeight="Bold" VerticalAlignment="Center"/>
+                        <TextBlock Text="Performance" FontWeight="SemiBold" VerticalAlignment="Center"/>
                     </StackPanel>
                 </PivotItem.Header>
                 <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
@@ -64,7 +64,7 @@
                             <RowDefinition Height="10"/>   <!-- 2: Spacer shortened -->
                             <RowDefinition Height="32"/>   <!-- 3: Overlay Labels -->
                             <RowDefinition Height="Auto"/> <!-- 4: TDP Text (Shifted up) -->
-                            <RowDefinition Height="32"/>   <!-- 5: TDP Slider -->
+                            <RowDefinition Height="Auto"/> <!-- 5: TDP Slider -->
                             <RowDefinition Height="36"/>   <!-- 6: CPU Boost -->
                             <RowDefinition Height="Auto"/> <!-- 7: CPU EPP Text -->
                             <RowDefinition Height="32"/>   <!-- 8: CPU EPP Slider -->
@@ -72,7 +72,7 @@
                             <RowDefinition Height="32"/>   <!-- 10: CPU Clock Slider -->
                         </Grid.RowDefinitions>
 
-                        <TextBlock x:Name="PerformanceOverlayText" Text="Performance Overlay" FontWeight="SemiBold" FontSize="18" Grid.Row="0"/>
+                        <TextBlock x:Name="PerformanceOverlayText" Text="Performance Overlay" FontWeight="Normal" FontSize="18" Grid.Row="0"/>
                         <Slider x:Name="PerformanceOverlaySlider" Grid.Row="1"
                             Minimum="0" Maximum="4"
                             TickFrequency="1"
@@ -95,7 +95,7 @@
                         </Grid>
 
                         <Grid Grid.Row="4" Visibility="Collapsed" x:Name="TDPHeaderGrid">
-                            <TextBlock x:Name="TDPLimitText" Text="Thermal Power (TDP) Limit" FontWeight="SemiBold" FontSize="18" Grid.Row="0"/>
+                            <TextBlock x:Name="TDPLimitText" Text="Thermal Power (TDP) Limit" FontWeight="Normal" FontSize="18" Grid.Row="0"/>
                             <TextBlock x:Name="TDPValueText" Text="{Binding ElementName=TDPSlider, Path=Value, Converter={StaticResource WattStringConverter}}" 
                                 VerticalAlignment="Center" HorizontalAlignment="Right"/>
                         </Grid>
@@ -107,13 +107,13 @@
                             IsEnabled="False"
                             Visibility="Collapsed"/>
                         <Grid Grid.Row="6">
-                            <TextBlock x:Name="CPUBoostText" Text="CPU Boost" FontWeight="SemiBold" FontSize="18"
+                            <TextBlock x:Name="CPUBoostText" Text="CPU Boost" FontWeight="Normal" FontSize="18"
                                 TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                             <ToggleSwitch x:Name="CPUBoostToggle" IsEnabled="False" OffContent="Disabled" OnContent="Aggressive"
                                 FlowDirection="RightToLeft" VerticalAlignment="Center" HorizontalAlignment="Right" />
                         </Grid>
                         <Grid Grid.Row="7">
-                            <TextBlock x:Name="CPUEPPText" Text="Energy Pref (EPP)" FontWeight="SemiBold" FontSize="18"/>
+                            <TextBlock x:Name="CPUEPPText" Text="Energy Pref (EPP)" FontWeight="Normal" FontSize="18"/>
                             <TextBlock x:Name="CPUEPPValueText" Text="{Binding ElementName=CPUEPPSlider, Path=Value}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                         </Grid>
                         <Slider x:Name="CPUEPPSlider" Grid.Row="8"
@@ -123,7 +123,7 @@
                             TickPlacement="BottomRight"
                             IsEnabled="False"/>
                         <Grid Grid.Row="9">
-                            <TextBlock x:Name="LimitCPUClockText" Text="Limit CPU Clock" FontWeight="SemiBold" FontSize="18"
+                            <TextBlock x:Name="LimitCPUClockText" Text="Limit CPU Clock" FontWeight="Normal" FontSize="18"
                                 TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                             <ToggleSwitch x:Name="LimitCPUClockToggle" IsEnabled="False" OffContent="Disabled" OnContent="{Binding ElementName=CPUClockMaxSlider, Path=Value, Converter={StaticResource MegahertzStringConverter}}"
                                 FlowDirection="RightToLeft" VerticalAlignment="Center" HorizontalAlignment="Right" />
@@ -144,27 +144,30 @@
                 <PivotItem.Header>
                     <StackPanel Orientation="Horizontal" Margin="10,0,10,0">
                         <FontIcon Glyph="&#xE770;" Margin="0,0,8,0" FontSize="16" VerticalAlignment="Center"/>
-                        <TextBlock Text="System" FontWeight="Bold" VerticalAlignment="Center"/>
+                        <TextBlock Text="System" FontWeight="SemiBold" VerticalAlignment="Center"/>
                     </StackPanel>
                 </PivotItem.Header>
                 <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                     <Grid Margin="3,10,3,15">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="36"/> <!-- 0: Refresh Rate -->
-                            <RowDefinition Height="10"/> <!-- 1: Spacer (spacer between 2 comboboxes should be slightly smaller) -->
-                            <RowDefinition Height="36"/> <!-- 2: Resolution -->
+                            <RowDefinition Height="Auto"/> <!-- 0: Display Headline -->
+                            <RowDefinition Height="36"/>   <!-- 1: Refresh Rate -->
+                            <RowDefinition Height="10"/>   <!-- 2: Spacer -->
+                            <RowDefinition Height="36"/>   <!-- 3: Resolution -->
                         </Grid.RowDefinitions>
 
-                        <Grid Grid.Row="0">
-                            <TextBlock x:Name="RefreshRatesText" Text="Refresh Rate" FontWeight="SemiBold" FontSize="18"
+                        <TextBlock Text="Display" FontWeight="SemiBold" FontSize="18" Grid.Row="0" Margin="0,0,0,5"/>
+
+                        <Grid Grid.Row="1">
+                            <TextBlock x:Name="RefreshRatesText" Text="Refresh Rate" FontWeight="Normal" FontSize="18"
                                 TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                             <ComboBox x:Name="RefreshRatesComboBox" PlaceholderText="60 Hz" Width="140" IsEnabled="False" HorizontalAlignment="Right">
                                 <x:String>60 Hz</x:String>
                             </ComboBox>
                         </Grid>
 
-                        <Grid Grid.Row="2">
-                            <TextBlock x:Name="ResolutionsText" Text="Resolution" FontWeight="SemiBold" FontSize="18"
+                        <Grid Grid.Row="3">
+                            <TextBlock x:Name="ResolutionsText" Text="Resolution" FontWeight="Normal" FontSize="18"
                                 TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                             <ComboBox x:Name="ResolutionsComboBox" PlaceholderText="1920x1080" Width="140" IsEnabled="False" HorizontalAlignment="Right">
                                 <x:String>1920x1080</x:String>
@@ -179,7 +182,7 @@
                 <PivotItem.Header>
                     <StackPanel Orientation="Horizontal" Margin="0,0,25,0">
                         <FontIcon Glyph="&#xE945;" Margin="0,0,8,0" FontSize="16" VerticalAlignment="Center"/>
-                        <TextBlock Text="AMD" FontWeight="Bold" VerticalAlignment="Center"/>
+                        <TextBlock Text="AMD" FontWeight="SemiBold" VerticalAlignment="Center"/>
                     </StackPanel>
                 </PivotItem.Header>
                 <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
@@ -199,7 +202,7 @@
                         </Grid.RowDefinitions>
 
                         <Grid Grid.Row="0">
-                            <TextBlock x:Name="AMDRadeonSuperResolutionText" Text="Radeon Super Resolution" FontWeight="SemiBold" FontSize="18"
+                            <TextBlock x:Name="AMDRadeonSuperResolutionText" Text="Radeon Super Resolution" FontWeight="Normal" FontSize="18"
                                 TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" HorizontalAlignment="Left" VerticalAlignment="Center" />
                             <ToggleSwitch x:Name="AMDRadeonSuperResolutionToggle" IsEnabled="False" OffContent="Disabled" OnContent="{Binding ElementName=AMDRadeonSuperResolutionSharpnessSlider, Path=Value, Converter={StaticResource SharpnessPercentStringConverter}}"
                                 FlowDirection="RightToLeft" VerticalAlignment="Center" HorizontalAlignment="Right"/>
@@ -213,21 +216,21 @@
                             Visibility="{Binding ElementName=AMDRadeonSuperResolutionToggle, Path=IsOn, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
                         <Grid Grid.Row="2">
-                            <TextBlock x:Name="AMDFluidMotionFrameText" Text="AMD Fluid Motion Frame" FontWeight="SemiBold" FontSize="18"
+                            <TextBlock x:Name="AMDFluidMotionFrameText" Text="AMD Fluid Motion Frame" FontWeight="Normal" FontSize="18"
                                 TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                             <ToggleSwitch x:Name="AMDFluidMotionFrameToggle" IsEnabled="False" OffContent="Disabled" OnContent="Enabled"
                                 FlowDirection="RightToLeft" VerticalAlignment="Center" HorizontalAlignment="Right" />
                         </Grid>
 
                         <Grid Grid.Row="3">
-                            <TextBlock x:Name="AMDRadeonAntiLagText" Text="Radeon Anti-Lag" FontWeight="SemiBold" FontSize="18"
+                            <TextBlock x:Name="AMDRadeonAntiLagText" Text="Radeon Anti-Lag" FontWeight="Normal" FontSize="18"
                                 TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                             <ToggleSwitch x:Name="AMDRadeonAntiLagToggle" IsEnabled="False" OffContent="Disabled" OnContent="Enabled"
                                 FlowDirection="RightToLeft" VerticalAlignment="Center" HorizontalAlignment="Right" />
                         </Grid>
 
                         <Grid Grid.Row="4">
-                            <TextBlock x:Name="AMDRadeonBoostText" Text="Radeon Boost" FontWeight="SemiBold" FontSize="18"
+                            <TextBlock x:Name="AMDRadeonBoostText" Text="Radeon Boost" FontWeight="Normal" FontSize="18"
                                 TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                             <ToggleSwitch x:Name="AMDRadeonBoostToggle" IsEnabled="False" OffContent="Disabled" OnContent="{Binding ElementName=AMDRadeonBoostResolutionSlider, Path=Value, Converter={StaticResource RadeonBoostResolutionStringConverter}}"
                                 FlowDirection="RightToLeft" VerticalAlignment="Center" HorizontalAlignment="Right" />
@@ -241,7 +244,7 @@
                             Visibility="{Binding ElementName=AMDRadeonBoostToggle, Path=IsOn, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
                         <Grid Grid.Row="6">
-                            <TextBlock x:Name="AMDRadeonChillText" Text="Radeon Chill" FontWeight="SemiBold" FontSize="18"
+                            <TextBlock x:Name="AMDRadeonChillText" Text="Radeon Chill" FontWeight="Normal" FontSize="18"
                                 TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                             <ToggleSwitch x:Name="AMDRadeonChillToggle" IsEnabled="False" OffContent="Disabled" OnContent="Enabled"
                                 FlowDirection="RightToLeft" VerticalAlignment="Center" HorizontalAlignment="Right" />
@@ -277,6 +280,7 @@
             <Border BorderBrush="{ThemeResource SystemControlForegroundBaseMediumLowBrush}" 
                     BorderThickness="0,0,0,1" 
                     VerticalAlignment="Top" 
+                    Margin="3,0,3,0"
                     Height="48" 
                     IsHitTestVisible="False"/>
         </Grid>
