@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Runtime.InteropServices;
 using NLog;
 using Windows.ApplicationModel.AppService;
 using Windows.Foundation.Collections;
@@ -10,6 +11,9 @@ namespace XboxGamingBarHelper.Systems
 {
     public class TrayIconManager : IDisposable
     {
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        extern static bool DestroyIcon(IntPtr handle);
+
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private NotifyIcon notifyIcon;
         private ContextMenuStrip contextMenu;
@@ -45,10 +49,10 @@ namespace XboxGamingBarHelper.Systems
             {
                 string[] iconPaths = new string[]
                 {
-                    System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "Icons", "icon.targetsize-256.png"),
+                    System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "Icons", "tray_icon_32.png"),
+                    System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "Icons", "tray_icon.png"),
                     System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tray_icon.png"),
-                    System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "XboxGamingBar", "Assets", "Icons", "icon.targetsize-256.png"),
-                    System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "Images", "Square44x44Logo.png") // Packaged location
+                    System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "Images", "Square44x44Logo.png")
                 };
 
                 foreach (string iconPath in iconPaths)
@@ -58,7 +62,11 @@ namespace XboxGamingBarHelper.Systems
                         Logger.Info($"Found tray icon at {iconPath}");
                         using (Bitmap bitmap = new Bitmap(iconPath))
                         {
-                            notifyIcon.Icon = Icon.FromHandle(bitmap.GetHicon());
+                            IntPtr hIcon = bitmap.GetHicon();
+                            notifyIcon.Icon = Icon.FromHandle(hIcon);
+                            // Note: notifyIcon.Icon takes ownership of the icon object, 
+                            // but hIcon itself is a GDI handle that can be destroyed after the Icon object is created.
+                            DestroyIcon(hIcon);
                         }
                         break;
                     }
