@@ -61,11 +61,12 @@ namespace XboxGamingBar
         /// </summary>
         protected override void OnBackgroundActivated(BackgroundActivatedEventArgs args)
         {
-            Logger.Info("App background activated");
+            Logger.Info($"App background activated. TriggerDetails: {args.TaskInstance.TriggerDetails?.GetType().Name}");
             base.OnBackgroundActivated(args);
 
             if (args.TaskInstance.TriggerDetails is AppServiceTriggerDetails details)
             {
+                Logger.Info($"App service trigger details: AppServiceName={details.AppServiceConnection.AppServiceName}, CallerPackageFamilyName={details.CallerPackageFamilyName}");
                 // only accept connections from callers in the same package
                 if (details.CallerPackageFamilyName == Package.Current.Id.FamilyName)
                 {
@@ -109,12 +110,13 @@ namespace XboxGamingBar
 
         protected override void OnActivated(IActivatedEventArgs args)
         {
-            Logger.Info("App activated");
+            Logger.Info($"App activated. Kind: {args.Kind}");
             XboxGameBarWidgetActivatedEventArgs widgetArgs = null;
             if (args.Kind == ActivationKind.Protocol)
             {
                 var protocolArgs = args as IProtocolActivatedEventArgs;
                 string scheme = protocolArgs.Uri.Scheme;
+                Logger.Info($"Protocol scheme: {scheme}, Uri: {protocolArgs.Uri}");
                 if (scheme.Equals("ms-gamebarwidget"))
                 {
                     widgetArgs = args as XboxGameBarWidgetActivatedEventArgs;
@@ -122,6 +124,7 @@ namespace XboxGamingBar
             }
             if (widgetArgs != null)
             {
+                Logger.Info($"XboxGameBarWidget activation. IsLaunchActivation: {widgetArgs.IsLaunchActivation}, AppExtensionId: {widgetArgs.AppExtensionId}");
                 //
                 // Activation Notes:
                 //
@@ -203,7 +206,7 @@ namespace XboxGamingBar
         /// <param name="e">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
-            Logger.Info("App launched");
+            Logger.Info($"App launched. PreviousExecutionState: {e.PreviousExecutionState}, PrelaunchActivated: {e.PrelaunchActivated}, Arguments: {e.Arguments}");
             Frame rootFrame = Window.Current.Content as Frame;
 
             // Do not repeat app initialization when the Window already has content,

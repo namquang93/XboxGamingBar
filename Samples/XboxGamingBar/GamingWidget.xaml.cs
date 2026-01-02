@@ -317,6 +317,7 @@ namespace XboxGamingBar
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
+            Logger.Info($"GamingWidget OnNavigatedTo. NavigationMode: {e.NavigationMode}, Parameter: {e.Parameter}");
             base.OnNavigatedTo(e);
 
             //while (!System.Diagnostics.Debugger.IsAttached)
@@ -353,16 +354,19 @@ namespace XboxGamingBar
 
                 if (App.Connection == null && ApiInformation.IsApiContractPresent("Windows.ApplicationModel.FullTrustAppContract", 1, 0))
                 {
-                    Logger.Info("Launching a new full trust process.");
+                    Logger.Info("App.Connection is NULL. Launching a new full trust process (helper).");
                     App.AppServiceConnected += GamingWidget_AppServiceConnected;
                     App.AppServiceDisconnected += GamingWidget_AppServiceDisconnected;
                     await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
+                    Logger.Info("FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync() completed.");
                 }
                 else
                 {
+                    Logger.Info($"App.Connection is {(App.Connection == null ? "NULL" : "NOT NULL")}. Contract present: {ApiInformation.IsApiContractPresent("Windows.ApplicationModel.FullTrustAppContract", 1, 0)}. Not launching helper.");
                     ReconnectAppService();
                 }
             }
+            Logger.Info("GamingWidget OnNavigatedTo finished.");
         }
 
         private void ReconnectAppService()
