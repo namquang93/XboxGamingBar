@@ -1,5 +1,6 @@
 ﻿using Microsoft.Gaming.XboxGameBar;
 using NLog;
+using Shared.Enums;
 using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
@@ -85,12 +86,24 @@ namespace XboxGamingBar
         {
             //Logger.Info("App service request received");
 
-            if (args.Request.Message.ContainsKey("Function") && (int)args.Request.Message["Function"] == 100) // Function.AppExit
+            if (args.Request.Message.ContainsKey("Function") && (int)args.Request.Message["Function"] == (int)Function.AppExit)
             {
                 Logger.Info("AppExit requested by helper.");
                 
                 if (gamingWidget != null)
                 {
+                    if (gamingWidget.WidgetActivity != null)
+                    {
+                        try
+                        {
+                            gamingWidget.WidgetActivity.Complete();
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.Error($"Exception completing widget activity on AppExit: {ex}");
+                        }
+                    }
+
                     _ = gamingWidget.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
                     {
                         gamingXboxGameBarWidget?.Close();
