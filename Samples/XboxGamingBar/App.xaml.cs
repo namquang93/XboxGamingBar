@@ -85,6 +85,39 @@ namespace XboxGamingBar
         {
             //Logger.Info("App service request received");
 
+            if (args.Request.Message.ContainsKey("Function") && (int)args.Request.Message["Function"] == 100) // Function.AppExit
+            {
+                Logger.Info("AppExit requested by helper.");
+                
+                if (gamingWidget != null)
+                {
+                    _ = gamingWidget.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                    {
+                        gamingXboxGameBarWidget?.Close();
+                    });
+                }
+                else
+                {
+                    Logger.Info("gamingWidget is null on AppExit.");
+                }
+
+                if (gamingWidgetSettings != null)
+                {
+                    _ = gamingWidgetSettings.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                    {
+                        gamingSettingsXboxGameBarWidget?.Close();
+                    });
+                }
+                else
+                {
+                    Logger.Info("gamingWidgetSettings is null on AppExit.");
+                }
+
+                AppServiceDeferral?.Complete();
+                Windows.ApplicationModel.Core.CoreApplication.Exit();
+                return;
+            }
+
             if (gamingWidget != null)
             {
                 await gamingWidget.RequestReceived(sender, args);

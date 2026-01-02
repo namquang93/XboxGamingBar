@@ -470,6 +470,7 @@
     <Compile Include="Windows\ProcessWindow.cs" />
     <Compile Include="Windows\User32.cs" />
     <Compile Include="Systems\SystemManager.cs" />
+    <Compile Include="Systems\TrayIconManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

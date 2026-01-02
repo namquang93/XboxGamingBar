@@ -40,6 +40,7 @@ namespace XboxGamingBarHelper
 
         public static OnScreenDisplayProperty onScreenDisplay;
         public static List<OnScreenDisplayManager> onScreenDisplayProviders;
+        private static TrayIconManager trayIconManager;
 
         // Properties
         private static HelperProperties properties;
@@ -161,6 +162,9 @@ namespace XboxGamingBarHelper
             powerManager.LimitCPUClock.PropertyChanged += CPUClock_PropertyChanged;
             powerManager.CPUClockMax.PropertyChanged += CPUClock_PropertyChanged;
             profileManager.CurrentProfile.PropertyChanged += CurrentProfile_PropertyChanged;
+
+            Logger.Info("Initialize Tray Icon Manager.");
+            trayIconManager = new TrayIconManager(connection);
 
             await ConnectToWidget(true);
 
@@ -365,6 +369,10 @@ namespace XboxGamingBarHelper
             foreach (var manager in Managers)
             {
                 manager.Connection = connection;
+            }
+            if (trayIconManager != null)
+            {
+                trayIconManager.Connection = connection;
             }
         }
     }
