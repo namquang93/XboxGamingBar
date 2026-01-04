@@ -23,7 +23,7 @@
     <StartupObject />
     <ApplicationManifest Condition="'$(Configuration)' != 'Store'">app.manifest</ApplicationManifest>
     <ApplicationManifest Condition="'$(Configuration)' == 'Store'">app.Store.manifest</ApplicationManifest>
-    <Platforms>AnyCPU;x64</Platforms>
+    <Platforms>x64;x86</Platforms>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <OutputPath>bin\x64\Debug\</OutputPath>
