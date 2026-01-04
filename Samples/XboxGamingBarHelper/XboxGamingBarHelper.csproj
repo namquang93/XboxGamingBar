@@ -21,7 +21,8 @@
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
     <Configurations>Debug;Release;Store</Configurations>
     <StartupObject />
-    <ApplicationManifest>app.Store.manifest</ApplicationManifest>
+    <ApplicationManifest Condition="'$(Configuration)' != 'Store'">app.manifest</ApplicationManifest>
+    <ApplicationManifest Condition="'$(Configuration)' == 'Store'">app.Store.manifest</ApplicationManifest>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <OutputPath>bin\x64\Debug\</OutputPath>
