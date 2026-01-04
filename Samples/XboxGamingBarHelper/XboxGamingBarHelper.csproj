@@ -63,8 +63,8 @@
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
     <PackageReference Include="System.Management" Version="10.0.1" />
-    <PackageReference Include="HidSharp" Version="2.1.0" />
-    <PackageReference Include="LibreHardwareMonitorLib" Version="0.9.4" />
+    <PackageReference Include="HidSharp" Version="2.1.0" Condition="'$(Configuration)' != 'Store'" />
+    <PackageReference Include="LibreHardwareMonitorLib" Version="0.9.4" Condition="'$(Configuration)' != 'Store'" />
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="9.0.9" />
     <PackageReference Include="NLog" Version="6.0.4" />
     <PackageReference Include="System.Buffers" Version="4.5.1" />
