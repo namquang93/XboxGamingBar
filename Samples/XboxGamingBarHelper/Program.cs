@@ -344,8 +344,9 @@ namespace XboxGamingBarHelper
         /// </summary>
         private static async void Connection_RequestReceived(AppServiceConnection sender, AppServiceRequestReceivedEventArgs args)
         {
-            Logger.Info($"Helper received message {args.Request.Message.ToDebugString()} from widget.");
-            await properties.OnRequestReceived(args.Request);
+            // TODO : Handle the request from UWP app
+            //Logger.Info($"Helper received message {args.Request.Message.ToDebugString()} from widget.");
+            await properties.OnRequestReceived(new HelperAppServiceRequest(args.Request));
         }
 
         /// <summary>

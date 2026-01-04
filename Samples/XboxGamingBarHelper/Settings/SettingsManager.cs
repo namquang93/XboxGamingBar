@@ -5,6 +5,7 @@ using System.IO;
 using Windows.ApplicationModel.AppService;
 using Windows.Storage;
 using XboxGamingBarHelper.Core;
+using XboxGamingBarHelper.OnScreenDisplay;
 
 namespace XboxGamingBarHelper.Settings
 {
@@ -61,7 +62,7 @@ namespace XboxGamingBarHelper.Settings
         {
             get { return setting; }
         }
-        private GenericProperty<int> onScreenDisplayPropertySettings;
+        private HelperProperty<int, OnScreenDisplayManager> onScreenDisplayPropertySettings;
 
         protected SettingsManager(AppServiceConnection connection) : base(connection)
         {
@@ -87,7 +88,7 @@ namespace XboxGamingBarHelper.Settings
             losslessScalingShortcut.PropertyChanged += LosslessScalingShortcutChanged;
         }
 
-        public void SyncOnScreenDisplaySettings(GenericProperty<int> onScreenDisplayProperty)
+        public void SyncOnScreenDisplaySettings(HelperProperty<int, OnScreenDisplayManager> onScreenDisplayProperty)
         {
             if (onScreenDisplayPropertySettings != null)
                 onScreenDisplayPropertySettings.PropertyChanged -= PerformanceOverlayLevelChanged;

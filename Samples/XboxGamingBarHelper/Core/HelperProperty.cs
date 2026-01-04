@@ -7,7 +7,7 @@ using Windows.Foundation.Collections;
 
 namespace XboxGamingBarHelper.Core
 {
-    internal class HelperProperty<T, TManager> : GenericProperty<T> where TManager : IManager
+    internal class HelperProperty<T, TManager> : GenericProperty<T, HelperValueSet, HelperAppServiceResponse> where TManager : IManager
     {
         protected TManager manager;
 
@@ -36,7 +36,7 @@ namespace XboxGamingBarHelper.Core
             get { return manager; }
         }
 
-        protected override Task<AppServiceResponse> SendMessageAsync(ValueSet request)
+        protected override Task<HelperAppServiceResponse> SendMessageAsync(HelperValueSet request)
         {
             if (Manager == null)
             {
@@ -53,7 +53,10 @@ namespace XboxGamingBarHelper.Core
             Logger.Info($"Send message {request.ToDebugString()} to widget.");
             try
             {
-                return Manager.Connection.SendMessageAsync(request).AsTask();
+                return Manager.Connection.SendMessageAsync(request.ValueSet).AsTask().ContinueWith(accedentTask =>
+                {
+                    return new HelperAppServiceResponse(accedentTask.Result);
+                }, TaskScheduler.Default);
             }
             catch (Exception ex)
             {

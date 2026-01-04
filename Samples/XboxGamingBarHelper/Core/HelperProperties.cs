@@ -1,18 +1,18 @@
 ﻿using Shared.Data;
 using System;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.AppService;
-using Windows.Foundation.Collections;
 
 namespace XboxGamingBarHelper.Core
 {
-    internal class HelperProperties : FunctionalProperties
+    internal class HelperProperties : FunctionalProperties<HelperValueSet, HelperAppServiceResponse, HelperAppServiceRequest>
     {
-        public HelperProperties(params FunctionalProperty[] inProperties) : base(inProperties) { }
+        public HelperProperties(params FunctionalProperty<HelperValueSet, HelperAppServiceResponse>[] inProperties) : base(inProperties) { }
 
-        protected override Task<AppServiceResponseStatus> SendResponse(AppServiceRequest request, ValueSet response)
+        protected override Task<SharedAppServiceResponseStatus> SendResponse(HelperAppServiceRequest request, HelperValueSet response)
         {
-            return request.SendResponseAsync(response).AsTask();
+            // TODO : Implement this method properly.
+            //var a = await request.SendResponseAsync(response);
+            return null;
         }
     }
 }

@@ -72,8 +72,9 @@ namespace XboxGamingBar
         /// </summary>
         public async Task RequestReceived(AppServiceConnection sender, AppServiceRequestReceivedEventArgs args)
         {
-            Logger.Info($"GamingWidgetSettings received message {args.Request.Message.ToDebugString()} from helper.");
-            await properties.OnRequestReceived(args.Request);
+            // TODO: Handle request
+            //Logger.Info($"GamingWidgetSettings received message {args.Request.Message.ToDebugString()} from helper.");
+            await properties.OnRequestReceived(new WidgetAppServiceRequest(args.Request));
         }
     }
 }

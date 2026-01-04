@@ -125,6 +125,8 @@
     <Compile Include="Data\RunningGameProperty.cs" />
     <Compile Include="Data\TDPControlSupportProperty.cs" />
     <Compile Include="Data\TrackedGameProperty.cs" />
+    <Compile Include="Data\WidgetAppServiceRequest.cs" />
+    <Compile Include="Data\WidgetAppServiceResponse.cs" />
     <Compile Include="Data\WidgetComboBoxSelectionProperty.cs" />
     <Compile Include="Data\WidgetControlEnabledProperty.cs" />
     <Compile Include="Data\WidgetControlFocusProperty.cs" />
@@ -136,6 +138,7 @@
     <Compile Include="Data\WidgetProperty.cs" />
     <Compile Include="Data\WidgetPropertyWithAdditionalUI.cs" />
     <Compile Include="Data\WidgetToggleProperty.cs" />
+    <Compile Include="Data\WidgetValueSet.cs" />
     <Compile Include="Event\BackgroundTaskCancellationEventArgs.cs" />
     <Compile Include="GamingWidget.xaml.cs">
       <DependentUpon>GamingWidget.xaml</DependentUpon>

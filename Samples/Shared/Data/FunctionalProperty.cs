@@ -1,8 +1,6 @@
 ﻿using NLog;
 using Shared.Enums;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.AppService;
-using Windows.Foundation.Collections;
 
 namespace Shared.Data
 {
@@ -10,7 +8,9 @@ namespace Shared.Data
     /// A value that should be shared and synced between the helper and the widget for a specific purpose, like TDP or OSD.
     /// </summary>
     /// <typeparam name="T">Type of the value.</typeparam>
-    public abstract class FunctionalProperty : Property
+    public abstract class FunctionalProperty<TSharedValueSet, TSharedAppServiceResponse> : Property
+        where TSharedAppServiceResponse : SharedAppServiceResponse
+        where TSharedValueSet : SharedValueSet, new()
     {
         protected Function function;
         public Function Function
@@ -51,7 +51,7 @@ namespace Shared.Data
                 return;
             }
 
-            var request = new ValueSet
+            var request = new TSharedValueSet
             {
                 { nameof(Command), (int)Command.Set },
                 { nameof(Function),(int)function },
@@ -104,7 +104,7 @@ namespace Shared.Data
                 return;
             }
 
-            var request = new ValueSet
+            var request = new TSharedValueSet
             {
                 { nameof(Command), (int)Command.Get },
                 { nameof(Function),(int)function },
@@ -152,8 +152,8 @@ namespace Shared.Data
             }
         }
 
-        protected abstract Task<AppServiceResponse> SendMessageAsync(ValueSet request);
+        protected abstract Task<TSharedAppServiceResponse> SendMessageAsync(TSharedValueSet request);
 
-        public abstract ValueSet AddValueSetContent(in ValueSet inValueSet);
+        public abstract TSharedValueSet AddValueSetContent(in TSharedValueSet inValueSet);
     }
 }
