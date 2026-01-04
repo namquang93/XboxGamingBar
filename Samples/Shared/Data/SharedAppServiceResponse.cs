@@ -1,7 +1,7 @@
 ﻿namespace Shared.Data
 {
-    public class SharedAppServiceResponse
+    public abstract class SharedAppServiceResponse
     {
-        public virtual SharedValueSet Message { get; }
+        public abstract SharedValueSet Message { get; }
     }
 }

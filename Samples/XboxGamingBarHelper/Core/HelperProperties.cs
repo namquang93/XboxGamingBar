@@ -10,9 +10,10 @@ namespace XboxGamingBarHelper.Core
 
         protected override Task<SharedAppServiceResponseStatus> SendResponse(HelperAppServiceRequest request, HelperValueSet response)
         {
-            // TODO : Implement this method properly.
-            //var a = await request.SendResponseAsync(response);
-            return null;
+            return request.SendResponseAsync(response).AsTask().ContinueWith(antecedentTask =>
+            {
+                return (SharedAppServiceResponseStatus)(int)antecedentTask.Result;
+            }, TaskScheduler.Default);
         }
     }
 }

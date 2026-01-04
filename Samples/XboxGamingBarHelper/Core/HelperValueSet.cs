@@ -14,6 +14,11 @@ namespace XboxGamingBarHelper.Core
             ValueSet = new ValueSet();
         }
 
+        public HelperValueSet(ValueSet inValueSet)
+        {
+            ValueSet = inValueSet;
+        }
+
         public override object this[string key]
         {
             get { return ValueSet[key]; }

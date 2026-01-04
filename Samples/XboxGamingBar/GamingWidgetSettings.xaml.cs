@@ -3,7 +3,7 @@ using NLog;
 using System;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.AppService;
-using Shared.Data;
+using Shared.Utilities;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -72,8 +72,7 @@ namespace XboxGamingBar
         /// </summary>
         public async Task RequestReceived(AppServiceConnection sender, AppServiceRequestReceivedEventArgs args)
         {
-            // TODO: Handle request
-            //Logger.Info($"GamingWidgetSettings received message {args.Request.Message.ToDebugString()} from helper.");
+            Logger.Info($"GamingWidgetSettings received message {args.Request.Message.ToDebugString()} from helper.");
             await properties.OnRequestReceived(new WidgetAppServiceRequest(args.Request));
         }
     }

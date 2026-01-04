@@ -53,9 +53,9 @@ namespace XboxGamingBarHelper.Core
             Logger.Info($"Send message {request.ToDebugString()} to widget.");
             try
             {
-                return Manager.Connection.SendMessageAsync(request.ValueSet).AsTask().ContinueWith(accedentTask =>
+                return Manager.Connection.SendMessageAsync(request.ValueSet).AsTask().ContinueWith(antecedentTask =>
                 {
-                    return new HelperAppServiceResponse(accedentTask.Result);
+                    return new HelperAppServiceResponse(antecedentTask.Result);
                 }, TaskScheduler.Default);
             }
             catch (Exception ex)

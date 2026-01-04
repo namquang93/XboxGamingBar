@@ -14,6 +14,11 @@ namespace XboxGamingBar.Data
             ValueSet = new ValueSet();
         }
 
+        public WidgetValueSet(ValueSet inValueSet)
+        {
+            ValueSet = inValueSet;
+        }
+
         public override object this[string key]
         {
             get { return ValueSet[key]; }

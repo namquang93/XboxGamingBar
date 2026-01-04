@@ -1,6 +1,7 @@
 ﻿using NLog;
 using Shared.Constants;
 using Shared.Data;
+using Shared.Utilities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -344,8 +345,7 @@ namespace XboxGamingBarHelper
         /// </summary>
         private static async void Connection_RequestReceived(AppServiceConnection sender, AppServiceRequestReceivedEventArgs args)
         {
-            // TODO : Handle the request from UWP app
-            //Logger.Info($"Helper received message {args.Request.Message.ToDebugString()} from widget.");
+            Logger.Info($"Helper received message {args.Request.Message.ToDebugString()} from widget.");
             await properties.OnRequestReceived(new HelperAppServiceRequest(args.Request));
         }
 

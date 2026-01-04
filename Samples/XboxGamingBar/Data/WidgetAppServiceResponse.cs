@@ -7,6 +7,11 @@ namespace XboxGamingBar.Data
     {
         public AppServiceResponse AppServiceResponse { get; }
 
+        public override SharedValueSet Message
+        {
+            get { return new WidgetValueSet(AppServiceResponse.Message); }
+        }
+
         public WidgetAppServiceResponse(AppServiceResponse appServiceResponse)
         {
             AppServiceResponse = appServiceResponse;

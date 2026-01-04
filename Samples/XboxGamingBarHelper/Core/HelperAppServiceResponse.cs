@@ -7,6 +7,11 @@ namespace XboxGamingBarHelper.Core
     {
         public AppServiceResponse AppServiceResponse { get; }
 
+        public override SharedValueSet Message
+        {
+            get { return new HelperValueSet(AppServiceResponse.Message); }
+        }
+
         public HelperAppServiceResponse(AppServiceResponse appServiceResponse)
         {
             AppServiceResponse = appServiceResponse;
