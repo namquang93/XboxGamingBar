@@ -4,7 +4,6 @@ using Shared.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Windows.Foundation.Collections;
 
 namespace Shared.Data
 {
@@ -12,7 +11,9 @@ namespace Shared.Data
     /// Contains value for something, like the TDP, or OSD level.
     /// </summary>
     /// <typeparam name="ValueType">Type of that value. Int or bool or what so ever.</typeparam>
-    public abstract class GenericProperty<ValueType> : FunctionalProperty
+    public abstract class GenericProperty<ValueType, TSharedValueSet, TSharedAppServiceResponse> : FunctionalProperty<TSharedValueSet, TSharedAppServiceResponse>
+        where TSharedAppServiceResponse : SharedAppServiceResponse
+        where TSharedValueSet : SharedValueSet, new()
     {
         protected ValueType value;
         public ValueType Value
@@ -34,12 +35,12 @@ namespace Shared.Data
 
         private long lastUpdatedTime;
 
-        public static implicit operator ValueType(GenericProperty<ValueType> property)
+        public static implicit operator ValueType(GenericProperty<ValueType, TSharedValueSet, TSharedAppServiceResponse> property)
         {
             return property.Value;
         }
 
-        public static bool operator ==(GenericProperty<ValueType> left, ValueType right)
+        public static bool operator ==(GenericProperty<ValueType, TSharedValueSet, TSharedAppServiceResponse> left, ValueType right)
         {
             // Handle null cases
             if (ReferenceEquals(left, null))
@@ -51,7 +52,7 @@ namespace Shared.Data
             return left.Equals(right);
         }
 
-        public static bool operator ==(ValueType left, GenericProperty<ValueType> right)
+        public static bool operator ==(ValueType left, GenericProperty<ValueType, TSharedValueSet, TSharedAppServiceResponse> right)
         {
             // Handle null cases
             if (ReferenceEquals(left, null))
@@ -63,7 +64,7 @@ namespace Shared.Data
             return right.Equals(left);
         }
 
-        public static bool operator ==(GenericProperty<ValueType> left, GenericProperty<ValueType> right)
+        public static bool operator ==(GenericProperty<ValueType, TSharedValueSet, TSharedAppServiceResponse> left, GenericProperty<ValueType, TSharedValueSet, TSharedAppServiceResponse> right)
         {
             // Handle null cases
             if (ReferenceEquals(left, null))
@@ -75,17 +76,17 @@ namespace Shared.Data
             return left.Equals(right);
         }
 
-        public static bool operator !=(GenericProperty<ValueType> left, ValueType right)
+        public static bool operator !=(GenericProperty<ValueType, TSharedValueSet, TSharedAppServiceResponse> left, ValueType right)
         {
             return !(left == right);
         }
 
-        public static bool operator !=(ValueType left, GenericProperty<ValueType> right)
+        public static bool operator !=(ValueType left, GenericProperty<ValueType, TSharedValueSet, TSharedAppServiceResponse> right)
         {
             return !(right == left);
         }
 
-        public static bool operator !=(GenericProperty<ValueType> left, GenericProperty<ValueType> right)
+        public static bool operator !=(GenericProperty<ValueType, TSharedValueSet, TSharedAppServiceResponse> left, GenericProperty<ValueType, TSharedValueSet, TSharedAppServiceResponse> right)
         {
             return !(left == right);
         }
@@ -93,7 +94,7 @@ namespace Shared.Data
         // Override the Equals method
         public override bool Equals(object obj)
         {
-            if (obj is GenericProperty<ValueType> other)
+            if (obj is GenericProperty<ValueType, TSharedValueSet, TSharedAppServiceResponse> other)
             {
                 return EqualityComparer<ValueType>.Default.Equals(value, other.value);
             }
@@ -135,7 +136,7 @@ namespace Shared.Data
             lastUpdatedTime = 0L;
         }
 
-        public override ValueSet AddValueSetContent(in ValueSet inValueSet)
+        public override TSharedValueSet AddValueSetContent(in TSharedValueSet inValueSet)
         {
             if (TypeHelper.IsStruct<ValueType>())
             {

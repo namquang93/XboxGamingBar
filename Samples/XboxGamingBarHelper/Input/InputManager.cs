@@ -12,7 +12,6 @@ namespace XboxGamingBarHelper.Input
 {
     internal class InputManager : Manager
     {
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private CancellationTokenSource cancellationTokenSource;
         private Task pollingTask;
         private InputInjector inputInjector;

@@ -1,6 +1,7 @@
 ﻿using NLog;
 using Shared.Constants;
 using Shared.Data;
+using Shared.Utilities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -40,6 +41,7 @@ namespace XboxGamingBarHelper
 
         public static OnScreenDisplayProperty onScreenDisplay;
         public static List<OnScreenDisplayManager> onScreenDisplayProviders;
+        private static TrayIconManager trayIconManager;
 
         // Properties
         private static HelperProperties properties;
@@ -161,6 +163,9 @@ namespace XboxGamingBarHelper
             powerManager.LimitCPUClock.PropertyChanged += CPUClock_PropertyChanged;
             powerManager.CPUClockMax.PropertyChanged += CPUClock_PropertyChanged;
             profileManager.CurrentProfile.PropertyChanged += CurrentProfile_PropertyChanged;
+
+            Logger.Info("Initialize Tray Icon Manager.");
+            trayIconManager = new TrayIconManager(connection);
 
             await ConnectToWidget(true);
 
@@ -341,7 +346,7 @@ namespace XboxGamingBarHelper
         private static async void Connection_RequestReceived(AppServiceConnection sender, AppServiceRequestReceivedEventArgs args)
         {
             Logger.Info($"Helper received message {args.Request.Message.ToDebugString()} from widget.");
-            await properties.OnRequestReceived(args.Request);
+            await properties.OnRequestReceived(new HelperAppServiceRequest(args.Request));
         }
 
         /// <summary>
@@ -365,6 +370,10 @@ namespace XboxGamingBarHelper
             foreach (var manager in Managers)
             {
                 manager.Connection = connection;
+            }
+            if (trayIconManager != null)
+            {
+                trayIconManager.Connection = connection;
             }
         }
     }

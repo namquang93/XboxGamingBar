@@ -2,18 +2,16 @@
 using Shared.Data;
 using Shared.Enums;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.AppService;
-using Windows.Foundation.Collections;
 
 namespace XboxGamingBar.Data
 {
-    internal class WidgetProperty<ValueType> : GenericProperty<ValueType>
+    internal class WidgetProperty<ValueType> : GenericProperty<ValueType, WidgetValueSet, WidgetAppServiceResponse>
     {
         public WidgetProperty(ValueType inValue, IProperty inParentProperty, Function inFunction) : base(inValue, inParentProperty, inFunction)
         {
         }
 
-        protected override Task<AppServiceResponse> SendMessageAsync(ValueSet request)
+        protected override Task<WidgetAppServiceResponse> SendMessageAsync(WidgetValueSet request)
         {
             if (App.Connection == null)
             {
@@ -22,7 +20,10 @@ namespace XboxGamingBar.Data
             }
 
             Logger.Info($"Sending message for widget property {function}: {request.ToDebugString()}.");
-            return App.Connection.SendMessageAsync(request).AsTask();
+            return App.Connection.SendMessageAsync(request.ValueSet).AsTask().ContinueWith(antecedentTask =>
+            {
+                return new WidgetAppServiceResponse(antecedentTask.Result);
+            }, TaskScheduler.Default);
         }
     }
 }

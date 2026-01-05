@@ -1,14 +1,14 @@
 ﻿using Shared.Enums;
+using System.Collections.Generic;
 using System.Text;
-using Windows.Foundation.Collections;
 
-namespace Shared.Data
+namespace Shared.Utilities
 {
-    public static class ValueSetExtensions
+    public static class DebugHelper
     {
         private const string QUOTE = "'";
         private const string SPACE = " ";
-        public static string ToDebugString(this ValueSet valueSet)
+        public static string ToDebugString(this IDictionary<string, object> valueSet)
         {
             if (valueSet == null || valueSet.Count == 0)
             {

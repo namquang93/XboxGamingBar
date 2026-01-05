@@ -2,20 +2,21 @@
 using Shared.Enums;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.AppService;
-using Windows.Foundation.Collections;
 
 namespace Shared.Data
 {
-    public abstract class FunctionalProperties
+    public abstract class FunctionalProperties<TSharedValueSet, TSharedAppServiceResponse, TSharedAppServiceRequest>
+        where TSharedAppServiceResponse : SharedAppServiceResponse
+        where TSharedAppServiceRequest : SharedAppServiceRequest
+        where TSharedValueSet : SharedValueSet, new()
     {
         protected static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-        protected readonly Dictionary<Function, FunctionalProperty> properties;
+        protected readonly Dictionary<Function, FunctionalProperty<TSharedValueSet, TSharedAppServiceResponse>> properties;
 
-        public FunctionalProperties(params FunctionalProperty[] inProperties)
+        public FunctionalProperties(params FunctionalProperty<TSharedValueSet, TSharedAppServiceResponse>[] inProperties)
         {
-            properties = new Dictionary<Function, FunctionalProperty>();
+            properties = new Dictionary<Function, FunctionalProperty<TSharedValueSet, TSharedAppServiceResponse>>();
             foreach (var property in inProperties)
             {
                 if (property == null)
@@ -35,7 +36,7 @@ namespace Shared.Data
             }
         }
 
-        public async Task OnRequestReceived(AppServiceRequest request)
+        public async Task OnRequestReceived(TSharedAppServiceRequest request)
         {
             var function = (Function)request.Message[nameof(Function)];
             if (function == Function.None)
@@ -51,7 +52,7 @@ namespace Shared.Data
             }
 
             var command = (Command)request.Message[nameof(Command)];
-            var response = new ValueSet();
+            var response = new TSharedValueSet();
             switch (command)
             {
                 case Command.Get:
@@ -70,6 +71,6 @@ namespace Shared.Data
             Logger.Info($"Sent response {function} {sendResponseResult}.");
         }
 
-        protected abstract Task<AppServiceResponseStatus> SendResponse(AppServiceRequest request, ValueSet response);
+        protected abstract Task<SharedAppServiceResponseStatus> SendResponse(TSharedAppServiceRequest request, TSharedValueSet response);
     }
 }

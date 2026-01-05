@@ -42,6 +42,7 @@
         Support_PerformanceOverlay,
         Support_AMDSettings,
         LosslessScalingShortcut,
-        IsListeningForKeyBinding
+        IsListeningForKeyBinding,
+        AppExit = 100
     }
 }

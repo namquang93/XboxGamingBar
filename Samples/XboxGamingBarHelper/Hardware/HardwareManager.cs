@@ -191,7 +191,7 @@ namespace XboxGamingBarHelper.Hardware
             {
                 RyzenAdj.refresh_table(ryzenAdjHandle);
                 // RyzenAdj.set_fast_limit(ryzenAdjHandle, 30000);
-                initialTDP = (int)RyzenAdj.get_fast_limit(ryzenAdjHandle);
+                initialTDP = (int)RyzenAdj.get_stapm_limit(ryzenAdjHandle);
                 Logger.Info($"RyzenAdj initialized successfully at {initialTDP}W.");
                 tdpControlSupport = new TDPControlSupportProperty(true, this);
             }

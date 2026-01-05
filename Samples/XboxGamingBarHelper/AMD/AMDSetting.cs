@@ -1,8 +1,6 @@
 ﻿using NLog;
 using System;
-using System.Management.Instrumentation;
 using System.Reflection;
-using System.Runtime.InteropServices;
 
 namespace XboxGamingBarHelper.AMD
 {
