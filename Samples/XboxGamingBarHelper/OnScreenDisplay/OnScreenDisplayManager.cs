@@ -1,4 +1,5 @@
-﻿using Shared.Enums;
+﻿using OverlaySharp;
+using Shared.Enums;
 using Windows.ApplicationModel.AppService;
 using XboxGamingBarHelper.Core;
 

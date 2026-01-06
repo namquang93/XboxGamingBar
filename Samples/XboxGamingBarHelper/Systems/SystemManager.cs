@@ -1,16 +1,19 @@
-﻿using NLog;
+﻿using Microsoft.Win32;
+using NLog;
 using RTSSSharedMemoryNET;
+using Shared.Data;
+using Shared.Utilities;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using Shared.Data;
-using XboxGamingBarHelper.Windows;
-using XboxGamingBarHelper.Core;
-using Windows.ApplicationModel.AppService;
-using System.Collections.Generic;
-using Shared.Utilities;
-using Microsoft.Win32;
 using System.Timers;
+using System.Windows.Forms;
+using Windows.ApplicationModel.AppService;
+using XboxGamingBarHelper.Core;
+using XboxGamingBarHelper.OnScreenDisplay;
+using XboxGamingBarHelper.Windows;
 
 namespace XboxGamingBarHelper.Systems
 {
@@ -97,7 +100,10 @@ namespace XboxGamingBarHelper.Systems
         // Keep track to current opening windows to determine currently running game.
         private Dictionary<int, ProcessWindow> ProcessWindows { get; }
         private Dictionary<int, AppEntry> AppEntries { get; }
-        private readonly Timer displayUpdateTimer;
+        private readonly System.Timers.Timer displayUpdateTimer;
+
+        protected MyESP overlay;
+        public MyESP Overlay => overlay;
 
         public event ResumeFromSleepEventHandler ResumeFromSleep;
 
@@ -126,9 +132,11 @@ namespace XboxGamingBarHelper.Systems
                 Logger.Info($"Supported native resolution: {res.Width}x{res.Height} vs {resolution.Width}x{resolution.Height}");
             }
 
-            displayUpdateTimer = new Timer(500); // 500ms debounce
+            displayUpdateTimer = new System.Timers.Timer(500); // 500ms debounce
             displayUpdateTimer.AutoReset = false;
             displayUpdateTimer.Elapsed += DisplayUpdateTimer_Elapsed;
+
+            overlay = new MyESP();
 
             SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
             SystemEvents.DisplaySettingsChanged += SystemEvents_DisplaySettingsChanged;
@@ -274,6 +282,21 @@ namespace XboxGamingBarHelper.Systems
                     Logger.Info($"Running game {RunningGame.Value.GameId.Name} stopped.");
                 }
                 RunningGame.SetValue(currentRunningGame);
+
+                if (currentRunningGame.ProcessId != 0)
+                {
+                    var process = Process.GetProcessById(currentRunningGame.ProcessId);
+                    if (process != null)
+                    {
+                        Logger.Info($"Attach overlay to process {process.ProcessName} with id {process.Id}.");
+                        overlay.AttachTo(process.MainWindowHandle);
+                        Application.Run(overlay);
+                    }
+                    else
+                    {
+                        Logger.Warn($"Can't find process with id {currentRunningGame.ProcessId} to attach overlay.");
+                    }
+                }
             }
         }
 
