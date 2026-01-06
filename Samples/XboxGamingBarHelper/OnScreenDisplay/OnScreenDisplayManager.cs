@@ -1,4 +1,5 @@
 ﻿using Shared.Enums;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.AppService;
 using XboxGamingBarHelper.Core;
 
@@ -8,11 +9,18 @@ namespace XboxGamingBarHelper.OnScreenDisplay
     {
         protected int onScreenDisplayLevel;
         protected ApplicationState applicationState;
+        protected SampleOverlay overlay;
 
         protected OnScreenDisplayManager(AppServiceConnection connection) : base(connection)
         {
             onScreenDisplayLevel = 0;
             applicationState = ApplicationState.Unknown;
+            overlay = new SampleOverlay();
+        }
+
+        public async Task RunOverlay()
+        {
+            await overlay.Run();
         }
 
         public virtual bool IsInUsed { get ; set ; }

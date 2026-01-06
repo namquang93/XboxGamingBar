@@ -55,7 +55,13 @@ namespace XboxGamingBarHelper
         static void Run(string[] args)
         {
             _ = MainLoopAsync(args);
+            _ = RunOverlayLoop();
             Application.Run();
+        }
+
+        private static async Task RunOverlayLoop()
+        {
+            await rtssManager.RunOverlay();
         }
 
         //static async Task Main(string[] args)
