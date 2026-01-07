@@ -2,3 +2,6 @@
 	path = ADLX
 	url = https://github.com/namquang93/ADLX.git
 	branch = xbox-gaming-bar
+[submodule "ClickableTransparentOverlay"]
+	path = ClickableTransparentOverlay
+	url = https://github.com/namquang93/ClickableTransparentOverlay.git

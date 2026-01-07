@@ -23,6 +23,7 @@ namespace XboxGamingBarHelper.RTSS
 
         private OSD rtssOSD;
         private readonly OSDItem[] osdItems;
+        private PerformanceOnScreenDisplay overlay = new PerformanceOnScreenDisplay();
 
         public RTSSManager(HardwareManager hardwareManager, AppServiceConnection connection) : base(connection)
         {
@@ -35,6 +36,8 @@ namespace XboxGamingBarHelper.RTSS
                 new OSDItemCPU(hardwareManager.CPUUsage, hardwareManager.CPUClock, hardwareManager.CPUWattage, hardwareManager.CPUTemperature),
                 new OSDItemGPU(hardwareManager.GPUUsage, hardwareManager.GPUClock, hardwareManager.GPUWattage, hardwareManager.GPUTemperature),
             };
+
+            overlay.Run();
         }
 
         public override void Update()

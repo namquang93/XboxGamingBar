@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "Shared\Shared.csp
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ADLXCSharpBind", "..\ADLX\Samples\csharp\ADLXCSharpBind\ADLXCSharpBind\ADLXCSharpBind.vcxproj", "{B9106003-FDC7-4318-A4C7-31C40484CD4E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClickableTransparentOverlay", "..\ClickableTransparentOverlay\ClickableTransparentOverlay\ClickableTransparentOverlay.csproj", "{05E4D9BF-A085-39E1-BD8D-CCA32FE10694}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -83,6 +85,18 @@ Global
 		{B9106003-FDC7-4318-A4C7-31C40484CD4E}.Release|x86.ActiveCfg = Release|Win32
 		{B9106003-FDC7-4318-A4C7-31C40484CD4E}.Store|x64.ActiveCfg = Store|x64
 		{B9106003-FDC7-4318-A4C7-31C40484CD4E}.Store|x86.ActiveCfg = Store|Win32
+		{05E4D9BF-A085-39E1-BD8D-CCA32FE10694}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{05E4D9BF-A085-39E1-BD8D-CCA32FE10694}.Debug|x64.Build.0 = Debug|Any CPU
+		{05E4D9BF-A085-39E1-BD8D-CCA32FE10694}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{05E4D9BF-A085-39E1-BD8D-CCA32FE10694}.Debug|x86.Build.0 = Debug|Any CPU
+		{05E4D9BF-A085-39E1-BD8D-CCA32FE10694}.Release|x64.ActiveCfg = Release|Any CPU
+		{05E4D9BF-A085-39E1-BD8D-CCA32FE10694}.Release|x64.Build.0 = Release|Any CPU
+		{05E4D9BF-A085-39E1-BD8D-CCA32FE10694}.Release|x86.ActiveCfg = Release|Any CPU
+		{05E4D9BF-A085-39E1-BD8D-CCA32FE10694}.Release|x86.Build.0 = Release|Any CPU
+		{05E4D9BF-A085-39E1-BD8D-CCA32FE10694}.Store|x64.ActiveCfg = Debug|Any CPU
+		{05E4D9BF-A085-39E1-BD8D-CCA32FE10694}.Store|x64.Build.0 = Debug|Any CPU
+		{05E4D9BF-A085-39E1-BD8D-CCA32FE10694}.Store|x86.ActiveCfg = Debug|Any CPU
+		{05E4D9BF-A085-39E1-BD8D-CCA32FE10694}.Store|x86.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
