@@ -13,7 +13,7 @@ namespace XboxGamingBarHelper.RTSS.OSDItems
         private HardwareSensor batteryChargeRateSensor;
         private HardwareSensor batteryRemainTimeSensor;
 
-        public OSDItemBattery(HardwareSensor batteryPercentSensor, HardwareSensor batteryDischargeRateSensor, HardwareSensor batteryChargeRateSensor, HardwareSensor batteryRemainTimeSensor) : base("BATTERY", Color.DarkCyan)
+        public OSDItemBattery(HardwareSensor batteryPercentSensor, HardwareSensor batteryDischargeRateSensor, HardwareSensor batteryChargeRateSensor, HardwareSensor batteryRemainTimeSensor) : base("BATT", Color.DarkSalmon)
         {
             this.batteryPercentSensor = batteryPercentSensor;
             this.batteryDischargeRateSensor = batteryDischargeRateSensor;

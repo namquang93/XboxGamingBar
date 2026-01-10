@@ -34,7 +34,7 @@ namespace XboxGamingBarHelper.RTSS
                 return string.Empty;
             }
 
-            var osdString = $"{GetNameString()} <C=FFFFFF>";
+            var osdString = $"{GetNameString()}  <C=FFFFFF>";
             
             //if (osdValues == null || osdValues.Count == 0)
             //{
@@ -61,7 +61,7 @@ namespace XboxGamingBarHelper.RTSS
                 }
                 if (i < osdValues.Count - 1)
                 {
-                    osdString += " ";
+                    osdString += "  ";
                 }
             }
             osdString += "<C>";

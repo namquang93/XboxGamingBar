@@ -9,7 +9,7 @@ namespace XboxGamingBarHelper.RTSS.OSDItems
         private HardwareSensor memoryUsageSensor;
         private HardwareSensor memoryUsedSensor;
 
-        public OSDItemMemory(HardwareSensor memoryUsageSensor, HardwareSensor memoryUsedSensor) : base("RAM", Color.Purple)
+        public OSDItemMemory(HardwareSensor memoryUsageSensor, HardwareSensor memoryUsedSensor) : base("RAM", Color.HotPink)
         {
             this.memoryUsageSensor = memoryUsageSensor;
             this.memoryUsedSensor = memoryUsedSensor;

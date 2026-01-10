@@ -18,7 +18,7 @@ namespace XboxGamingBarHelper.RTSS
         // END IOnScreenDisplayProvider implementation
 
         private const string OSDSeparator = " <C=6E006A>|<C> ";
-        private const string OSDBackground = "<P=0,0><L0><C=80000000><B=0,0>\b<C>";
+        private const string OSDBackground = "<M=0,0,-3000><P=0,0><L0><C=80000000><B=0,0>\b<C>";
         private const string OSDAppName = "Gaming Bar OSD";
 
         private OSD rtssOSD;
@@ -29,11 +29,11 @@ namespace XboxGamingBarHelper.RTSS
             
             osdItems = new OSDItem[]
             {
-                new OSDItemFPS(),
                 new OSDItemBattery(hardwareManager.BatteryLevel, hardwareManager.BatteryDischargeRate, hardwareManager.BatteryChargeRate, hardwareManager.BatteryRemainingTime),
-                new OSDItemMemory(hardwareManager.MemoryUsage, hardwareManager.MemoryUsed),
-                new OSDItemCPU(hardwareManager.CPUUsage, hardwareManager.CPUClock, hardwareManager.CPUWattage, hardwareManager.CPUTemperature),
                 new OSDItemGPU(hardwareManager.GPUUsage, hardwareManager.GPUClock, hardwareManager.GPUWattage, hardwareManager.GPUTemperature),
+                new OSDItemCPU(hardwareManager.CPUUsage, hardwareManager.CPUClock, hardwareManager.CPUWattage, hardwareManager.CPUTemperature),
+                new OSDItemMemory(hardwareManager.MemoryUsage, hardwareManager.MemoryUsed),
+                new OSDItemFPS(),
             };
         }
 
