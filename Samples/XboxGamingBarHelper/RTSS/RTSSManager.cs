@@ -116,20 +116,20 @@ namespace XboxGamingBarHelper.RTSS
             }
 
             string osdString = OSDBackground;
+            bool needSeparator = false;
             for (int i = 0; i < osdItems.Length; i++)
             {
                 var osdItemString = osdItems[i].GetOSDString(onScreenDisplayLevel);
                 if (string.IsNullOrEmpty(osdItemString))
                     continue;
 
-                if (i == 0)
+                if (needSeparator)
                 {
-                    osdString += osdItemString;
+                    osdString += OSDSeparator;
                 }
-                else
-                {
-                    osdString += OSDSeparator + osdItemString;
-                }
+
+                osdString += osdItemString;
+                needSeparator = true;
             }
 
             rtssOSD.Update(osdString);
