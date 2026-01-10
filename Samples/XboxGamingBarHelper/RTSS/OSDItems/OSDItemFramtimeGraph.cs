@@ -1,10 +1,10 @@
 ﻿namespace XboxGamingBarHelper.RTSS.OSDItems
 {
-    internal class OSDItemFPS : OSDItem
+    internal class OSDItemFramtimeGraph : OSDItem
     {
         public override string GetOSDString(int osdLevel)
         {
-            return "<C=FF0000><APP><C> <C=FFFFFF><FR><S=50> FPS<S><C>";
+            return "<C=00FF00><G=<FT>,-20,-1><C>";
         }
     }
 }
