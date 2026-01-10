@@ -19,12 +19,12 @@ namespace XboxGamingBarHelper.RTSS.OSDItems
         {
             var osdItems = base.GetValues(osdLevel);
 
-            if (osdLevel >= 3)
+            if (osdLevel >= 2)
             {
                 osdItems.Add(new OSDItemValue(memoryUsageSensor.Value, "%"));
             }
 
-            if (osdLevel >= 4)
+            if (osdLevel >= 3)
             {
                 osdItems.Add(new OSDItemValue(memoryUsedSensor.Value, "GB", string.Empty, false));
             }

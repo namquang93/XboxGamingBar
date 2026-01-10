@@ -89,9 +89,9 @@
                             </Grid.ColumnDefinitions>
                             <TextBlock Text="OFF"     Grid.Column="0" HorizontalAlignment="Center" FontSize="16"/>
                             <TextBlock Text="FPS"      Grid.Column="1" HorizontalAlignment="Center" FontSize="16"/>
-                            <TextBlock Text="BATTERY"  Grid.Column="2" HorizontalAlignment="Center" FontSize="16"/>
-                            <TextBlock Text="DETAILED" Grid.Column="3" HorizontalAlignment="Center" FontSize="16"/>
-                            <TextBlock Text="FULL"     Grid.Column="4" HorizontalAlignment="Center" FontSize="16"/>
+                            <TextBlock Text="DETAILED"  Grid.Column="2" HorizontalAlignment="Center" FontSize="16"/>
+                            <TextBlock Text="FULL" Grid.Column="3" HorizontalAlignment="Center" FontSize="16"/>
+                            <TextBlock Text="ALL"     Grid.Column="4" HorizontalAlignment="Center" FontSize="16"/>
                         </Grid>
 
                         <Grid Grid.Row="4" Visibility="Collapsed" x:Name="TDPHeaderGrid">

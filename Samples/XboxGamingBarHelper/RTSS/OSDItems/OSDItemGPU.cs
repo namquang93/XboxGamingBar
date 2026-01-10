@@ -24,14 +24,14 @@ namespace XboxGamingBarHelper.RTSS.OSDItems
             var osdItems = base.GetValues(osdLevel);
 
             // for level 3, only show GPU usage and temperature.
-            if (osdLevel >= 3)
+            if (osdLevel >= 2)
             {
                 osdItems.Add(new OSDItemValue(gpuUsageSensor.Value, "%"));
                 osdItems.Add(new OSDItemValue(gpuWattageSensor.Value, "W"));
             }
 
             // for level 4, show GPU usage, clock speed, wattage and temperature.
-            if (osdLevel >= 4)
+            if (osdLevel >= 3)
             {
                 osdItems.Add(new OSDItemValue(gpuClockSensor.Value, "MHz"));
                 osdItems.Add(new OSDItemValue(gpuTemperatureSensor.Value, "°C"));
