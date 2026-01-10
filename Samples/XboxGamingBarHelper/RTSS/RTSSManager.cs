@@ -17,8 +17,8 @@ namespace XboxGamingBarHelper.RTSS
         public override bool IsInstalled => RTSSHelper.IsInstalled(out _);
         // END IOnScreenDisplayProvider implementation
 
-        private const string OSDSeparator = " <C=6E006A>|<C> ";
-        private const string OSDBackground = "<M=0,0,-3000><P=0,0><L0><C=80000000><B=0,0>\b<C>";
+        public const string OSDSeparator = " <C=6E006A>|<C> ";
+        private const string OSDBackground = "<M=0,0,-3000,0><P=0,0><L0><C=80000000><B=0,0>\b<C>";
         private const string OSDAppName = "Gaming Bar OSD";
 
         private OSD rtssOSD;
