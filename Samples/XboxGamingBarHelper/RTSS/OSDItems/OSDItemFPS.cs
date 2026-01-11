@@ -4,7 +4,10 @@
     {
         public override string GetOSDString(int osdLevel)
         {
-            return "<C=FF0000><APP><C> <C=FFFFFF><FR><S=50> FPS<S><C>";
+            if (osdLevel >= 3)
+                return "<C=FF0000><APP><C>\t\t<C=FFFFFF><FR><S=50> FPS<S><C>";
+            else
+                return "<C=FF0000><APP><C> <C=FFFFFF><FR><S=50> FPS<S><C>";
         }
     }
 }

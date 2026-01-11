@@ -17,8 +17,12 @@ namespace XboxGamingBarHelper.RTSS
         public override bool IsInstalled => RTSSHelper.IsInstalled(out _);
         // END IOnScreenDisplayProvider implementation
 
-        private const string OSDSeparator = " <C=6E006A>|<C> ";
-        private const string OSDBackground = "<M=0,0,-3000,0><P=0,0><L0><C=80000000><B=0,0>\b<C>";
+        private const string OSDVerticalLineSeparator = " <C=6E006A>|<C> ";
+        private const string OSDNewLine = "\n";
+        private const string OSDNewLinePadding = " ";
+        private const string OSDSingleLineShortBackground = "<M=0,0,-3000,0><P=0,0><L0><C=80000000><B=0,0>\b<C>";
+        private const string OSDSingleLineFullwidthBackground = "<M=0,0,-3000,0><P=0,0><L0><C=80000000><B=0,0>\b<C>";
+        private const string OSDMultipleLinesBackground = "<M=0,0,0,0><P=0,0><L0><C=80000000><B=0,0>\b<C><A0=4><A1=10>";
         private const string OSDAppName = "Gaming Bar OSD";
 
         private OSD rtssOSD;
@@ -116,8 +120,10 @@ namespace XboxGamingBarHelper.RTSS
                 rtssOSD = new OSD(OSDAppName);
             }
 
-            string osdString = OSDBackground;
-            bool needSeparator = false;
+            var osdString = onScreenDisplayLevel == 1 ? OSDSingleLineShortBackground : (onScreenDisplayLevel >= 3 ? OSDMultipleLinesBackground : OSDSingleLineFullwidthBackground);
+            var needSeparator = false;
+            var osdPadding = onScreenDisplayLevel >= 3 ? OSDNewLinePadding : string.Empty;
+            var osdSeparator = onScreenDisplayLevel >= 3 ? OSDNewLine : OSDVerticalLineSeparator;
             for (int i = 0; i < osdItems.Length; i++)
             {
                 var osdItemString = osdItems[i].GetOSDString(onScreenDisplayLevel);
@@ -126,10 +132,11 @@ namespace XboxGamingBarHelper.RTSS
 
                 if (needSeparator)
                 {
-                    osdString += OSDSeparator;
+                    osdString += osdSeparator;
                 }
 
-                osdString += osdItemString;
+                osdString += osdPadding + osdItemString;
+                //Logger.Info("OSD Item: " + osdItemString + " => OSD String: " + osdString);
                 needSeparator = true;
             }
 

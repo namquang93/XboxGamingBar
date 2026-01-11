@@ -7,10 +7,13 @@ namespace XboxGamingBarHelper.RTSS
 {
     internal abstract class OSDItem
     {
+        private const string SingleLineSpacing = "  ";
+        private const string MultipleLinesSpacing = "\t";
+        private const string MultipleLinesSpacing2 = "\t\t";
+
         protected static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         protected string name;
-
         protected string colorCode;
 
         protected OSDItem()
@@ -34,13 +37,14 @@ namespace XboxGamingBarHelper.RTSS
                 return string.Empty;
             }
 
-            var osdString = $"{GetNameString()}  <C=FFFFFF>";
-            
+            var osdString = $"{GetNameString()}<C=FFFFFF>{(osdLevel >= 3 ? MultipleLinesSpacing2 : SingleLineSpacing)}";
+
             //if (osdValues == null || osdValues.Count == 0)
             //{
             //    return osdString + " N/A";
             //}
 
+            var lineBreakCounter = 0;
             for (int i = 0; i < osdValues.Count; i++)
             {
                 var osdValue = osdValues[i];
@@ -59,9 +63,17 @@ namespace XboxGamingBarHelper.RTSS
                         osdString += $"{osdValue.Prefix}{osdValue.Value:F1}<S=50> {osdValue.Unit}<S>";
                     }
                 }
+
                 if (i < osdValues.Count - 1)
                 {
-                    osdString += "  ";
+                    lineBreakCounter++;
+                    if (osdLevel >= 3 && lineBreakCounter >= 2)
+                    {
+                        lineBreakCounter = 0;
+                        osdString += "\n\t";
+                    }
+
+                    osdString += osdLevel >= 3 ? MultipleLinesSpacing : SingleLineSpacing;
                 }
             }
             osdString += "<C>";

@@ -4,7 +4,10 @@
     {
         public override string GetOSDString(int osdLevel)
         {
-            return "<C=00FF00><G=<FT>,-20,-1><C>";
+            if (osdLevel >= 2)
+                return "<C=00FF00><G=<FT>,-20,-1><C>";
+            else
+                return string.Empty;
         }
     }
 }
