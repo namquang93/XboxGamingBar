@@ -42,9 +42,10 @@ namespace XboxGamingBarHelper.RTSS.OSDItems
                 if (batteryRemainTimeSensor.Value > 0)
                 {
                     var hours = Math.Floor(batteryRemainTimeSensor.Value / MathConstants.SECONDS_PER_HOUR);
-                    var minutes = (batteryRemainTimeSensor.Value - hours * MathConstants.SECONDS_PER_HOUR) / MathConstants.SECONDS_PER_MINUTE;
-                    osdItems.Add(new OSDItemValue((float)hours, "H"));
-                    osdItems.Add(new OSDItemValue((float)minutes, "M"));
+                    var minutes = Math.Floor((batteryRemainTimeSensor.Value - hours * MathConstants.SECONDS_PER_HOUR) / MathConstants.SECONDS_PER_MINUTE);
+                    osdItems.Add(new OSDItemValue(-1, $"{hours}<S=50> H<S> {minutes}<S=50> M<S>"));
+                    //osdItems.Add(new OSDItemValue((float)hours, "H"));
+                    //osdItems.Add(new OSDItemValue((float)minutes, "M"));
                 }
             }
 

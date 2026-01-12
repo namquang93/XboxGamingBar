@@ -50,7 +50,7 @@ namespace XboxGamingBarHelper.RTSS
                 var osdValue = osdValues[i];
                 if (osdValue.Value < 0)
                 {
-                    //osdString += "N/A";
+                    osdString += $"{osdValue.Prefix}{osdValue.Unit}"; ;
                 }
                 else
                 {
