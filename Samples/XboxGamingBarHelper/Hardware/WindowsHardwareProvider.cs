@@ -319,9 +319,13 @@ namespace XboxGamingBarHelper.Hardware
         public float GetBatteryLevel() => batteryLevel;
         public float GetBatteryRemainingTime() => batteryRemainingTime;
         public float GetBatteryDischargeRate() => batteryDischargeRate;
-        public float GetBatteryChargeRate() => batteryChargeRate;
+        public float GetBatteryChargeRate() => -1.0f;
 
-        public string GetCpuName() => string.Empty;
+        public int GetCpuCoreCount() => 8;
+        public float GetCpuCoreUsage(int coreIndex) => -1.0f;
+        public float GetCpuCoreClock(int coreIndex) => -1.0f;
+
+        public string GetCpuName() => "Unknown CPU";
         public string GetMotherboardName() => string.Empty;
     }
 }

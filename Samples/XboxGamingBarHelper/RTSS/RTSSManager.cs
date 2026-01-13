@@ -8,6 +8,7 @@ using Windows.ApplicationModel.AppService;
 using XboxGamingBarHelper.OnScreenDisplay;
 using XboxGamingBarHelper.Hardware;
 using XboxGamingBarHelper.RTSS.OSDItems;
+using System.Collections.Generic;
 
 namespace XboxGamingBarHelper.RTSS
 {
@@ -20,7 +21,7 @@ namespace XboxGamingBarHelper.RTSS
         private const string OSDVerticalLineSeparator = " <C=6E006A>|<C> ";
         private const string OSDNewLine = "\n";
         private const string OSDNewLinePadding = " ";
-        private const string OSDSingleLineShortBackground = "<M=0,0,-3000,0><P=0,0><L0><C=80000000><B=0,0>\b<C>";
+        private const string OSDSingleLineShortBackground = "<M=0,0,0,0><P=0,0><L0><C=80000000><B=0,0>\b<C>";
         private const string OSDSingleLineFullwidthBackground = "<M=0,0,-3000,0><P=0,0><L0><C=80000000><B=0,0>\b<C>";
         private const string OSDMultipleLinesBackground = "<M=0,0,0,0><P=0,0><L0><C=80000000><B=0,0>\b<C><A0=4><A1=10>";
         private const string OSDAppName = "Gaming Bar OSD";
@@ -30,16 +31,23 @@ namespace XboxGamingBarHelper.RTSS
 
         public RTSSManager(HardwareManager hardwareManager, AppServiceConnection connection) : base(connection)
         {
-            
-            osdItems = new OSDItem[]
+            var osdItemsList = new List<OSDItem>()
             {
                 new OSDItemBattery(hardwareManager.BatteryLevel, hardwareManager.BatteryDischargeRate, hardwareManager.BatteryChargeRate, hardwareManager.BatteryRemainingTime),
                 new OSDItemGPU(hardwareManager.GPUUsage, hardwareManager.GPUClock, hardwareManager.GPUWattage, hardwareManager.GPUTemperature),
                 new OSDItemCPU(hardwareManager.CPUUsage, hardwareManager.CPUClock, hardwareManager.CPUWattage, hardwareManager.CPUTemperature),
-                new OSDItemMemory(hardwareManager.MemoryUsage, hardwareManager.MemoryUsed),
-                new OSDItemFPS(),
-                new OSDItemFramtimeGraph(),
             };
+
+            for (int i = 0; i < hardwareManager.CPUCoreUsages.Length; i++)
+            {
+                osdItemsList.Add(new OSDItemCPUPerCore(i, hardwareManager.CPUCoreUsages[i], hardwareManager.CPUCoreClocks[i]));
+            }
+
+            osdItemsList.Add(new OSDItemMemory(hardwareManager.MemoryUsage, hardwareManager.MemoryUsed));
+            osdItemsList.Add(new OSDItemFPS());
+            osdItemsList.Add(new OSDItemFramtimeGraph());
+
+            osdItems = osdItemsList.ToArray();
         }
 
         public override void Update()

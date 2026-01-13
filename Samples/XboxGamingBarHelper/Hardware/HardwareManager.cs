@@ -90,6 +90,8 @@ namespace XboxGamingBarHelper.Hardware
         public CPUClockSensor CPUClock { get; }
         public CPUWattageSensor CPUWattage { get ; }
         public CPUTemperatureSensor CPUTemperature { get; }
+        public CPUCoreUsageSensor[] CPUCoreUsages { get; }
+        public CPUCoreClockSensor[] CPUCoreClocks { get; }
 
         public GPUUsageSensor GPUUsage { get; }
         public GPUClockSensor GPUClock { get; }
@@ -151,6 +153,16 @@ namespace XboxGamingBarHelper.Hardware
             CPUUsage = new CPUUsageSensor();
             CPUWattage = new CPUWattageSensor();
             CPUTemperature = new CPUTemperatureSensor();
+
+            int coreCount = hardwareProvider.GetCpuCoreCount();
+            CPUCoreUsages = new CPUCoreUsageSensor[coreCount];
+            CPUCoreClocks = new CPUCoreClockSensor[coreCount];
+            for (int i = 0; i < coreCount; i++)
+            {
+                CPUCoreUsages[i] = new CPUCoreUsageSensor(i);
+                CPUCoreClocks[i] = new CPUCoreClockSensor(i);
+            }
+
             GPUUsage = new GPUUsageSensor();
             GPUClock = new GPUClockSensor();
             GPUTemperature = new GPUTemperatureSensor();
@@ -178,6 +190,9 @@ namespace XboxGamingBarHelper.Hardware
                 BatteryDischargeRate,
                 BatteryChargeRate,
             };
+
+            foreach (var sensor in CPUCoreUsages) hardwareSensors.Add(sensor);
+            foreach (var sensor in CPUCoreClocks) hardwareSensors.Add(sensor);
 
             var initialTDP = 25;
 #if !STORE
@@ -226,6 +241,12 @@ namespace XboxGamingBarHelper.Hardware
             CPUUsage.Value = hardwareProvider.GetCpuUsage();
             CPUWattage.Value = hardwareProvider.GetCpuWattage();
             CPUTemperature.Value = hardwareProvider.GetCpuTemperature();
+
+            for (int i = 0; i < CPUCoreUsages.Length; i++)
+            {
+                CPUCoreUsages[i].Value = hardwareProvider.GetCpuCoreUsage(i);
+                CPUCoreClocks[i].Value = hardwareProvider.GetCpuCoreClock(i);
+            }
 
             GPUClock.Value = hardwareProvider.GetGpuClock();
             GPUUsage.Value = hardwareProvider.GetGpuUsage();
