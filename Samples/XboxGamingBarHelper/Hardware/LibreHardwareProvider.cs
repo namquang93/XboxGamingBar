@@ -115,6 +115,9 @@ namespace XboxGamingBarHelper.Hardware
         public float GetCpuCoreClock(int coreIndex) => GetSensorValue(HardwareType.Cpu, SensorType.Clock, $"Core #{coreIndex + 1}");
 
         public float GetGpuClock() => GetSensorValue(HardwareType.GpuAmd, SensorType.Clock, "GPU Core");
+        public float GetGpuMemoryUsed() => GetSensorValue(HardwareType.GpuAmd, SensorType.SmallData, "GPU Memory Used");
+        public float GetGpuMemoryTotal() => GetSensorValue(HardwareType.GpuAmd, SensorType.SmallData, "GPU Memory Total");
+        public float GetGpuMemoryClock() => GetSensorValue(HardwareType.GpuAmd, SensorType.Clock, "GPU Memory");
         public float GetGpuUsage() => GetSensorValue(HardwareType.GpuAmd, SensorType.Load, "GPU Core");
         public float GetGpuWattage() => GetSensorValue(HardwareType.GpuAmd, SensorType.Power, "GPU Core");
         public float GetGpuTemperature() => GetSensorValue(HardwareType.GpuAmd, SensorType.Temperature, "GPU VR SoC");

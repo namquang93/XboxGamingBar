@@ -43,6 +43,7 @@ namespace XboxGamingBarHelper.RTSS
                 osdItemsList.Add(new OSDItemCPUPerCore(i, hardwareManager.CPUCoreUsages[i], hardwareManager.CPUCoreClocks[i]));
             }
 
+            osdItemsList.Add(new OSDItemVideoMemory(hardwareManager.GPUMemoryUsed, hardwareManager.GPUMemoryTotal));
             osdItemsList.Add(new OSDItemMemory(hardwareManager.MemoryUsage, hardwareManager.MemoryUsed));
             osdItemsList.Add(new OSDItemFPS());
             osdItemsList.Add(new OSDItemFramtimeGraph());
@@ -53,7 +54,7 @@ namespace XboxGamingBarHelper.RTSS
         public override void Update()
         {
             base.Update();
-            
+
             if (!RTSSHelper.IsInstalled(out string installDir))
             {
                 Logger.Debug("Rivatuner Statistics Server is not installed.");

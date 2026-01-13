@@ -13,6 +13,9 @@ namespace XboxGamingBarHelper.Hardware
         float GetCpuCoreUsage(int coreIndex);
         float GetCpuCoreClock(int coreIndex);
         float GetGpuClock();
+        float GetGpuMemoryUsed();
+        float GetGpuMemoryTotal();
+        float GetGpuMemoryClock();
         float GetGpuUsage();
         float GetGpuWattage();
         float GetGpuTemperature();

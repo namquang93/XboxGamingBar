@@ -88,13 +88,16 @@ namespace XboxGamingBarHelper.Hardware
 
         public CPUUsageSensor CPUUsage { get; }
         public CPUClockSensor CPUClock { get; }
-        public CPUWattageSensor CPUWattage { get ; }
+        public CPUWattageSensor CPUWattage { get; }
         public CPUTemperatureSensor CPUTemperature { get; }
         public CPUCoreUsageSensor[] CPUCoreUsages { get; }
         public CPUCoreClockSensor[] CPUCoreClocks { get; }
 
         public GPUUsageSensor GPUUsage { get; }
         public GPUClockSensor GPUClock { get; }
+        public GPUMemoryUsedSensor GPUMemoryUsed { get; }
+        public GPUMemoryTotalSensor GPUMemoryTotal { get; }
+        public GPUMemoryClockSensor GPUMemoryClock { get; }
         public GPUWattageSensor GPUWattage { get; }
         public GPUTemperatureSensor GPUTemperature { get; }
 
@@ -165,6 +168,9 @@ namespace XboxGamingBarHelper.Hardware
 
             GPUUsage = new GPUUsageSensor();
             GPUClock = new GPUClockSensor();
+            GPUMemoryUsed = new GPUMemoryUsedSensor();
+            GPUMemoryTotal = new GPUMemoryTotalSensor();
+            GPUMemoryClock = new GPUMemoryClockSensor();
             GPUTemperature = new GPUTemperatureSensor();
             GPUWattage = new GPUWattageSensor();
             MemoryUsage = new MemoryUsageSensor();
@@ -181,6 +187,9 @@ namespace XboxGamingBarHelper.Hardware
                 CPUTemperature,
                 GPUUsage,
                 GPUClock,
+                GPUMemoryUsed,
+                GPUMemoryTotal,
+                GPUMemoryClock,
                 GPUTemperature,
                 GPUWattage,
                 MemoryUsage,
@@ -249,6 +258,9 @@ namespace XboxGamingBarHelper.Hardware
             }
 
             GPUClock.Value = hardwareProvider.GetGpuClock();
+            GPUMemoryUsed.Value = hardwareProvider.GetGpuMemoryUsed();
+            GPUMemoryTotal.Value = hardwareProvider.GetGpuMemoryTotal();
+            GPUMemoryClock.Value = hardwareProvider.GetGpuMemoryClock();
             GPUUsage.Value = hardwareProvider.GetGpuUsage();
             GPUWattage.Value = hardwareProvider.GetGpuWattage();
             GPUTemperature.Value = hardwareProvider.GetGpuTemperature();
