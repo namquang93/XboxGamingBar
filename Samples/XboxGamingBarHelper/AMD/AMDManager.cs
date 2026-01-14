@@ -45,6 +45,9 @@ namespace XboxGamingBarHelper.AMD
         private SWIGTYPE_p_double totalBoardPowerPointer;
         private SWIGTYPE_p_double gpuTemperaturePointer;
         private SWIGTYPE_p_int gpuClockSpeedPointer;
+        private SWIGTYPE_p_int gpuVRAMPointer;
+        private SWIGTYPE_p_int gpuVRAMClockSpeedPointer;
+        private SWIGTYPE_p_unsigned_int gpuTotalVRAMPointer;
 
         private static AMDManager instance;
         public static AMDManager Instance => instance;
@@ -180,9 +183,11 @@ namespace XboxGamingBarHelper.AMD
         }
 
         private bool isInUsed;
-        public override bool IsInUsed {
+        public override bool IsInUsed
+        {
             get { return isInUsed; }
-            set {
+            set
+            {
                 isInUsed = value;
                 if (!isInUsed)
                 {
@@ -357,6 +362,9 @@ namespace XboxGamingBarHelper.AMD
             totalBoardPowerPointer = ADLX.new_doubleP();
             gpuTemperaturePointer = ADLX.new_doubleP();
             gpuClockSpeedPointer = ADLX.new_intP();
+            gpuVRAMPointer = ADLX.new_intP();
+            gpuVRAMClockSpeedPointer = ADLX.new_intP();
+            gpuTotalVRAMPointer = ADLX.new_uintP();
 
             //aDLXGPUMetrics.GPUPower(gpuPowerPointer);
             //var gpuPower = ADLX.doubleP_value(gpuPowerPointer);
@@ -595,7 +603,7 @@ namespace XboxGamingBarHelper.AMD
                     }
                 }
 #endif
-                
+
                 return;
             }
 
@@ -769,6 +777,39 @@ namespace XboxGamingBarHelper.AMD
 
             adlxGPUMetrics.GPUTemperature(gpuTemperaturePointer);
             return ADLX.doubleP_value(gpuTemperaturePointer);
+        }
+
+        public double GetGPUMemoryUsed()
+        {
+            if (adlxGPUMetrics == null || gpuVRAMPointer == null)
+            {
+                return -1.0;
+            }
+
+            adlxGPUMetrics.GPUVRAM(gpuVRAMPointer);
+            return ADLX.intP_value(gpuVRAMPointer);
+        }
+
+        public double GetGPUMemoryTotal()
+        {
+            if (adlxInternalGPU == null || gpuTotalVRAMPointer == null)
+            {
+                return -1.0;
+            }
+
+            adlxInternalGPU.TotalVRAM(gpuTotalVRAMPointer);
+            return ADLX.uintP_value(gpuTotalVRAMPointer);
+        }
+
+        public double GetGPUMemoryClock()
+        {
+            if (adlxGPUMetrics == null || gpuVRAMClockSpeedPointer == null)
+            {
+                return -1.0;
+            }
+
+            adlxGPUMetrics.GPUVRAMClockSpeed(gpuVRAMClockSpeedPointer);
+            return ADLX.intP_value(gpuVRAMClockSpeedPointer);
         }
     }
 }

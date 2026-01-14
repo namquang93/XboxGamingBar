@@ -24,7 +24,8 @@
         Usage,
         Level,
         Data,
-        TimeSpan
+        TimeSpan,
+        SmallData
     }
 #else
     using LibreHardwareMonitor.Hardware;
