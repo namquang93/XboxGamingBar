@@ -105,7 +105,29 @@ namespace XboxGamingBarHelper.Hardware
             return -1.0f;
         }
 
-        public float GetCpuClock() => GetSensorValue(HardwareType.Cpu, SensorType.Clock, "Core #1");
+        public float GetCpuClock()
+        {
+            float totalClock = 0;
+            int count = 0;
+
+            foreach (var hardware in computer.Hardware)
+            {
+                if (hardware.HardwareType != HardwareType.Cpu) continue;
+
+                foreach (var sensor in hardware.Sensors)
+                {
+                    if (sensor.SensorType == SensorType.Clock &&
+                        sensor.Name.StartsWith("Core #") &&
+                        sensor.Value.HasValue)
+                    {
+                        totalClock += sensor.Value.Value;
+                        count++;
+                    }
+                }
+            }
+
+            return count > 0 ? totalClock / count : -1.0f;
+        }
         public float GetCpuUsage() => GetSensorValue(HardwareType.Cpu, SensorType.Load, "CPU Total");
         public float GetCpuWattage() => GetSensorValue(HardwareType.Cpu, SensorType.Power, "Package");
         public float GetCpuTemperature() => GetSensorValue(HardwareType.Cpu, SensorType.Temperature, "Core (Tctl/Tdie)");
