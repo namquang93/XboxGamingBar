@@ -9,6 +9,7 @@ using XboxGamingBarHelper.OnScreenDisplay;
 using XboxGamingBarHelper.Hardware;
 using XboxGamingBarHelper.RTSS.OSDItems;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace XboxGamingBarHelper.RTSS
 {
@@ -28,6 +29,7 @@ namespace XboxGamingBarHelper.RTSS
 
         private OSD rtssOSD;
         private readonly OSDItem[] osdItems;
+        private readonly OSDItemFrametimeStats frametimeStatsItem;
 
         public RTSSManager(HardwareManager hardwareManager, AppServiceConnection connection) : base(connection)
         {
@@ -46,6 +48,9 @@ namespace XboxGamingBarHelper.RTSS
             osdItemsList.Add(new OSDItemVideoMemory(hardwareManager.GPUMemoryUsed, hardwareManager.GPUMemoryTotal));
             osdItemsList.Add(new OSDItemMemory(hardwareManager.MemoryUsage, hardwareManager.MemoryUsed));
             osdItemsList.Add(new OSDItemFPS());
+
+            frametimeStatsItem = new OSDItemFrametimeStats();
+            osdItemsList.Add(frametimeStatsItem);
             osdItemsList.Add(new OSDItemFramtimeGraph());
 
             osdItems = osdItemsList.ToArray();
@@ -127,6 +132,24 @@ namespace XboxGamingBarHelper.RTSS
             if (rtssOSD == null)
             {
                 rtssOSD = new OSD(OSDAppName);
+            }
+
+            if (onScreenDisplayLevel >= 4)
+            {
+                var appEntries = OSD.GetAppEntries();
+                if (appEntries != null && appEntries.Length > 0)
+                {
+                    // Find the app that has stats or use the first one with a PID
+                    AppEntry activeApp = appEntries.FirstOrDefault(a => a.StatFrameTimeCount > 0)
+                                      ?? appEntries.FirstOrDefault(a => a.ProcessId > 0);
+
+                    if (activeApp != null)
+                    {
+                        frametimeStatsItem.Min = activeApp.StatFrameTimeMin / 1000.0f;
+                        frametimeStatsItem.Max = activeApp.StatFrameTimeMax / 1000.0f;
+                        frametimeStatsItem.Avg = activeApp.StatFrameTimeAvg / 1000.0f;
+                    }
+                }
             }
 
             var osdString = onScreenDisplayLevel == 1 ? OSDSingleLineShortBackground : (onScreenDisplayLevel >= 3 ? OSDMultipleLinesBackground : OSDSingleLineFullwidthBackground);
