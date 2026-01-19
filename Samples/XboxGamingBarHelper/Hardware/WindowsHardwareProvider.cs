@@ -18,9 +18,15 @@ namespace XboxGamingBarHelper.Hardware
 
         private System.Diagnostics.PerformanceCounter cpuCounter;
         private System.Diagnostics.PerformanceCounter cpuFreqCounter;
+        private System.Diagnostics.PerformanceCounter[] cpuCoreCounters;
+        private System.Diagnostics.PerformanceCounter[] cpuCoreFreqCounters;
+
         private float cpuUsage = -1.0f;
         private float cpuClock = -1.0f;
+        private float[] cpuCoreUsages;
+        private float[] cpuCoreClocks;
         private float maxCpuMhz = 0f;
+        private int coreCount = 0;
 
         public WindowsHardwareProvider()
         {
@@ -42,6 +48,49 @@ namespace XboxGamingBarHelper.Hardware
             catch (System.Exception ex)
             {
                 Logger.Error(ex, "Failed to initialize CPU frequency counter");
+            }
+
+            // Initialize per-core counters
+            coreCount = Math.Min(System.Environment.ProcessorCount, 8);
+            cpuCoreCounters = new System.Diagnostics.PerformanceCounter[coreCount];
+            cpuCoreFreqCounters = new System.Diagnostics.PerformanceCounter[coreCount];
+            cpuCoreUsages = new float[coreCount];
+            cpuCoreClocks = new float[coreCount];
+
+            for (int i = 0; i < coreCount; i++)
+            {
+                cpuCoreUsages[i] = -1.0f;
+                cpuCoreClocks[i] = -1.0f;
+
+                try
+                {
+                    cpuCoreCounters[i] = new System.Diagnostics.PerformanceCounter("Processor", "% Processor Time", i.ToString());
+                    cpuCoreCounters[i].NextValue();
+                }
+                catch (System.Exception ex)
+                {
+                    Logger.Error(ex, $"Failed to initialize CPU usage counter for core {i}");
+                }
+
+                try
+                {
+                    // Instance name for Processor Information is "0,0", "0,1" etc.
+                    cpuCoreFreqCounters[i] = new System.Diagnostics.PerformanceCounter("Processor Information", "% of Maximum Frequency", $"0,{i}");
+                    cpuCoreFreqCounters[i].NextValue();
+                }
+                catch
+                {
+                    // Fallback to "0" if "0,0" fails
+                    try
+                    {
+                        cpuCoreFreqCounters[i] = new System.Diagnostics.PerformanceCounter("Processor Information", "% of Maximum Frequency", i.ToString());
+                        cpuCoreFreqCounters[i].NextValue();
+                    }
+                    catch (System.Exception ex)
+                    {
+                        Logger.Error(ex, $"Failed to initialize CPU frequency counter for core {i}");
+                    }
+                }
             }
         }
 
@@ -96,15 +145,38 @@ namespace XboxGamingBarHelper.Hardware
                     float percent = cpuFreqCounter.NextValue();
                     cpuClock = maxCpuMhz * (percent / 100.0f);
                 }
-                catch 
+                catch
                 {
-                    cpuClock = -1.0f;       
+                    cpuClock = -1.0f;
                 }
             }
             else
             {
                 // Fallback or just keep 0 if failed
                 cpuClock = maxCpuMhz;
+            }
+
+            // Update Per-Core CPU
+            for (int i = 0; i < coreCount; i++)
+            {
+                if (cpuCoreCounters[i] != null)
+                {
+                    try { cpuCoreUsages[i] = cpuCoreCounters[i].NextValue(); } catch { }
+                }
+
+                if (maxCpuMhz > 0 && cpuCoreFreqCounters[i] != null)
+                {
+                    try
+                    {
+                        float percent = cpuCoreFreqCounters[i].NextValue();
+                        cpuCoreClocks[i] = maxCpuMhz * (percent / 100.0f);
+                    }
+                    catch { cpuCoreClocks[i] = maxCpuMhz; }
+                }
+                else
+                {
+                    cpuCoreClocks[i] = maxCpuMhz;
+                }
             }
 
             // Update Memory
@@ -116,7 +188,7 @@ namespace XboxGamingBarHelper.Hardware
                     memoryUsage = memStatus.dwMemoryLoad;
                     // convert bytes to GB with double precision to ensure float result
                     double usedBytes = (double)(memStatus.ullTotalPhys - memStatus.ullAvailPhys);
-                    memoryUsed = (float)(usedBytes / (1024.0 * 1024.0 * 1024.0)); 
+                    memoryUsed = (float)(usedBytes / (1024.0 * 1024.0 * 1024.0));
                 }
             }
             catch (System.Exception ex)
@@ -300,17 +372,32 @@ namespace XboxGamingBarHelper.Hardware
 
         public float GetGpuUsage()
         {
-             return (float)(XboxGamingBarHelper.AMD.AMDManager.Instance?.GetGPUUsage() ?? -1.0);
+            return (float)(XboxGamingBarHelper.AMD.AMDManager.Instance?.GetGPUUsage() ?? -1.0);
+        }
+
+        public float GetGpuMemoryUsed()
+        {
+            return (float)(XboxGamingBarHelper.AMD.AMDManager.Instance?.GetGPUMemoryUsed() ?? -1.0);
+        }
+
+        public float GetGpuMemoryTotal()
+        {
+            return (float)(XboxGamingBarHelper.AMD.AMDManager.Instance?.GetGPUMemoryTotal() ?? -1.0);
+        }
+
+        public float GetGpuMemoryClock()
+        {
+            return (float)(XboxGamingBarHelper.AMD.AMDManager.Instance?.GetGPUMemoryClock() ?? -1.0);
         }
 
         public float GetGpuWattage()
         {
-             return (float)(XboxGamingBarHelper.AMD.AMDManager.Instance?.GetGPUWattage() ?? -1.0);
+            return (float)(XboxGamingBarHelper.AMD.AMDManager.Instance?.GetGPUWattage() ?? -1.0);
         }
 
         public float GetGpuTemperature()
         {
-             return (float)(XboxGamingBarHelper.AMD.AMDManager.Instance?.GetGPUTemperature() ?? -1.0);
+            return (float)(XboxGamingBarHelper.AMD.AMDManager.Instance?.GetGPUTemperature() ?? -1.0);
         }
 
         public float GetMemoryUsage() => memoryUsage;
@@ -319,9 +406,13 @@ namespace XboxGamingBarHelper.Hardware
         public float GetBatteryLevel() => batteryLevel;
         public float GetBatteryRemainingTime() => batteryRemainingTime;
         public float GetBatteryDischargeRate() => batteryDischargeRate;
-        public float GetBatteryChargeRate() => batteryChargeRate;
+        public float GetBatteryChargeRate() => -1.0f;
 
-        public string GetCpuName() => string.Empty;
+        public int GetCpuCoreCount() => coreCount;
+        public float GetCpuCoreUsage(int coreIndex) => (coreIndex >= 0 && coreIndex < coreCount) ? cpuCoreUsages[coreIndex] : -1.0f;
+        public float GetCpuCoreClock(int coreIndex) => (coreIndex >= 0 && coreIndex < coreCount) ? cpuCoreClocks[coreIndex] : -1.0f;
+
+        public string GetCpuName() => "Unknown CPU";
         public string GetMotherboardName() => string.Empty;
     }
 }

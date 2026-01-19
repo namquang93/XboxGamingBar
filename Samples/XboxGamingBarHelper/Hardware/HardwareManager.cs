@@ -88,11 +88,16 @@ namespace XboxGamingBarHelper.Hardware
 
         public CPUUsageSensor CPUUsage { get; }
         public CPUClockSensor CPUClock { get; }
-        public CPUWattageSensor CPUWattage { get ; }
+        public CPUWattageSensor CPUWattage { get; }
         public CPUTemperatureSensor CPUTemperature { get; }
+        public CPUCoreUsageSensor[] CPUCoreUsages { get; }
+        public CPUCoreClockSensor[] CPUCoreClocks { get; }
 
         public GPUUsageSensor GPUUsage { get; }
         public GPUClockSensor GPUClock { get; }
+        public GPUMemoryUsedSensor GPUMemoryUsed { get; }
+        public GPUMemoryTotalSensor GPUMemoryTotal { get; }
+        public GPUMemoryClockSensor GPUMemoryClock { get; }
         public GPUWattageSensor GPUWattage { get; }
         public GPUTemperatureSensor GPUTemperature { get; }
 
@@ -151,8 +156,21 @@ namespace XboxGamingBarHelper.Hardware
             CPUUsage = new CPUUsageSensor();
             CPUWattage = new CPUWattageSensor();
             CPUTemperature = new CPUTemperatureSensor();
+
+            int coreCount = hardwareProvider.GetCpuCoreCount();
+            CPUCoreUsages = new CPUCoreUsageSensor[coreCount];
+            CPUCoreClocks = new CPUCoreClockSensor[coreCount];
+            for (int i = 0; i < coreCount; i++)
+            {
+                CPUCoreUsages[i] = new CPUCoreUsageSensor(i);
+                CPUCoreClocks[i] = new CPUCoreClockSensor(i);
+            }
+
             GPUUsage = new GPUUsageSensor();
             GPUClock = new GPUClockSensor();
+            GPUMemoryUsed = new GPUMemoryUsedSensor();
+            GPUMemoryTotal = new GPUMemoryTotalSensor();
+            GPUMemoryClock = new GPUMemoryClockSensor();
             GPUTemperature = new GPUTemperatureSensor();
             GPUWattage = new GPUWattageSensor();
             MemoryUsage = new MemoryUsageSensor();
@@ -169,6 +187,9 @@ namespace XboxGamingBarHelper.Hardware
                 CPUTemperature,
                 GPUUsage,
                 GPUClock,
+                GPUMemoryUsed,
+                GPUMemoryTotal,
+                GPUMemoryClock,
                 GPUTemperature,
                 GPUWattage,
                 MemoryUsage,
@@ -178,6 +199,9 @@ namespace XboxGamingBarHelper.Hardware
                 BatteryDischargeRate,
                 BatteryChargeRate,
             };
+
+            foreach (var sensor in CPUCoreUsages) hardwareSensors.Add(sensor);
+            foreach (var sensor in CPUCoreClocks) hardwareSensors.Add(sensor);
 
             var initialTDP = 25;
 #if !STORE
@@ -227,7 +251,16 @@ namespace XboxGamingBarHelper.Hardware
             CPUWattage.Value = hardwareProvider.GetCpuWattage();
             CPUTemperature.Value = hardwareProvider.GetCpuTemperature();
 
+            for (int i = 0; i < CPUCoreUsages.Length; i++)
+            {
+                CPUCoreUsages[i].Value = hardwareProvider.GetCpuCoreUsage(i);
+                CPUCoreClocks[i].Value = hardwareProvider.GetCpuCoreClock(i);
+            }
+
             GPUClock.Value = hardwareProvider.GetGpuClock();
+            GPUMemoryUsed.Value = hardwareProvider.GetGpuMemoryUsed();
+            GPUMemoryTotal.Value = hardwareProvider.GetGpuMemoryTotal();
+            GPUMemoryClock.Value = hardwareProvider.GetGpuMemoryClock();
             GPUUsage.Value = hardwareProvider.GetGpuUsage();
             GPUWattage.Value = hardwareProvider.GetGpuWattage();
             GPUTemperature.Value = hardwareProvider.GetGpuTemperature();

@@ -8,6 +8,8 @@ using Windows.ApplicationModel.AppService;
 using XboxGamingBarHelper.OnScreenDisplay;
 using XboxGamingBarHelper.Hardware;
 using XboxGamingBarHelper.RTSS.OSDItems;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace XboxGamingBarHelper.RTSS
 {
@@ -17,30 +19,47 @@ namespace XboxGamingBarHelper.RTSS
         public override bool IsInstalled => RTSSHelper.IsInstalled(out _);
         // END IOnScreenDisplayProvider implementation
 
-        private const string OSDSeparator = " <C=6E006A>|<C> ";
-        private const string OSDBackground = "<P=0,0><L0><C=80000000><B=0,0>\b<C>";
+        private const string OSDVerticalLineSeparator = " <C=6E006A>|<C> ";
+        private const string OSDNewLine = "\n";
+        private const string OSDNewLinePadding = " ";
+        private const string OSDSingleLineShortBackground = "<M=0,0,0,0><P=0,0><L0><C=80000000><B=0,0>\b<C>";
+        private const string OSDSingleLineFullwidthBackground = "<M=0,0,-3000,0><P=0,0><L0><C=80000000><B=0,0>\b<C>";
+        private const string OSDMultipleLinesBackground = "<M=0,0,0,0><P=0,0><L0><C=80000000><B=0,0>\b<C><A0=4><A1=10>";
         private const string OSDAppName = "Gaming Bar OSD";
 
         private OSD rtssOSD;
         private readonly OSDItem[] osdItems;
+        private readonly OSDItemFrametimeStats frametimeStatsItem;
 
         public RTSSManager(HardwareManager hardwareManager, AppServiceConnection connection) : base(connection)
         {
-            
-            osdItems = new OSDItem[]
+            var osdItemsList = new List<OSDItem>()
             {
-                new OSDItemFPS(),
                 new OSDItemBattery(hardwareManager.BatteryLevel, hardwareManager.BatteryDischargeRate, hardwareManager.BatteryChargeRate, hardwareManager.BatteryRemainingTime),
-                new OSDItemMemory(hardwareManager.MemoryUsage, hardwareManager.MemoryUsed),
-                new OSDItemCPU(hardwareManager.CPUUsage, hardwareManager.CPUClock, hardwareManager.CPUWattage, hardwareManager.CPUTemperature),
                 new OSDItemGPU(hardwareManager.GPUUsage, hardwareManager.GPUClock, hardwareManager.GPUWattage, hardwareManager.GPUTemperature),
+                new OSDItemCPU(hardwareManager.CPUUsage, hardwareManager.CPUClock, hardwareManager.CPUWattage, hardwareManager.CPUTemperature),
             };
+
+            for (int i = 0; i < hardwareManager.CPUCoreUsages.Length; i++)
+            {
+                osdItemsList.Add(new OSDItemCPUPerCore(i, hardwareManager.CPUCoreUsages[i], hardwareManager.CPUCoreClocks[i]));
+            }
+
+            osdItemsList.Add(new OSDItemVideoMemory(hardwareManager.GPUMemoryUsed, hardwareManager.GPUMemoryTotal));
+            osdItemsList.Add(new OSDItemMemory(hardwareManager.MemoryUsage, hardwareManager.MemoryUsed));
+            osdItemsList.Add(new OSDItemFPS());
+
+            frametimeStatsItem = new OSDItemFrametimeStats();
+            osdItemsList.Add(frametimeStatsItem);
+            osdItemsList.Add(new OSDItemFramtimeGraph());
+
+            osdItems = osdItemsList.ToArray();
         }
 
         public override void Update()
         {
             base.Update();
-            
+
             if (!RTSSHelper.IsInstalled(out string installDir))
             {
                 Logger.Debug("Rivatuner Statistics Server is not installed.");
@@ -115,21 +134,42 @@ namespace XboxGamingBarHelper.RTSS
                 rtssOSD = new OSD(OSDAppName);
             }
 
-            string osdString = OSDBackground;
+            if (onScreenDisplayLevel >= 4)
+            {
+                var appEntries = OSD.GetAppEntries();
+                if (appEntries != null && appEntries.Length > 0)
+                {
+                    // Find the app that has stats or use the first one with a PID
+                    AppEntry activeApp = appEntries.FirstOrDefault(a => a.StatFrameTimeCount > 0)
+                                      ?? appEntries.FirstOrDefault(a => a.ProcessId > 0);
+
+                    if (activeApp != null)
+                    {
+                        frametimeStatsItem.Min = activeApp.StatFrameTimeMin / 1000.0f;
+                        frametimeStatsItem.Max = activeApp.StatFrameTimeMax / 1000.0f;
+                        frametimeStatsItem.Avg = activeApp.StatFrameTimeAvg / 1000.0f;
+                    }
+                }
+            }
+
+            var osdString = onScreenDisplayLevel == 1 ? OSDSingleLineShortBackground : (onScreenDisplayLevel >= 3 ? OSDMultipleLinesBackground : OSDSingleLineFullwidthBackground);
+            var needSeparator = false;
+            var osdPadding = onScreenDisplayLevel >= 3 ? OSDNewLinePadding : string.Empty;
+            var osdSeparator = onScreenDisplayLevel >= 3 ? OSDNewLine : OSDVerticalLineSeparator;
             for (int i = 0; i < osdItems.Length; i++)
             {
                 var osdItemString = osdItems[i].GetOSDString(onScreenDisplayLevel);
                 if (string.IsNullOrEmpty(osdItemString))
                     continue;
 
-                if (i == 0)
+                if (needSeparator)
                 {
-                    osdString += osdItemString;
+                    osdString += osdSeparator;
                 }
-                else
-                {
-                    osdString += OSDSeparator + osdItemString;
-                }
+
+                osdString += osdPadding + osdItemString;
+                //Logger.Info("OSD Item: " + osdItemString + " => OSD String: " + osdString);
+                needSeparator = true;
             }
 
             rtssOSD.Update(osdString);

@@ -2,9 +2,6 @@
 using LibreHardwareMonitor.Hardware;
 using NLog;
 using System;
-using System.Collections.Generic;
-using XboxGamingBarHelper.Core;
-using XboxGamingBarHelper.Hardware.Sensors;
 
 namespace XboxGamingBarHelper.Hardware
 {
@@ -16,6 +13,8 @@ namespace XboxGamingBarHelper.Hardware
         private readonly IVisitor updateVisitor;
         private string cpuName = string.Empty;
         private string motherboardName = string.Empty;
+        private int cpuCoreCount = 0;
+
 
         public LibreHardwareProvider()
         {
@@ -48,6 +47,20 @@ namespace XboxGamingBarHelper.Hardware
                 if (hardware.HardwareType == HardwareType.Cpu)
                 {
                     cpuName = hardware.Name;
+
+                    // Detect core count (max 8)
+                    int maxCores = 0;
+                    foreach (var sensor in hardware.Sensors)
+                    {
+                        if (sensor.SensorType == SensorType.Clock && sensor.Name.StartsWith("Core #"))
+                        {
+                            if (int.TryParse(sensor.Name.Replace("Core #", ""), out int coreNum))
+                            {
+                                if (coreNum > maxCores) maxCores = coreNum;
+                            }
+                        }
+                    }
+                    cpuCoreCount = Math.Min(maxCores, 8);
                 }
 
                 if (hardware.HardwareType == HardwareType.Motherboard)
@@ -60,6 +73,19 @@ namespace XboxGamingBarHelper.Hardware
         public void Update()
         {
             computer.Accept(updateVisitor);
+
+            //foreach (var hardware in computer.Hardware)
+            //{
+            //    foreach (var sensor in hardware.Sensors)
+            //    {
+            //        Logger.Info($"Sensor {sensor.Name} type {sensor.SensorType} of hardware {hardware.Name} type {hardware.HardwareType} is {sensor.Value}");
+            //    }
+
+            //    foreach (var subHardware in hardware.SubHardware)
+            //    {
+            //        Logger.Info($"Subhardware {subHardware.Name} of hardware {hardware.Name} type {hardware.HardwareType}");
+            //    }
+            //}
         }
 
         private float GetSensorValue(HardwareType hardwareType, SensorType sensorType, string name)
@@ -79,12 +105,41 @@ namespace XboxGamingBarHelper.Hardware
             return -1.0f;
         }
 
-        public float GetCpuClock() => GetSensorValue(HardwareType.Cpu, SensorType.Clock, "Core #1");
+        public float GetCpuClock()
+        {
+            float totalClock = 0;
+            int count = 0;
+
+            foreach (var hardware in computer.Hardware)
+            {
+                if (hardware.HardwareType != HardwareType.Cpu) continue;
+
+                foreach (var sensor in hardware.Sensors)
+                {
+                    if (sensor.SensorType == SensorType.Clock &&
+                        sensor.Name.StartsWith("Core #") &&
+                        sensor.Value.HasValue)
+                    {
+                        totalClock += sensor.Value.Value;
+                        count++;
+                    }
+                }
+            }
+
+            return count > 0 ? totalClock / count : -1.0f;
+        }
         public float GetCpuUsage() => GetSensorValue(HardwareType.Cpu, SensorType.Load, "CPU Total");
         public float GetCpuWattage() => GetSensorValue(HardwareType.Cpu, SensorType.Power, "Package");
         public float GetCpuTemperature() => GetSensorValue(HardwareType.Cpu, SensorType.Temperature, "Core (Tctl/Tdie)");
 
+        public int GetCpuCoreCount() => cpuCoreCount;
+        public float GetCpuCoreUsage(int coreIndex) => GetSensorValue(HardwareType.Cpu, SensorType.Load, $"CPU Core #{coreIndex + 1}");
+        public float GetCpuCoreClock(int coreIndex) => GetSensorValue(HardwareType.Cpu, SensorType.Clock, $"Core #{coreIndex + 1}");
+
         public float GetGpuClock() => GetSensorValue(HardwareType.GpuAmd, SensorType.Clock, "GPU Core");
+        public float GetGpuMemoryUsed() => GetSensorValue(HardwareType.GpuAmd, SensorType.SmallData, "GPU Memory Used");
+        public float GetGpuMemoryTotal() => GetSensorValue(HardwareType.GpuAmd, SensorType.SmallData, "GPU Memory Total");
+        public float GetGpuMemoryClock() => GetSensorValue(HardwareType.GpuAmd, SensorType.Clock, "GPU Memory");
         public float GetGpuUsage() => GetSensorValue(HardwareType.GpuAmd, SensorType.Load, "GPU Core");
         public float GetGpuWattage() => GetSensorValue(HardwareType.GpuAmd, SensorType.Power, "GPU Core");
         public float GetGpuTemperature() => GetSensorValue(HardwareType.GpuAmd, SensorType.Temperature, "GPU VR SoC");
