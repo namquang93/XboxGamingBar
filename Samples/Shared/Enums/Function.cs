@@ -37,6 +37,7 @@
 
         Settings_OnScreenDisplayProvider,
         Settings_OnScreenDisplayProviderInstalled,
+        Settings_OnScreenDisplayProviderRunning,
 
         Support_TDPControl,
         Support_PerformanceOverlay,

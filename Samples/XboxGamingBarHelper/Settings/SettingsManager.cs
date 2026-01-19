@@ -38,6 +38,12 @@ namespace XboxGamingBarHelper.Settings
             get { return onScreenDisplayProviderInstalled; }
         }
 
+        private readonly OnScreenDisplayProviderRunningProperty onScreenDisplayProviderRunning;
+        public OnScreenDisplayProviderRunningProperty OnScreenDisplayProviderRunning
+        {
+            get { return onScreenDisplayProviderRunning; }
+        }
+
         private readonly IsForegroundProperty isForeground;
         public IsForegroundProperty IsForeground
         {
@@ -82,6 +88,7 @@ namespace XboxGamingBarHelper.Settings
             onScreenDisplayProvider = new OnScreenDisplayProviderProperty(setting.OnScreenDisplayProvider, this);
             onScreenDisplayProvider.PropertyChanged += OnScreenDisplayProviderChanged;
             onScreenDisplayProviderInstalled = new OnScreenDisplayProviderInstalledProperty(this);
+            onScreenDisplayProviderRunning = new OnScreenDisplayProviderRunningProperty(this);
             isForeground = new IsForegroundProperty(this);
             isListeningForKeyBinding = new IsListeningForKeyBindingProperty(this);
             losslessScalingShortcut = new LosslessScalingShortcutProperty(setting.LosslessScalingShortcut, null, this);
@@ -94,6 +101,8 @@ namespace XboxGamingBarHelper.Settings
                 onScreenDisplayPropertySettings.PropertyChanged -= PerformanceOverlayLevelChanged;
             onScreenDisplayPropertySettings = onScreenDisplayProperty;
             onScreenDisplayProperty.PropertyChanged += PerformanceOverlayLevelChanged;
+            onScreenDisplayProviderInstalled.SetValue(onScreenDisplayProperty.Manager.IsInstalled);
+            onScreenDisplayProviderRunning.SetValue(onScreenDisplayProperty.Manager.IsRunning);
         }
 
         private void OnScreenDisplayProviderChanged(object sender, PropertyChangedEventArgs e)
@@ -132,8 +141,9 @@ namespace XboxGamingBarHelper.Settings
         {
             base.Update();
 
-            Logger.Debug($"On-Screen Display provider {Program.onScreenDisplay.Manager.GetType().Name} is {(Program.onScreenDisplay.Manager.IsInstalled ? "installed" : "not installed")}.");
+            Logger.Debug($"On-Screen Display provider {Program.onScreenDisplay.Manager.GetType().Name} is {(Program.onScreenDisplay.Manager.IsInstalled ? "installed" : "not installed")} and {(Program.onScreenDisplay.Manager.IsRunning ? "running" : "not running")}.");
             onScreenDisplayProviderInstalled.SetValue(Program.onScreenDisplay.Manager.IsInstalled);
+            onScreenDisplayProviderRunning.SetValue(Program.onScreenDisplay.Manager.IsRunning);
         }
     }
 }

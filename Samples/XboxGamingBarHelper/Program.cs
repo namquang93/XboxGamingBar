@@ -132,6 +132,7 @@ namespace XboxGamingBarHelper
                 systemManager.Resolution,
                 systemManager.TrackedGame,
                 settingsManager.OnScreenDisplayProviderInstalled,
+                settingsManager.OnScreenDisplayProviderRunning,
                 settingsManager.IsForeground,
                 settingsManager.IsListeningForKeyBinding,
                 amdManager.AMDSettingsSupported,

@@ -114,6 +114,7 @@
     <Compile Include="Data\MinTDPProperty.cs" />
     <Compile Include="Data\OnScreenDisplayProviderProperty.cs" />
     <Compile Include="Data\LosslessScalingShortcutProperty.cs" />
+    <Compile Include="Data\OnScreenDisplayProviderRunningProperty.cs" />
     <Compile Include="Data\PerGameProfileProperty.cs" />
     <Compile Include="Data\OSDProperty.cs" />
     <Compile Include="Data\AMDRadeonSuperResolutionSupportedProperty.cs" />

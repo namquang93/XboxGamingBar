@@ -63,6 +63,7 @@ namespace XboxGamingBar
         private readonly ResolutionsProperty resolutions;
         private readonly TrackedGameProperty trackedGame;
         private readonly OnScreenDisplayProviderInstalledProperty onScreenDisplayProviderInstalled;
+        private readonly OnScreenDisplayProviderRunningProperty onScreenDisplayProviderRunning;
         private readonly IsForegroundProperty isForeground;
         private readonly FocusingOnOSDSliderProperty focusingOnOSDSlider;
         private readonly LosslessScalingShortcutProperty losslessScalingShortcut;
@@ -110,7 +111,8 @@ namespace XboxGamingBar
             resolutions = new ResolutionsProperty(ResolutionsComboBox, this);
             resolution = new ResolutionProperty(ResolutionsComboBox, this);
             trackedGame = new TrackedGameProperty(new TrackedGame());
-            onScreenDisplayProviderInstalled = new OnScreenDisplayProviderInstalledProperty(PerformanceOverlaySlider, this);
+            onScreenDisplayProviderInstalled = new OnScreenDisplayProviderInstalledProperty(PerformanceOverlaySlider, this, PerformanceOverlayText, PerformanceOverlayLabelsGrid);
+            onScreenDisplayProviderRunning = new OnScreenDisplayProviderRunningProperty(PerformanceOverlaySlider, this);
             isForeground = new IsForegroundProperty();
             amdSettingsSupported = new AMDSettingsSupportedProperty(AMDPivotItem, this, AMDPivotItemStackPanel, AMDRadeonSuperResolutionToggle,
                 AMDRadeonSuperResolutionText, AMDFluidMotionFrameToggle, AMDFluidMotionFrameText, AMDRadeonAntiLagToggle, AMDRadeonAntiLagText,
@@ -151,6 +153,7 @@ namespace XboxGamingBar
                 resolution,
                 trackedGame,
                 onScreenDisplayProviderInstalled,
+                onScreenDisplayProviderRunning,
                 isForeground,
                 amdSettingsSupported,
                 amdRadeonSuperResolutionEnabled,
@@ -209,7 +212,7 @@ namespace XboxGamingBar
                 {
                     // Allow navigation if no key has been captured yet? 
                     // Or prioritize capturing. Let's allow DPad/Stick navigation to cancel listening.
-                    if (e.Key == VirtualKey.GamepadDPadUp || e.Key == VirtualKey.GamepadDPadDown || 
+                    if (e.Key == VirtualKey.GamepadDPadUp || e.Key == VirtualKey.GamepadDPadDown ||
                         e.Key == VirtualKey.GamepadDPadLeft || e.Key == VirtualKey.GamepadDPadRight ||
                         e.Key == VirtualKey.GamepadLeftThumbstickUp || e.Key == VirtualKey.GamepadLeftThumbstickDown ||
                         e.Key == VirtualKey.GamepadLeftThumbstickLeft || e.Key == VirtualKey.GamepadLeftThumbstickRight)
@@ -268,7 +271,7 @@ namespace XboxGamingBar
         {
             isListeningForKeyBinding.SetValue(true);
             isFirstKeyCaptured = false;
-            
+
             StartListeningTimeout();
         }
 

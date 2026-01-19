@@ -17,6 +17,7 @@ namespace XboxGamingBarHelper.RTSS
     {
         // START IOnScreenDisplayProvider implementation
         public override bool IsInstalled => RTSSHelper.IsInstalled(out _);
+        public override bool IsRunning => RTSSHelper.IsRunning();
         // END IOnScreenDisplayProvider implementation
 
         private const string OSDVerticalLineSeparator = " <C=6E006A>|<C> ";

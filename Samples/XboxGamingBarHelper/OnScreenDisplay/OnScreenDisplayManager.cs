@@ -15,9 +15,10 @@ namespace XboxGamingBarHelper.OnScreenDisplay
             applicationState = ApplicationState.Unknown;
         }
 
-        public virtual bool IsInUsed { get ; set ; }
+        public virtual bool IsInUsed { get; set; }
 
         public virtual bool IsInstalled => false;
+        public virtual bool IsRunning => false;
 
         public virtual void SetLevel(int level)
         {

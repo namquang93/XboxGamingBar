@@ -36,7 +36,13 @@ namespace XboxGamingBarHelper.Core
 
         public override string ToDebugString()
         {
-            return "{}";
+            var debugString = "{";
+            foreach (var pair in ValueSet)
+            {
+                debugString += $"{pair.Key}: {pair.Value}, ";
+            }
+            debugString = debugString.TrimEnd(' ', ',') + "}";
+            return debugString;
         }
 
         public override IEnumerator GetEnumerator()
