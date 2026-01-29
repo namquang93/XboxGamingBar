@@ -199,6 +199,7 @@ namespace XboxGamingBar
                     var rootFrame = new Frame();
                     rootFrame.NavigationFailed += OnNavigationFailed;
                     Window.Current.Content = rootFrame;
+                    Window.Current.Activated += (s, ev) => Logger.Info($"Window Activated: {ev.WindowActivationState}");
 
                     if (widgetArgs.AppExtensionId == "GamingWidget")
                     {

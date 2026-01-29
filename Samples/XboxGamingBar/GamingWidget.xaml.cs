@@ -175,6 +175,32 @@ namespace XboxGamingBar
             this.KeyDown += GamingWidget_KeyDown;
             this.MainPivot.SelectionChanged += MainPivot_SelectionChanged;
             this.LosslessScalingBindingButton.LostFocus += LosslessScalingBindingButton_LostFocus;
+            this.Loaded += (s, e) => Logger.Info("GamingWidget Loaded.");
+
+            FocusManager.GettingFocus += FocusManager_GettingFocus;
+            FocusManager.LosingFocus += FocusManager_LosingFocus;
+            FocusManager.GotFocus += FocusManager_GotFocus;
+            FocusManager.LostFocus += FocusManager_LostFocus;
+        }
+
+        private void FocusManager_GettingFocus(object sender, GettingFocusEventArgs e)
+        {
+            Logger.Info($"FocusManager_GettingFocus: NewFocus={e.NewFocusedElement?.GetType().Name}, OldFocus={e.OldFocusedElement?.GetType().Name}, Direction={e.Direction}, FocusState={e.FocusState}, InputDevice={e.InputDevice}");
+        }
+
+        private void FocusManager_LosingFocus(object sender, LosingFocusEventArgs e)
+        {
+            Logger.Info($"FocusManager_LosingFocus: NewFocus={e.NewFocusedElement?.GetType().Name}, OldFocus={e.OldFocusedElement?.GetType().Name}, Direction={e.Direction}, FocusState={e.FocusState}, InputDevice={e.InputDevice}");
+        }
+
+        private void FocusManager_GotFocus(object sender, FocusManagerGotFocusEventArgs e)
+        {
+            Logger.Info($"FocusManager_GotFocus: NewFocus={e.NewFocusedElement?.GetType().Name}");
+        }
+
+        private void FocusManager_LostFocus(object sender, FocusManagerLostFocusEventArgs e)
+        {
+            Logger.Info($"FocusManager_LostFocus: OldFocus={e.OldFocusedElement?.GetType().Name}");
         }
 
         private void LosslessScalingBindingButton_LostFocus(object sender, RoutedEventArgs e)
@@ -202,6 +228,7 @@ namespace XboxGamingBar
 
         private void GamingWidget_KeyDown(object sender, KeyRoutedEventArgs e)
         {
+            Logger.Info($"GamingWidget_KeyDown: Key={e.Key}");
             if (isListeningForKeyBinding)
             {
                 // Capture the gamepad key
@@ -209,7 +236,7 @@ namespace XboxGamingBar
                 {
                     // Allow navigation if no key has been captured yet? 
                     // Or prioritize capturing. Let's allow DPad/Stick navigation to cancel listening.
-                    if (e.Key == VirtualKey.GamepadDPadUp || e.Key == VirtualKey.GamepadDPadDown || 
+                    if (e.Key == VirtualKey.GamepadDPadUp || e.Key == VirtualKey.GamepadDPadDown ||
                         e.Key == VirtualKey.GamepadDPadLeft || e.Key == VirtualKey.GamepadDPadRight ||
                         e.Key == VirtualKey.GamepadLeftThumbstickUp || e.Key == VirtualKey.GamepadLeftThumbstickDown ||
                         e.Key == VirtualKey.GamepadLeftThumbstickLeft || e.Key == VirtualKey.GamepadLeftThumbstickRight)
@@ -268,7 +295,7 @@ namespace XboxGamingBar
         {
             isListeningForKeyBinding.SetValue(true);
             isFirstKeyCaptured = false;
-            
+
             StartListeningTimeout();
         }
 
