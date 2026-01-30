@@ -103,6 +103,7 @@
     <Compile Include="Data\AMDRadeonSuperResolutionEnabledProperty.cs" />
     <Compile Include="Data\AMDRadeonSuperResolutionSharpnessProperty.cs" />
     <Compile Include="Data\AMDSettingsSupportedProperty.cs" />
+    <Compile Include="Data\AutoTDPEnabledProperty.cs" />
     <Compile Include="Data\CPUBoostProperty.cs" />
     <Compile Include="Data\FocusingOnOSDSliderProperty.cs" />
     <Compile Include="Data\IsListeningForKeyBindingProperty.cs" />
@@ -123,6 +124,7 @@
     <Compile Include="Data\ResolutionProperty.cs" />
     <Compile Include="Data\ResolutionsProperty.cs" />
     <Compile Include="Data\RunningGameProperty.cs" />
+    <Compile Include="Data\TargetFPSProperty.cs" />
     <Compile Include="Data\TDPControlSupportProperty.cs" />
     <Compile Include="Data\TrackedGameProperty.cs" />
     <Compile Include="Data\WidgetAppServiceRequest.cs" />

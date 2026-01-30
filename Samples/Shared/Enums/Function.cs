@@ -34,6 +34,8 @@
         AMDRadeonChillMaxFPS,
         Foreground,
         FocusingOnOSDSlider,
+        AutoTDPEnabled,
+        TargetFPS,
 
         Settings_OnScreenDisplayProvider,
         Settings_OnScreenDisplayProviderInstalled,

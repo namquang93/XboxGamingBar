@@ -95,17 +95,36 @@
                         </Grid>
 
                         <Grid Grid.Row="4" Visibility="Collapsed" x:Name="TDPHeaderGrid">
-                            <TextBlock x:Name="TDPLimitText" Text="Thermal Power (TDP) Limit" FontWeight="Normal" FontSize="18" Grid.Row="0"/>
-                            <TextBlock x:Name="TDPValueText" Text="{Binding ElementName=TDPSlider, Path=Value, Converter={StaticResource WattStringConverter}}" 
-                                VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                <TextBlock x:Name="TDPLimitText" Text="Thermal Power (TDP) Limit" FontWeight="Normal" FontSize="18"/>
+                                <TextBlock x:Name="TargetFPSTitleText" Text="Target FPS" FontWeight="Normal" FontSize="18" Visibility="Collapsed"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                <TextBlock x:Name="TDPValueText" Text="{Binding ElementName=TDPSlider, Path=Value, Converter={StaticResource WattStringConverter}}" 
+                                    VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                <TextBlock x:Name="TargetFPSValueText" Text="{Binding ElementName=TargetFPSSlider, Path=Value}" 
+                                    VerticalAlignment="Center" Visibility="Collapsed" Margin="0,0,5,0"/>
+                                <TextBlock Text="FPS" x:Name="TargetFPSLabel" VerticalAlignment="Center" Visibility="Collapsed" Margin="0,0,10,0"/>
+
+                                <ToggleSwitch x:Name="AutoTDPToggle" OffContent="" OnContent="" MinWidth="0" Margin="5,0,0,0"/>
+                            </StackPanel>
                         </Grid>
-                        <Slider x:Name="TDPSlider" Grid.Row="5"
-                            Minimum="4" Maximum="32"
-                            TickFrequency="1"
-                            SnapsTo="Ticks"
-                            TickPlacement="BottomRight"
-                            IsEnabled="False"
-                            Visibility="Collapsed"/>
+                        <Grid Grid.Row="5">
+                            <Slider x:Name="TDPSlider"
+                                Minimum="4" Maximum="32"
+                                TickFrequency="1"
+                                SnapsTo="Ticks"
+                                TickPlacement="BottomRight"
+                                IsEnabled="False"
+                                Visibility="Collapsed"/>
+                            <Slider x:Name="TargetFPSSlider"
+                                Minimum="30" Maximum="120"
+                                TickFrequency="5"
+                                SnapsTo="Ticks"
+                                TickPlacement="BottomRight"
+                                IsEnabled="False"
+                                Visibility="Collapsed"/>
+                        </Grid>
                         <Grid Grid.Row="6">
                             <TextBlock x:Name="CPUBoostText" Text="CPU Boost" FontWeight="Normal" FontSize="18"
                                 TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" HorizontalAlignment="Left" VerticalAlignment="Center"/>

@@ -84,6 +84,9 @@ namespace XboxGamingBar
         private readonly AMDRadeonChillMinFPSProperty amdRadeonChillMinFPSProperty;
         private readonly AMDRadeonChillMaxFPSProperty amdRadeonChillMaxFPSProperty;
 
+        private readonly AutoTDPEnabledProperty autoTDPEnabled;
+        private readonly TargetFPSProperty targetFPS;
+
         private readonly IsListeningForKeyBindingProperty isListeningForKeyBinding;
 
         private readonly WidgetProperties properties;
@@ -96,7 +99,7 @@ namespace XboxGamingBar
             InitializeComponent();
             minTDP = new MinTDPProperty(TDPSlider, this);
             maxTDP = new MaxTDPProperty(TDPSlider, this);
-            tdpControlSupport = new TDPControlSupportProperty(TDPSlider, this, TDPHeaderGrid);
+            tdpControlSupport = new TDPControlSupportProperty(TDPHeaderGrid, this, AutoTDPToggle);
             tdp = new TDPProperty(4, TDPSlider, this);
             osd = new OSDProperty(0, PerformanceOverlaySlider, this);
             runningGame = new RunningGameProperty(RunningGameText, PerGameProfileToggle, this);
@@ -131,7 +134,11 @@ namespace XboxGamingBar
             amdRadeonChillMaxFPSProperty = new AMDRadeonChillMaxFPSProperty(AMDRadeonChillMaxFPSSlider, this);
             focusingOnOSDSlider = new FocusingOnOSDSliderProperty(PerformanceOverlaySlider, this);
             isListeningForKeyBinding = new IsListeningForKeyBindingProperty();
+            isListeningForKeyBinding = new IsListeningForKeyBindingProperty();
             losslessScalingShortcut = new LosslessScalingShortcutProperty(LosslessScalingBindingButton, new List<int>());
+
+            autoTDPEnabled = new AutoTDPEnabledProperty(false, AutoTDPToggle, this);
+            targetFPS = new TargetFPSProperty(60, TargetFPSSlider, this);
 
             properties = new WidgetProperties(
                 osd,
@@ -169,9 +176,14 @@ namespace XboxGamingBar
                 amdRadeonChillMaxFPSProperty,
                 focusingOnOSDSlider,
                 isListeningForKeyBinding,
-                losslessScalingShortcut
+                focusingOnOSDSlider,
+                isListeningForKeyBinding,
+                losslessScalingShortcut,
+                autoTDPEnabled,
+                targetFPS
             );
 
+            this.AutoTDPToggle.Toggled += AutoTDPToggle_Toggled;
             this.KeyDown += GamingWidget_KeyDown;
             this.MainPivot.SelectionChanged += MainPivot_SelectionChanged;
             this.LosslessScalingBindingButton.LostFocus += LosslessScalingBindingButton_LostFocus;
@@ -206,6 +218,46 @@ namespace XboxGamingBar
         private void LosslessScalingBindingButton_LostFocus(object sender, RoutedEventArgs e)
         {
             CancelListening();
+        }
+
+        private void AutoTDPToggle_Toggled(object sender, RoutedEventArgs e)
+        {
+            UpdateTDPVisibility();
+        }
+
+        private void UpdateTDPVisibility()
+        {
+            if (AutoTDPToggle.IsOn)
+            {
+                TDPSlider.Visibility = Visibility.Collapsed;
+
+                TDPLimitText.Text = "Auto TDP";
+                TDPLimitText.Visibility = Visibility.Visible;
+
+                TDPValueText.Visibility = Visibility.Collapsed;
+
+                TargetFPSSlider.Visibility = Visibility.Visible;
+                TargetFPSTitleText.Visibility = Visibility.Collapsed;
+                TargetFPSLabel.Visibility = Visibility.Visible;
+                TargetFPSValueText.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                TargetFPSSlider.Visibility = Visibility.Collapsed;
+                TargetFPSTitleText.Visibility = Visibility.Collapsed;
+                TargetFPSLabel.Visibility = Visibility.Collapsed;
+                TargetFPSValueText.Visibility = Visibility.Collapsed;
+
+                if (tdpControlSupport.Value)
+                {
+                    TDPSlider.Visibility = Visibility.Visible;
+
+                    TDPLimitText.Text = "Manual TDP";
+                    TDPLimitText.Visibility = Visibility.Visible;
+
+                    TDPValueText.Visibility = Visibility.Visible;
+                }
+            }
         }
 
         private void MainPivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -524,6 +576,7 @@ namespace XboxGamingBar
             }
 
             await properties.Sync();
+            UpdateTDPVisibility();
         }
 
         /// <summary>

@@ -34,6 +34,7 @@ namespace XboxGamingBarHelper
         private static SystemManager systemManager;
         private static PowerManager powerManager;
         private static AMDManager amdManager;
+        private static AutoTDPController autoTDPController;
         private static SettingsManager settingsManager;
         private static InputManager inputManager;
         private static List<IManager> Managers;
@@ -92,9 +93,11 @@ namespace XboxGamingBarHelper
             powerManager = new PowerManager(connection);
             Logger.Info("Initialize AMD Manager.");
             amdManager = new AMDManager(connection);
+            Logger.Info("Initialize Auto TDP Controller.");
+            autoTDPController = new AutoTDPController(connection);
             Logger.Info("Initialize Input Manager.");
             inputManager = new InputManager(connection);
-            
+
             Managers = new List<IManager>
             {
                 hardwareManager,
@@ -103,6 +106,7 @@ namespace XboxGamingBarHelper
                 systemManager,
                 powerManager,
                 amdManager,
+                autoTDPController,
                 settingsManager,
                 inputManager
             };
@@ -151,7 +155,9 @@ namespace XboxGamingBarHelper
                 amdManager.AMDRadeonChillMaxFPS,
                 amdManager.FocusingOnOSDSlider,
                 settingsManager.OnScreenDisplayProvider,
-                settingsManager.LosslessScalingShortcut);
+                settingsManager.LosslessScalingShortcut,
+                autoTDPController.AutoTDPEnabled,
+                autoTDPController.TargetFPSProperty);
 
             Logger.Info("Initialize callbacks.");
             systemManager.RunningGame.PropertyChanged += RunningGame_PropertyChanged;
@@ -184,6 +190,8 @@ namespace XboxGamingBarHelper
                 {
                     manager.Update();
                 }
+
+                autoTDPController.Update((int)systemManager.RunningGame.Value.FPS, hardwareManager);
             }
         }
 
