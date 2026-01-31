@@ -84,7 +84,7 @@ namespace XboxGamingBarHelper.Power
                     if (currentTDP != AVERAGE_TDP)
                     {
                         Logger.Info($"Not playing any game, set TDP limit to {AVERAGE_TDP}W.");
-                        hardwareManager.SetTDP(AVERAGE_TDP);
+                        hardwareManager.TDP.SetValue(AVERAGE_TDP);
                     }
                     fpsHistory.Clear();
                 }
@@ -102,13 +102,19 @@ namespace XboxGamingBarHelper.Power
 
             RecordFPS(currentTdp, currentFPS, fpsTimestamp);
 
-            if (FindRecordedFPSCount(currentTdp) < STABLE_NUM_RECORDED_FPS)
+            // Detailed debug logging
+            int historyCount = FindRecordedFPSCount(currentTdp);
+            Logger.Debug($"AutoTDP Update: CurrentFPS={currentFPS}, CurrentTDP={currentTdp}, TargetFPS={targetFPS}, HistoryCount={historyCount}");
+
+            if (historyCount < STABLE_NUM_RECORDED_FPS)
             {
-                // Logger.Info($"Waiting for stable FPS at {currentTdp}W...");
+                Logger.Debug($"Waiting for stable FPS at {currentTdp}W... ({historyCount}/{STABLE_NUM_RECORDED_FPS} samples)");
                 return;
             }
 
             (int currentTdpAverageFps, long currentTdpLastUpdateTime) = FindRecordedFPS(currentTdp);
+
+            Logger.Debug($"Average FPS for {currentTdp}W is {currentTdpAverageFps} (Target: {targetFPS})");
 
             bool superWell = false;
 
@@ -133,7 +139,7 @@ namespace XboxGamingBarHelper.Power
                     if (lessTdpAverageFps == UNKNOWN)
                     {
                         Logger.Info($"FPS {currentTdpAverageFps} good at {currentTdp}W. Trying to lower TDP to {currentTdp - 1}W (Unknown history).");
-                        hardwareManager.SetTDP(currentTdp - 1);
+                        hardwareManager.TDP.SetValue(currentTdp - 1);
                         delayTimeAfterChangingTDP = 1;
                         lastTDPChangeTimestamp = fpsTimestamp;
                     }
@@ -145,7 +151,7 @@ namespace XboxGamingBarHelper.Power
                             if (fpsTimestamp - lessTdpLastUpdateTime >= 10)
                             {
                                 Logger.Info($"FPS {currentTdpAverageFps} super good at {currentTdp}W. Retrying {currentTdp - 1}W after 10s.");
-                                hardwareManager.SetTDP(currentTdp - 1);
+                                hardwareManager.TDP.SetValue(currentTdp - 1);
                                 delayTimeAfterChangingTDP = 1;
                                 lastTDPChangeTimestamp = fpsTimestamp;
                             }
@@ -166,7 +172,7 @@ namespace XboxGamingBarHelper.Power
                     else
                     {
                         Logger.Info($"FPS {currentTdpAverageFps} good at {currentTdp}W. History says {currentTdp - 1}W is also good ({lessTdpAverageFps}). Lowering.");
-                        hardwareManager.SetTDP(currentTdp - 1);
+                        hardwareManager.TDP.SetValue(currentTdp - 1);
                         delayTimeAfterChangingTDP = 1;
                         lastTDPChangeTimestamp = fpsTimestamp;
                     }
@@ -184,7 +190,7 @@ namespace XboxGamingBarHelper.Power
                 else
                 {
                     Logger.Info($"FPS {currentTdpAverageFps} below target at {currentTdp}W. Increasing TDP to {currentTdp + 1}W.");
-                    hardwareManager.SetTDP(currentTdp + 1);
+                    hardwareManager.TDP.SetValue(currentTdp + 1);
                     delayTimeAfterChangingTDP = 1;
                     lastTDPChangeTimestamp = fpsTimestamp;
                 }
@@ -206,6 +212,13 @@ namespace XboxGamingBarHelper.Power
             {
                 list.RemoveAt(0);
             }
+
+            var debugFPSHistory = string.Empty;
+            foreach (var fpsHistoryItem in fpsHistory)
+            {
+                debugFPSHistory = $"{fpsHistoryItem.Key}:[{string.Join(',', fpsHistoryItem.Value.Select(item => item.fps))}]";
+            }
+            Logger.Info($"FPS History: {debugFPSHistory}");
         }
 
         private int FindRecordedFPSCount(int tdp)

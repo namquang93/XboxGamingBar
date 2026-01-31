@@ -1,5 +1,7 @@
 ﻿
 using NLog;
+using Shared.Data;
+using Shared.Enums;
 using System;
 //using System.Collections;
 using System.Collections.Generic;
@@ -80,6 +82,20 @@ namespace XboxGamingBarHelper.Hardware
 
     internal class HardwareManager : Manager
     {
+        internal class TDPProperty : HelperProperty<int, HardwareManager>
+        {
+            public TDPProperty(int inValue, IProperty inParentProperty, HardwareManager inManager) : base(inValue, inParentProperty, Function.TDP, inManager)
+            {
+            }
+
+            protected override void NotifyPropertyChanged(string propertyName = "")
+            {
+                base.NotifyPropertyChanged(propertyName);
+
+                Manager.SetTDP(Value);
+            }
+        }
+
         private readonly CPU cpu;
         private readonly Device device;
 
@@ -213,9 +229,7 @@ namespace XboxGamingBarHelper.Hardware
             }
             else
             {
-                RyzenAdj.refresh_table(ryzenAdjHandle);
-                // RyzenAdj.set_fast_limit(ryzenAdjHandle, 30000);
-                initialTDP = (int)RyzenAdj.get_stapm_limit(ryzenAdjHandle);
+                initialTDP = GetTDP();
                 Logger.Info($"RyzenAdj initialized successfully at {initialTDP}W.");
                 tdpControlSupport = new TDPControlSupportProperty(true, this);
             }
@@ -274,7 +288,7 @@ namespace XboxGamingBarHelper.Hardware
             BatteryChargeRate.Value = hardwareProvider.GetBatteryChargeRate();
         }
 
-        public int GetTDP()
+        private int GetTDP()
         {
             if (ryzenAdjHandle == IntPtr.Zero)
             {
@@ -286,7 +300,7 @@ namespace XboxGamingBarHelper.Hardware
             return (int)RyzenAdj.get_stapm_limit(ryzenAdjHandle);
         }
 
-        public void SetTDP(int tdp)
+        private void SetTDP(int tdp)
         {
             if (ryzenAdjHandle == IntPtr.Zero)
             {
@@ -295,7 +309,7 @@ namespace XboxGamingBarHelper.Hardware
             }
             //RyzenAdj.refresh_table(ryzenAdjHandle);
             RyzenAdj.set_fast_limit(ryzenAdjHandle, (uint)((tdp + 10) * 1000));
-            RyzenAdj.set_slow_limit(ryzenAdjHandle, (uint)((tdp + 5) * 1000));
+            RyzenAdj.set_slow_limit(ryzenAdjHandle, (uint)(tdp * 1000));
             RyzenAdj.set_stapm_limit(ryzenAdjHandle, (uint)(tdp * 1000));
 #if DEBUG
             RyzenAdj.refresh_table(ryzenAdjHandle);

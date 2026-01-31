@@ -186,16 +186,18 @@ namespace XboxGamingBarHelper.Systems
                         continue;
                     }
 
+                    var possibleFPS = AppEntries.ContainsKey(processWindow.Value.ProcessId) ? AppEntries[processWindow.Value.ProcessId].InstantaneousFrames : 0;
+
                     if (trackedGame.IsValid() && trackedGame.DisplayName == processWindow.Value.Title)
                     {
                         Logger.Debug($"Found window \"{processWindow.Value.Title}\" running {(processWindow.Value.IsForeground ? "foreground" : "background")} process id {processWindow.Key} at path \"{processWindow.Value.Path}\" named \"{processWindow.Value.ProcessName}\" matches the xbox game bar widget app tracker target.");
-                        possibleGames.Add(new RunningGame(processWindow.Value.ProcessId, processWindow.Value.Title, processWindow.Value.Path, trackedGame.AumId, 0, processWindow.Value.IsForeground));
+                        possibleGames.Add(new RunningGame(processWindow.Value.ProcessId, processWindow.Value.Title, processWindow.Value.Path, trackedGame.AumId, possibleFPS, processWindow.Value.IsForeground));
                     }
 
                     if (Profiles.ContainsKey(new GameId(processWindow.Value.Title, processWindow.Value.Path)))
                     {
                         Logger.Debug($"Found window \"{processWindow.Value.Title}\" running {(processWindow.Value.IsForeground ? "foreground" : "background")} process id {processWindow.Key} at path \"{processWindow.Value.Path}\" named \"{processWindow.Value.ProcessName}\" has profile, use it.");
-                        possibleGames.Add(new RunningGame(processWindow.Value.ProcessId, processWindow.Value.Title, processWindow.Value.Path, string.Empty, 0, processWindow.Value.IsForeground));
+                        possibleGames.Add(new RunningGame(processWindow.Value.ProcessId, processWindow.Value.Title, processWindow.Value.Path, string.Empty, possibleFPS, processWindow.Value.IsForeground));
                         continue;
                     }
 
@@ -209,7 +211,7 @@ namespace XboxGamingBarHelper.Systems
                     if (GameProcesses.Contains(processExecutable))
                     {
                         Logger.Debug($"Found window \"{processWindow.Value.Title}\" running {(processWindow.Value.IsForeground ? "foreground" : "background")} process id {processWindow.Key} at path \"{processPath}\" named \"{processWindow.Value.ProcessName}\" in pre-defined list.");
-                        possibleGames.Add(new RunningGame(processWindow.Value.ProcessId, processWindow.Value.Title, processPath, string.Empty, 0, processWindow.Value.IsForeground));
+                        possibleGames.Add(new RunningGame(processWindow.Value.ProcessId, processWindow.Value.Title, processPath, string.Empty, possibleFPS, processWindow.Value.IsForeground));
                         continue;
                     }
 
@@ -275,6 +277,10 @@ namespace XboxGamingBarHelper.Systems
                 }
                 RunningGame.SetValue(currentRunningGame);
             }
+            else
+            {
+                RunningGame.FPS = currentRunningGame.FPS;
+            }
         }
 
         private void SystemEvents_PowerModeChanged(object sender, PowerModeChangedEventArgs e)
@@ -291,7 +297,7 @@ namespace XboxGamingBarHelper.Systems
                     // Add your custom logic here to execute before sleep
                     break;
                 case PowerModes.StatusChange:
-                    Logger.Info($"Power mode status change detected: {DateTime.Now}");
+                    Logger.Debug($"Power mode status change detected: {DateTime.Now}");
                     break;
             }
         }

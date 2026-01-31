@@ -15,6 +15,12 @@ namespace XboxGamingBarHelper.Systems
             get { return Value.GameId; }
         }
 
+        public uint FPS
+        {
+            get { return Value.FPS; }
+            set { this.value.FPS = value; }
+        }
+
         public bool IsValid()
         {
             return Value.IsValid();
