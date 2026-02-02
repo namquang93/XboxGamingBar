@@ -58,6 +58,30 @@ namespace XboxGamingBarHelper.Profile
             }
         }
 
+        public bool AutoTDP
+        {
+            get { return value.AutoTDP; }
+            set
+            {
+                if (this.Value.AutoTDP != value)
+                {
+                    this.value.AutoTDP = value;
+                }
+            }
+        }
+
+        public int TargetFPS
+        {
+            get { return value.TargetFPS; }
+            set
+            {
+                if (this.Value.TargetFPS != value)
+                {
+                    this.value.TargetFPS = value;
+                }
+            }
+        }
+
         public GameId GameId
         {
             get { return value.GameId; }

@@ -105,6 +105,36 @@ namespace Shared.Data
             }
         }
 
+        [XmlElement("AutoTDP")]
+        private bool? autoTDP;
+        public bool AutoTDP
+        {
+            get { return autoTDP ?? true; }
+            set
+            {
+                if (autoTDP != value)
+                {
+                    autoTDP = value;
+                    Save();
+                }
+            }
+        }
+
+        [XmlElement("TargetFPS")]
+        private int targetFPS;
+        public int TargetFPS
+        {
+            get { return targetFPS; }
+            set
+            {
+                if (targetFPS != value)
+                {
+                    targetFPS = value;
+                    Save();
+                }
+            }
+        }
+
         [XmlIgnore]
         public string Path;
 
@@ -119,7 +149,7 @@ namespace Shared.Data
             set { cache = value; }
         }
 
-        public GameProfile(string gameName, string gamePath, bool inUse, int inTDP, bool inCPUBoost, int inCPUEPP, int inCPUClock, string inPath, IDictionary<GameId, GameProfile> inCache)
+        public GameProfile(string gameName, string gamePath, bool inUse, int inTDP, bool inCPUBoost, int inCPUEPP, int inCPUClock, bool inAutoTDP, int inTargetFPS, string inPath, IDictionary<GameId, GameProfile> inCache)
         {
             GameId = new GameId(gameName, gamePath);
             use = inUse;
@@ -127,6 +157,8 @@ namespace Shared.Data
             cpuBoost = inCPUBoost;
             cpuEPP = inCPUEPP;
             cpuClock = inCPUClock;
+            autoTDP = inAutoTDP;
+            targetFPS = inTargetFPS;
             Path = inPath;
             cache = inCache;
         }

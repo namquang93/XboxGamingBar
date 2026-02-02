@@ -23,56 +23,61 @@ namespace XboxGamingBarHelper.Power
         private const int IDLE_NO_FPS_NUM = 5;
         private const int UNKNOWN = -1;
 
-        private bool isEnabled;
-        private int targetFPS = 60;
+        //private bool isEnabled;
+        //private int targetFPS = 60;
         private int noFPSCount;
         private Dictionary<int, List<(int fps, long timestamp)>> fpsHistory = new Dictionary<int, List<(int fps, long timestamp)>>();
         private long lastTDPChangeTimestamp;
         private int delayTimeAfterChangingTDP;
 
         public AutoTDPEnabledProperty AutoTDPEnabled { get; private set; }
-        public TargetFPSProperty TargetFPSProperty { get; private set; }
+        public TargetFPSProperty TargetFPS { get; private set; }
 
-        public AutoTDPController(AppServiceConnection connection)
+        public AutoTDPController(AppServiceConnection connection, bool initiallyEnableAutoTDP, int initialTargetFPS)
         {
             Connection = connection;
-            AutoTDPEnabled = new AutoTDPEnabledProperty(false, null, this);
-            TargetFPSProperty = new TargetFPSProperty(60, null, this);
+            AutoTDPEnabled = new AutoTDPEnabledProperty(initiallyEnableAutoTDP, this);
+            TargetFPS = new TargetFPSProperty(initialTargetFPS, this);
         }
 
-        public bool IsEnabled
-        {
-            get { return isEnabled; }
-            set
-            {
-                isEnabled = value;
-                if (!isEnabled)
-                {
-                    fpsHistory.Clear();
-                    noFPSCount = 0;
-                }
-                Logger.Info($"Auto TDP {(isEnabled ? "Enabled" : "Disabled")}");
-            }
-        }
+        //public bool IsEnabled
+        //{
+        //    get { return isEnabled; }
+        //    set
+        //    {
+        //        isEnabled = value;
+        //        if (!isEnabled)
+        //        {
+        //            fpsHistory.Clear();
+        //            noFPSCount = 0;
+        //        }
+        //        Logger.Info($"Auto TDP {(isEnabled ? "Enabled" : "Disabled")}");
+        //    }
+        //}
 
-        public int TargetFPS
-        {
-            get { return targetFPS; }
-            set
-            {
-                targetFPS = value;
-                Logger.Info($"Auto TDP Target FPS set to {targetFPS}");
-            }
-        }
+        //public int TargetFPS
+        //{
+        //    get { return targetFPS; }
+        //    set
+        //    {
+        //        targetFPS = value;
+        //        Logger.Info($"Auto TDP Target FPS set to {targetFPS}");
+        //    }
+        //}
 
 
         public void Update(int currentFPS, HardwareManager hardwareManager)
         {
-            if (!isEnabled) return;
+            if (!AutoTDPEnabled)
+            {
+                Logger.Debug("Skip auto TDP update.");
+                return;
+            }
 
             // Simple throttling based on delay set by previous actions
             if (DateTimeOffset.UtcNow.ToUnixTimeSeconds() < lastTDPChangeTimestamp + delayTimeAfterChangingTDP)
             {
+                Logger.Debug("Still waiting after changing TDP.");
                 return;
             }
 
@@ -104,7 +109,7 @@ namespace XboxGamingBarHelper.Power
 
             // Detailed debug logging
             int historyCount = FindRecordedFPSCount(currentTdp);
-            Logger.Debug($"AutoTDP Update: CurrentFPS={currentFPS}, CurrentTDP={currentTdp}, TargetFPS={targetFPS}, HistoryCount={historyCount}");
+            Logger.Debug($"AutoTDP Update: CurrentFPS={currentFPS}, CurrentTDP={currentTdp}, TargetFPS={TargetFPS}, HistoryCount={historyCount}");
 
             if (historyCount < STABLE_NUM_RECORDED_FPS)
             {
@@ -114,16 +119,16 @@ namespace XboxGamingBarHelper.Power
 
             (int currentTdpAverageFps, long currentTdpLastUpdateTime) = FindRecordedFPS(currentTdp);
 
-            Logger.Debug($"Average FPS for {currentTdp}W is {currentTdpAverageFps} (Target: {targetFPS})");
+            Logger.Debug($"Average FPS for {currentTdp}W is {currentTdpAverageFps} (Target: {TargetFPS})");
 
             bool superWell = false;
 
-            if (currentTdpAverageFps >= targetFPS - BEST_THRESHOLD)
+            if (currentTdpAverageFps >= TargetFPS - BEST_THRESHOLD)
             {
                 superWell = true;
             }
 
-            if (currentTdpAverageFps >= targetFPS - GOOD_THRESHOLD)
+            if (currentTdpAverageFps >= TargetFPS - GOOD_THRESHOLD)
             {
                 // Performance is good, try to lower TDP
                 if (currentTdp <= MIN_TDP)
@@ -143,7 +148,7 @@ namespace XboxGamingBarHelper.Power
                         delayTimeAfterChangingTDP = 1;
                         lastTDPChangeTimestamp = fpsTimestamp;
                     }
-                    else if (lessTdpAverageFps < targetFPS - GOOD_THRESHOLD)
+                    else if (lessTdpAverageFps < TargetFPS - GOOD_THRESHOLD)
                     {
                         // Historical data says lowering TDP will hurt performance too much
                         if (superWell)
@@ -216,9 +221,10 @@ namespace XboxGamingBarHelper.Power
             var debugFPSHistory = string.Empty;
             foreach (var fpsHistoryItem in fpsHistory)
             {
-                debugFPSHistory = $"{fpsHistoryItem.Key}:[{string.Join(',', fpsHistoryItem.Value.Select(item => item.fps))}]";
+                debugFPSHistory += $"{fpsHistoryItem.Key}:[{string.Join(',', fpsHistoryItem.Value.Select(item => item.fps))}], ";
             }
-            Logger.Info($"FPS History: {debugFPSHistory}");
+            debugFPSHistory.TrimEnd(' ', ',');
+            Logger.Info($"Record FPS: {fps} at {tdp}W (FPS History: {debugFPSHistory})");
         }
 
         private int FindRecordedFPSCount(int tdp)
