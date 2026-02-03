@@ -1,4 +1,5 @@
 ﻿using NLog;
+using Shared.Constants;
 using Shared.Data;
 using Shared.Utilities;
 using System;
@@ -45,7 +46,7 @@ namespace XboxGamingBarHelper.Profile
             if (!File.Exists(globalProfilePath))
             {
                 // Create global profile path when it's not previously exist.
-                GlobalProfile = new GameProfile(GameProfile.GLOBAL_PROFILE_NAME, GameProfile.GLOBAL_PROFILE_NAME, true, 25, true, 80, 0, true, 60, globalProfilePath, gameProfiles);
+                GlobalProfile = new GameProfile(GameProfile.GLOBAL_PROFILE_NAME, GameProfile.GLOBAL_PROFILE_NAME, true, CPUConstants.DEFAULT_TDP, true, 80, 0, true, 60, globalProfilePath, gameProfiles);
                 GlobalProfile.Save();
             }
             else

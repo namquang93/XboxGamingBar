@@ -1,4 +1,5 @@
 using NLog;
+using Shared.Constants;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,6 @@ namespace XboxGamingBarHelper.Power
 {
     internal class AutoTDPManager : Manager
     {
-        private const int AVERAGE_TDP = 15;
         private const int GOOD_THRESHOLD = 3;
         private const int BEST_THRESHOLD = 0;
         private const int STABLE_NUM_RECORDED_FPS = 3;
@@ -105,10 +105,10 @@ namespace XboxGamingBarHelper.Power
                 if (noFPSCount >= IDLE_NO_FPS_NUM)
                 {
                     int currentTDP = hardwareManager.TDP.Value;
-                    if (currentTDP != AVERAGE_TDP)
+                    if (currentTDP != CPUConstants.DEFAULT_TDP)
                     {
-                        Logger.Info($"Not playing any game, set TDP limit to {AVERAGE_TDP}W.");
-                        hardwareManager.TDP.SetValue(AVERAGE_TDP);
+                        Logger.Info($"Not playing any game, set TDP limit to {CPUConstants.DEFAULT_TDP}W.");
+                        hardwareManager.TDP.SetValue(CPUConstants.DEFAULT_TDP);
                     }
                     fpsHistory.Clear();
                 }

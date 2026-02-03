@@ -1,5 +1,6 @@
 ﻿
 using NLog;
+using Shared.Constants;
 using Shared.Data;
 using Shared.Enums;
 using System;
@@ -219,7 +220,7 @@ namespace XboxGamingBarHelper.Hardware
             foreach (var sensor in CPUCoreUsages) hardwareSensors.Add(sensor);
             foreach (var sensor in CPUCoreClocks) hardwareSensors.Add(sensor);
 
-            var initialTDP = 25;
+            var initialTDP = CPUConstants.DEFAULT_TDP;
 #if !STORE
             ryzenAdjHandle = RyzenAdj.init_ryzenadj();
             if (ryzenAdjHandle == IntPtr.Zero)
