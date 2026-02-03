@@ -3,9 +3,9 @@ using XboxGamingBarHelper.Core;
 
 namespace XboxGamingBarHelper.Power
 {
-    internal class TargetFPSProperty : HelperProperty<int, AutoTDPController>
+    internal class TargetFPSProperty : HelperProperty<int, AutoTDPManager>
     {
-        public TargetFPSProperty(int inValue, AutoTDPController inManager) : base(inValue, null, Function.TargetFPS, inManager)
+        public TargetFPSProperty(int inValue, AutoTDPManager inManager) : base(inValue, null, Function.TargetFPS, inManager)
         {
         }
     }

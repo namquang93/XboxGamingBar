@@ -5,17 +5,12 @@ using System.Linq;
 using Windows.ApplicationModel.AppService;
 using XboxGamingBarHelper.Core;
 using XboxGamingBarHelper.Hardware;
+using XboxGamingBarHelper.Systems;
 
 namespace XboxGamingBarHelper.Power
 {
-    internal class AutoTDPController : IManager
+    internal class AutoTDPManager : Manager
     {
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-
-        public AppServiceConnection Connection { get; set; }
-
-        private const int MIN_TDP = 5;
-        private const int MAX_TDP = 30;
         private const int AVERAGE_TDP = 15;
         private const int GOOD_THRESHOLD = 3;
         private const int BEST_THRESHOLD = 0;
@@ -23,50 +18,72 @@ namespace XboxGamingBarHelper.Power
         private const int IDLE_NO_FPS_NUM = 5;
         private const int UNKNOWN = -1;
 
-        //private bool isEnabled;
-        //private int targetFPS = 60;
         private int noFPSCount;
-        private Dictionary<int, List<(int fps, long timestamp)>> fpsHistory = new Dictionary<int, List<(int fps, long timestamp)>>();
+        private Dictionary<int, List<(uint fps, long timestamp)>> fpsHistory = new Dictionary<int, List<(uint fps, long timestamp)>>();
         private long lastTDPChangeTimestamp;
         private int delayTimeAfterChangingTDP;
+        private readonly HardwareManager hardwareManager;
+        private readonly SystemManager systemManager;
 
         public AutoTDPEnabledProperty AutoTDPEnabled { get; private set; }
         public TargetFPSProperty TargetFPS { get; private set; }
 
-        public AutoTDPController(AppServiceConnection connection, bool initiallyEnableAutoTDP, int initialTargetFPS)
+        public AutoTDPManager(AppServiceConnection connection, bool initiallyEnableAutoTDP, int initialTargetFPS, HardwareManager inHardwareManager, SystemManager inSystemManager)
+             : base(connection)
         {
-            Connection = connection;
             AutoTDPEnabled = new AutoTDPEnabledProperty(initiallyEnableAutoTDP, this);
             TargetFPS = new TargetFPSProperty(initialTargetFPS, this);
+            hardwareManager = inHardwareManager;
+            systemManager = inSystemManager;
         }
 
-        //public bool IsEnabled
-        //{
-        //    get { return isEnabled; }
-        //    set
-        //    {
-        //        isEnabled = value;
-        //        if (!isEnabled)
-        //        {
-        //            fpsHistory.Clear();
-        //            noFPSCount = 0;
-        //        }
-        //        Logger.Info($"Auto TDP {(isEnabled ? "Enabled" : "Disabled")}");
-        //    }
-        //}
+        private void RecordFPS(int tdp, uint fps, long timestamp)
+        {
+            if (!fpsHistory.ContainsKey(tdp))
+            {
+                fpsHistory[tdp] = new List<(uint fps, long timestamp)>();
+            }
 
-        //public int TargetFPS
-        //{
-        //    get { return targetFPS; }
-        //    set
-        //    {
-        //        targetFPS = value;
-        //        Logger.Info($"Auto TDP Target FPS set to {targetFPS}");
-        //    }
-        //}
+            var list = fpsHistory[tdp];
+            list.Add((fps, timestamp));
 
+            // Keep only recent history
+            if (list.Count > STABLE_NUM_RECORDED_FPS * 2)
+            {
+                list.RemoveAt(0);
+            }
 
-        public void Update(int currentFPS, HardwareManager hardwareManager)
+            var debugFPSHistory = string.Empty;
+            foreach (var fpsHistoryItem in fpsHistory)
+            {
+                debugFPSHistory += $"{fpsHistoryItem.Key}:[{string.Join(',', fpsHistoryItem.Value.Select(item => item.fps))}], ";
+            }
+            debugFPSHistory.TrimEnd(' ', ',');
+            Logger.Info($"Record FPS: {fps} at {tdp}W (FPS History: {debugFPSHistory})");
+        }
+
+        private int FindRecordedFPSCount(int tdp)
+        {
+            if (fpsHistory.TryGetValue(tdp, out var list))
+            {
+                return list.Count;
+            }
+            return 0;
+        }
+
+        private (int averageFps, long lastUpdateTime) FindRecordedFPS(int tdp)
+        {
+            if (fpsHistory.TryGetValue(tdp, out var list) && list.Count > 0)
+            {
+                // Simple average of stored values
+                double avg = list.Average(x => x.fps);
+                long lastTime = list.Max(x => x.timestamp);
+                return ((int)Math.Round(avg), lastTime);
+            }
+            return (UNKNOWN, 0);
+        }
+
+        public override void Update()
         {
             if (!AutoTDPEnabled)
             {
@@ -80,6 +97,8 @@ namespace XboxGamingBarHelper.Power
                 Logger.Debug("Still waiting after changing TDP.");
                 return;
             }
+
+            var currentFPS = systemManager.RunningGame.FPS;
 
             if (currentFPS == 0)
             {
@@ -95,7 +114,7 @@ namespace XboxGamingBarHelper.Power
                 }
                 else
                 {
-                    // Logger.Debug("No FPS detected, wait a bit longer to confirm that game is closed.");
+                    Logger.Debug("No FPS detected, wait a bit longer to confirm that game is closed.");
                     noFPSCount++;
                 }
                 return;
@@ -131,7 +150,7 @@ namespace XboxGamingBarHelper.Power
             if (currentTdpAverageFps >= TargetFPS - GOOD_THRESHOLD)
             {
                 // Performance is good, try to lower TDP
-                if (currentTdp <= MIN_TDP)
+                if (currentTdp <= hardwareManager.MinTDP)
                 {
                     Logger.Info($"FPS {currentTdpAverageFps} good at {currentTdp}W, but already at MIN TDP.");
                     delayTimeAfterChangingTDP = 10;
@@ -186,7 +205,7 @@ namespace XboxGamingBarHelper.Power
             else
             {
                 // Performance needs improvement
-                if (currentTdp >= MAX_TDP)
+                if (currentTdp >= hardwareManager.MaxTDP)
                 {
                     Logger.Info($"FPS {currentTdpAverageFps} below target at {currentTdp}W, but already at MAX TDP.");
                     delayTimeAfterChangingTDP = 10;
@@ -200,57 +219,6 @@ namespace XboxGamingBarHelper.Power
                     lastTDPChangeTimestamp = fpsTimestamp;
                 }
             }
-        }
-
-        private void RecordFPS(int tdp, int fps, long timestamp)
-        {
-            if (!fpsHistory.ContainsKey(tdp))
-            {
-                fpsHistory[tdp] = new List<(int fps, long timestamp)>();
-            }
-
-            var list = fpsHistory[tdp];
-            list.Add((fps, timestamp));
-
-            // Keep only recent history
-            if (list.Count > STABLE_NUM_RECORDED_FPS * 2)
-            {
-                list.RemoveAt(0);
-            }
-
-            var debugFPSHistory = string.Empty;
-            foreach (var fpsHistoryItem in fpsHistory)
-            {
-                debugFPSHistory += $"{fpsHistoryItem.Key}:[{string.Join(',', fpsHistoryItem.Value.Select(item => item.fps))}], ";
-            }
-            debugFPSHistory.TrimEnd(' ', ',');
-            Logger.Info($"Record FPS: {fps} at {tdp}W (FPS History: {debugFPSHistory})");
-        }
-
-        private int FindRecordedFPSCount(int tdp)
-        {
-            if (fpsHistory.TryGetValue(tdp, out var list))
-            {
-                return list.Count;
-            }
-            return 0;
-        }
-
-        private (int averageFps, long lastUpdateTime) FindRecordedFPS(int tdp)
-        {
-            if (fpsHistory.TryGetValue(tdp, out var list) && list.Count > 0)
-            {
-                // Simple average of stored values
-                double avg = list.Average(x => x.fps);
-                long lastTime = list.Max(x => x.timestamp);
-                return ((int)Math.Round(avg), lastTime);
-            }
-            return (UNKNOWN, 0);
-        }
-
-        public void Update()
-        {
-            // Do nothing, called manually with params from SystemManager/Program
         }
     }
 }

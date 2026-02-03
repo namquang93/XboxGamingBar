@@ -3,9 +3,9 @@ using XboxGamingBarHelper.Core;
 
 namespace XboxGamingBarHelper.Power
 {
-    internal class AutoTDPEnabledProperty : HelperProperty<bool, AutoTDPController>
+    internal class AutoTDPEnabledProperty : HelperProperty<bool, AutoTDPManager>
     {
-        public AutoTDPEnabledProperty(bool inValue, AutoTDPController inManager) : base(inValue, null, Function.AutoTDPEnabled, inManager)
+        public AutoTDPEnabledProperty(bool inValue, AutoTDPManager inManager) : base(inValue, null, Function.AutoTDPEnabled, inManager)
         {
         }
     }

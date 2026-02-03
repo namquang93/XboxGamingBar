@@ -34,7 +34,7 @@ namespace XboxGamingBarHelper
         private static SystemManager systemManager;
         private static PowerManager powerManager;
         private static AMDManager amdManager;
-        private static AutoTDPController autoTDPController;
+        private static AutoTDPManager autoTDPManager;
         private static SettingsManager settingsManager;
         private static InputManager inputManager;
         private static List<IManager> Managers;
@@ -93,8 +93,8 @@ namespace XboxGamingBarHelper
             powerManager = new PowerManager(connection);
             Logger.Info("Initialize AMD Manager.");
             amdManager = new AMDManager(connection);
-            Logger.Info("Initialize Auto TDP Controller.");
-            autoTDPController = new AutoTDPController(connection, profileManager.GlobalProfile.AutoTDP, profileManager.GlobalProfile.TargetFPS);
+            Logger.Info("Initialize Auto TDP Manager.");
+            autoTDPManager = new AutoTDPManager(connection, profileManager.GlobalProfile.AutoTDP, profileManager.GlobalProfile.TargetFPS, hardwareManager, systemManager);
             Logger.Info("Initialize Input Manager.");
             inputManager = new InputManager(connection);
 
@@ -106,7 +106,7 @@ namespace XboxGamingBarHelper
                 systemManager,
                 powerManager,
                 amdManager,
-                autoTDPController,
+                autoTDPManager,
                 settingsManager,
                 inputManager
             };
@@ -156,8 +156,8 @@ namespace XboxGamingBarHelper
                 amdManager.FocusingOnOSDSlider,
                 settingsManager.OnScreenDisplayProvider,
                 settingsManager.LosslessScalingShortcut,
-                autoTDPController.AutoTDPEnabled,
-                autoTDPController.TargetFPS);
+                autoTDPManager.AutoTDPEnabled,
+                autoTDPManager.TargetFPS);
 
             Logger.Info("Initialize callbacks.");
             systemManager.RunningGame.PropertyChanged += RunningGame_PropertyChanged;
@@ -169,8 +169,8 @@ namespace XboxGamingBarHelper
             powerManager.LimitCPUClock.PropertyChanged += CPUClock_PropertyChanged;
             powerManager.CPUClockMax.PropertyChanged += CPUClock_PropertyChanged;
             profileManager.CurrentProfile.PropertyChanged += CurrentProfile_PropertyChanged;
-            autoTDPController.AutoTDPEnabled.PropertyChanged += AutoTDPEnabled_PropertyChanged;
-            autoTDPController.TargetFPS.PropertyChanged += TargetFPS_PropertyChanged;
+            autoTDPManager.AutoTDPEnabled.PropertyChanged += AutoTDPEnabled_PropertyChanged;
+            autoTDPManager.TargetFPS.PropertyChanged += TargetFPS_PropertyChanged;
 
             Logger.Info("Initialize Tray Icon Manager.");
             trayIconManager = new TrayIconManager(connection);
@@ -192,8 +192,6 @@ namespace XboxGamingBarHelper
                 {
                     manager.Update();
                 }
-
-                autoTDPController.Update((int)systemManager.RunningGame.Value.FPS, hardwareManager);
             }
         }
 
@@ -286,8 +284,8 @@ namespace XboxGamingBarHelper
                 powerManager.LimitCPUClock.SetValue(profileManager.CurrentProfile.CPUClock > 0);
                 powerManager.LimitCPUClock.SetValue(profileManager.CurrentProfile.CPUClock > 0);
                 powerManager.CPUClockMax.SetValue(profileManager.CurrentProfile.CPUClock > 0 ? profileManager.CurrentProfile.CPUClock : CPUConstants.DEFAULT_CPU_CLOCK);
-                autoTDPController.AutoTDPEnabled.SetValue(profileManager.CurrentProfile.AutoTDP);
-                autoTDPController.TargetFPS.SetValue(profileManager.CurrentProfile.TargetFPS);
+                autoTDPManager.AutoTDPEnabled.SetValue(profileManager.CurrentProfile.AutoTDP);
+                autoTDPManager.TargetFPS.SetValue(profileManager.CurrentProfile.TargetFPS);
 
                 profileManager.PerGameProfile.SetValue(profileManager.CurrentProfile.Use);
             }
@@ -328,14 +326,14 @@ namespace XboxGamingBarHelper
 
         private static void AutoTDPEnabled_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            Logger.Info($"Set current profile {profileManager.CurrentProfile.GameId.Name}'s AutoTDP from {profileManager.CurrentProfile.AutoTDP} to {autoTDPController.AutoTDPEnabled}.");
-            profileManager.CurrentProfile.AutoTDP = autoTDPController.AutoTDPEnabled;
+            Logger.Info($"Set current profile {profileManager.CurrentProfile.GameId.Name}'s AutoTDP from {profileManager.CurrentProfile.AutoTDP} to {autoTDPManager.AutoTDPEnabled}.");
+            profileManager.CurrentProfile.AutoTDP = autoTDPManager.AutoTDPEnabled;
         }
 
         private static void TargetFPS_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            Logger.Info($"Set current profile {profileManager.CurrentProfile.GameId.Name}'s TargetFPS from {profileManager.CurrentProfile.TargetFPS} to {autoTDPController.TargetFPS}.");
-            profileManager.CurrentProfile.TargetFPS = autoTDPController.TargetFPS;
+            Logger.Info($"Set current profile {profileManager.CurrentProfile.GameId.Name}'s TargetFPS from {profileManager.CurrentProfile.TargetFPS} to {autoTDPManager.TargetFPS}.");
+            profileManager.CurrentProfile.TargetFPS = autoTDPManager.TargetFPS;
         }
 
         private static void RunningGame_PropertyChanged(object sender, PropertyChangedEventArgs e)
