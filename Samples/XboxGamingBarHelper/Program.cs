@@ -320,6 +320,12 @@ namespace XboxGamingBarHelper
 
         private static void TDP_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
+            if (autoTDPManager.AutoTDPEnabled)
+            {
+                Logger.Info($"Auto TDP is enabled, ignore manual TDP change.");
+                return;
+            }
+
             Logger.Info($"Set current profile {profileManager.CurrentProfile.GameId.Name}'s TDP from {profileManager.CurrentProfile.TDP} to {hardwareManager.TDP}.");
             profileManager.CurrentProfile.TDP = hardwareManager.TDP;
         }
