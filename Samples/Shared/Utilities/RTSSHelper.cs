@@ -27,7 +27,8 @@ namespace Shared.Utilities
                 return false;
             }
 
-            return (DateTime.Now - rtssProcess.StartTime).TotalSeconds >= 2.0f;
+            var runningTime = (DateTime.Now - rtssProcess.StartTime).TotalSeconds;
+            return runningTime < 0 || runningTime >= 2.0f;
         }
 
         public static bool IsInstalled(out string installDir)
