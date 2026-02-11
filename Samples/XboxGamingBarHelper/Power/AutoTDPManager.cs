@@ -213,8 +213,24 @@ namespace XboxGamingBarHelper.Power
                 }
                 else
                 {
-                    Logger.Info($"FPS {currentTdpAverageFps} below target at {currentTdp}W. Increasing TDP to {currentTdp + 1}W.");
-                    hardwareManager.TDP.SetValue(currentTdp + 1);
+                    var fpsDeficit = TargetFPS - currentTdpAverageFps;
+                    int tdpIncrease;
+                    // If running significantly below target, increase TDP more aggressively
+                    if (fpsDeficit >= 40)
+                    {
+                        tdpIncrease = 3;
+                    }
+                    else if (fpsDeficit >= 20)
+                    {
+                        tdpIncrease = 2;
+                    }
+                    else
+                    {
+                        tdpIncrease = 1;
+                    }
+                    var nextTdp = Math.Min(currentTdp + tdpIncrease, hardwareManager.MaxTDP);
+                    Logger.Info($"FPS {currentTdpAverageFps} below target at {currentTdp}W. Increasing TDP to {nextTdp}W.");
+                    hardwareManager.TDP.SetValue(nextTdp);
                     delayTimeAfterChangingTDP = 1;
                     lastTDPChangeTimestamp = fpsTimestamp;
                 }
