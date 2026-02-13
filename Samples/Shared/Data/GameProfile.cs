@@ -109,7 +109,7 @@ namespace Shared.Data
         private bool? autoTDP;
         public bool AutoTDP
         {
-            get { return autoTDP ?? true; }
+            get { return autoTDP ?? false; }
             set
             {
                 if (autoTDP != value)
@@ -121,10 +121,10 @@ namespace Shared.Data
         }
 
         [XmlElement("TargetFPS")]
-        private int targetFPS;
+        private int? targetFPS;
         public int TargetFPS
         {
-            get { return targetFPS; }
+            get { return targetFPS ?? 60; }
             set
             {
                 if (targetFPS != value)
