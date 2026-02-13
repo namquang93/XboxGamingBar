@@ -101,12 +101,12 @@
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
                                 <TextBlock x:Name="TDPValueText" Text="{Binding ElementName=TDPSlider, Path=Value, Converter={StaticResource WattStringConverter}}" 
-                                    VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                    VerticalAlignment="Center" Margin="0,0,10,0"/>
                                 <TextBlock x:Name="TargetFPSValueText" Text="{Binding ElementName=TargetFPSSlider, Path=Value}" 
-                                    VerticalAlignment="Center" Visibility="Collapsed" Margin="0,0,5,0"/>
+                                    VerticalAlignment="Center" Visibility="Collapsed" Margin="0,0,10,0"/>
                                 <TextBlock Text="FPS" x:Name="TargetFPSLabel" VerticalAlignment="Center" Visibility="Collapsed" Margin="0,0,10,0"/>
 
-                                <ToggleSwitch x:Name="AutoTDPToggle" OffContent="" OnContent="" MinWidth="0" Margin="5,0,0,0"/>
+                                <ToggleSwitch x:Name="AutoTDPToggle" OffContent="" OnContent="" MinWidth="0" Margin="0,0,-12,0"/>
                             </StackPanel>
                         </Grid>
                         <Grid Grid.Row="5">
